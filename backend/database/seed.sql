@@ -27,10 +27,10 @@ VALUES
 -- ============================================================
 INSERT INTO clientes (usuario_id, telefono, fecha_nacimiento, historial_salud, preferencias)
 VALUES
-    (6, '555-1001', '1985-03-15', 'Alergia al polen. Lesión lumbar leve (2023).',                                             'Prefiere masajes de intensidad media. Horarios matutinos.'),
-    (7, '555-1002', '1992-07-22', 'Piel sensible. No usar productos con fragancias artificiales.',                            'Faciales una vez al mes. Aromaterapia suave.'),
-    (8, '555-1003', '1978-11-02', 'Hipertensión controlada. Evitar sesiones de hidroterapia a más de 38°C.',                  'Masajes deportivos los viernes. Sesiones de 90 min.'),
-    (9, '555-1004', '1995-09-10', 'Sin condiciones preexistentes.',                                                           'Prefiere tratamientos faciales y aromaterapia.');
+    (6, '3214567890', '1985-03-15', 'Alergia al polen. Lesión lumbar leve (2023).',                                             'Prefiere masajes de intensidad media. Horarios matutinos.'),
+    (7, '3107654321', '1992-07-22', 'Piel sensible. No usar productos con fragancias artificiales.',                            'Faciales una vez al mes. Aromaterapia suave.'),
+    (8, '3005551234', '1978-11-02', 'Hipertensión controlada. Evitar sesiones de hidroterapia a más de 38°C.',                  'Masajes deportivos los viernes. Sesiones de 90 min.'),
+    (9, '3159876543', '1995-09-10', 'Sin condiciones preexistentes.',                                                           'Prefiere tratamientos faciales y aromaterapia.');
 
 -- ============================================================
 -- TERAPEUTAS (perfiles que extienden a los usuarios con rol 'terapeuta')
@@ -57,12 +57,12 @@ VALUES
 -- ============================================================
 INSERT INTO servicios (nombre, duracion_minutos, precio, tipo_terapia)
 VALUES
-    ('Masaje Relajante',          60,  50.00, 'masajes'),
-    ('Masaje Deportivo',          90,  75.00, 'masajes'),
-    ('Limpieza Facial Profunda',  45,  40.00, 'facial'),
-    ('Hidroterapia Corporal',     60,  60.00, 'hidroterapia'),
-    ('Aromaterapia con Masaje',   75,  65.00, 'aromaterapia'),
-    ('Tratamiento Anti-edad',     60,  80.00, 'facial');
+    ('Masaje Relajante',          60,  85000.00, 'masajes'),
+    ('Masaje Deportivo',          90,  130000.00, 'masajes'),
+    ('Limpieza Facial Profunda',  45,  75000.00, 'facial'),
+    ('Hidroterapia Corporal',     60,  110000.00, 'hidroterapia'),
+    ('Aromaterapia con Masaje',   75,  120000.00, 'aromaterapia'),
+    ('Tratamiento Anti-edad',     60,  150000.00, 'facial');
 
 -- ============================================================
 -- CABINA_SERVICIOS (asociación M:N)
@@ -85,12 +85,12 @@ VALUES
 -- ============================================================
 INSERT INTO productos (nombre, stock, costo_unitario, stock_minimo)
 VALUES
-    ('Aceite Esencial Lavanda',          20,   8.50,  5),
-    ('Crema Hidratante Facial',           3,  15.00,  5),   -- STOCK BAJO
-    ('Exfoliante Corporal',              12,  10.00,  5),
-    ('Mascarilla de Arcilla',             2,   6.00,  5),   -- STOCK BAJO
-    ('Aceite de Masaje Neutro',          25,   7.00,  5),
-    ('Vela Aromática Terapéutica',        8,   4.50,  5);
+    ('Aceite Esencial Lavanda',          20,   18000.00,  5),
+    ('Crema Hidratante Facial',           3,  32000.00,  5),   -- STOCK BAJO
+    ('Exfoliante Corporal',              12,  22000.00,  5),
+    ('Mascarilla de Arcilla',             2,   14000.00,  5),   -- STOCK BAJO
+    ('Aceite de Masaje Neutro',          25,  16000.00,  5),
+    ('Vela Aromática Terapéutica',        8,   9500.00,  5);
 
 -- ============================================================
 -- CITAS (8 en diferentes estados, sin solapamientos)
@@ -98,21 +98,21 @@ VALUES
 INSERT INTO citas (cliente_id, terapeuta_id, cabina_id, fecha, hora_inicio, hora_fin, estado, total)
 VALUES
     -- Cita 1: completada - Pedro / Laura / Serenidad / Masaje Relajante
-    (1, 1, 1, '2026-05-20', '09:00:00', '10:00:00', 'completada',       50.00),
+    (1, 1, 1, '2026-05-20', '09:00:00', '10:00:00', 'completada',       85000.00),
     -- Cita 2: confirmada - Sofía / Miguel / Armonía / Limpieza Facial + Anti-edad
-    (2, 2, 2, '2026-05-25', '14:00:00', '15:45:00', 'confirmada',      120.00),
+    (2, 2, 2, '2026-05-25', '14:00:00', '15:45:00', 'confirmada',      225000.00),
     -- Cita 3: pendiente - Javier / Elena / Aqua / Hidroterapia Corporal
-    (3, 3, 3, '2026-05-23', '10:00:00', '11:00:00', 'pendiente',        60.00),
+    (3, 3, 3, '2026-05-23', '10:00:00', '11:00:00', 'pendiente',        110000.00),
     -- Cita 4: cancelada - Pedro / Laura / Serenidad / Masaje Relajante
-    (1, 1, 1, '2026-05-18', '16:00:00', '17:00:00', 'cancelada',        50.00),
+    (1, 1, 1, '2026-05-18', '16:00:00', '17:00:00', 'cancelada',        85000.00),
     -- Cita 5: completada - Pedro / Miguel / Armonía / Limpieza Facial Profunda
-    (1, 2, 2, '2026-05-21', '11:00:00', '11:45:00', 'completada',       40.00),
+    (1, 2, 2, '2026-05-21', '11:00:00', '11:45:00', 'completada',       75000.00),
     -- Cita 6: confirmada - Javier / Laura / Serenidad / Masaje Deportivo
-    (3, 1, 1, '2026-05-26', '09:00:00', '10:30:00', 'confirmada',       75.00),
+    (3, 1, 1, '2026-05-26', '09:00:00', '10:30:00', 'confirmada',       130000.00),
     -- Cita 7: cancelada con penalidad - Sofía / Elena / Aqua / Hidroterapia Corporal
-    (2, 3, 3, '2026-05-22', '08:00:00', '09:00:00', 'cancelada_penalidad', 60.00),
+    (2, 3, 3, '2026-05-22', '08:00:00', '09:00:00', 'cancelada_penalidad', 110000.00),
     -- Cita 8: completada - Javier / Miguel / Armonía / Tratamiento Anti-edad
-    (3, 2, 2, '2026-05-19', '15:00:00', '16:00:00', 'completada',       80.00);
+    (3, 2, 2, '2026-05-19', '15:00:00', '16:00:00', 'completada',       150000.00);
 
 -- ============================================================
 -- CITA_SERVICIOS (detalle de servicios por cita)
@@ -120,22 +120,22 @@ VALUES
 INSERT INTO cita_servicios (cita_id, servicio_id, precio_aplicado)
 VALUES
     -- Cita 1: Masaje Relajante
-    (1, 1, 50.00),
+    (1, 1, 85000.00),
     -- Cita 2: Limpieza Facial Profunda + Tratamiento Anti-edad
-    (2, 3, 40.00),
-    (2, 6, 80.00),
+    (2, 3, 75000.00),
+    (2, 6, 150000.00),
     -- Cita 3: Hidroterapia Corporal
-    (3, 4, 60.00),
+    (3, 4, 110000.00),
     -- Cita 4: Masaje Relajante
-    (4, 1, 50.00),
+    (4, 1, 85000.00),
     -- Cita 5: Limpieza Facial Profunda
-    (5, 3, 40.00),
+    (5, 3, 75000.00),
     -- Cita 6: Masaje Deportivo
-    (6, 2, 75.00),
+    (6, 2, 130000.00),
     -- Cita 7: Hidroterapia Corporal
-    (7, 4, 60.00),
+    (7, 4, 110000.00),
     -- Cita 8: Tratamiento Anti-edad
-    (8, 6, 80.00);
+    (8, 6, 150000.00);
 
 -- ============================================================
 -- USO_PRODUCTOS (registro de productos consumidos en citas completadas)
@@ -143,11 +143,11 @@ VALUES
 INSERT INTO uso_productos (cita_id, producto_id, cantidad, costo_aplicado)
 VALUES
     -- Cita 1: Masaje Relajante consumió aceites
-    (1, 1, 2, 8.50),    -- Aceite Esencial Lavanda (2 unidades)
-    (1, 5, 1, 7.00),    -- Aceite de Masaje Neutro (1 unidad)
+    (1, 1, 2, 18000.00),    -- Aceite Esencial Lavanda (2 unidades)
+    (1, 5, 1, 16000.00),    -- Aceite de Masaje Neutro (1 unidad)
     -- Cita 5: Limpieza Facial Profunda consumió crema y mascarilla
-    (5, 2, 1, 15.00),   -- Crema Hidratante Facial (1 unidad)
-    (5, 4, 1, 6.00),    -- Mascarilla de Arcilla (1 unidad)
+    (5, 2, 1, 32000.00),   -- Crema Hidratante Facial (1 unidad)
+    (5, 4, 1, 14000.00),    -- Mascarilla de Arcilla (1 unidad)
     -- Cita 8: Tratamiento Anti-edad consumió crema y mascarilla
-    (8, 2, 1, 15.00),   -- Crema Hidratante Facial (1 unidad)
-    (8, 4, 2, 6.00);    -- Mascarilla de Arcilla (2 unidades)
+    (8, 2, 1, 32000.00),   -- Crema Hidratante Facial (1 unidad)
+    (8, 4, 2, 14000.00);    -- Mascarilla de Arcilla (2 unidades)
