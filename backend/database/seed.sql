@@ -7,7 +7,7 @@
 -- ============================================================
 
 -- ============================================================
--- USUARIOS (8 en total: 1 admin, 1 recepcionista, 3 terapeutas, 3 clientes)
+-- USUARIOS (9 en total: 1 admin, 1 recepcionista, 3 terapeutas, 4 clientes)
 -- ============================================================
 INSERT INTO usuarios (nombre, apellido, email, password_hash, rol, activo)
 VALUES
@@ -18,17 +18,19 @@ VALUES
     ('Elena',    'Rodríguez', 'elena.rodriguez@zenspa.com',  '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'terapeuta',     TRUE),
     ('Pedro',    'Fernández', 'pedro.fernandez@email.com',   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'cliente',       TRUE),
     ('Sofía',    'Ramírez',   'sofia.ramirez@email.com',     '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'cliente',       TRUE),
-    ('Javier',   'Torres',    'javier.torres@email.com',     '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'cliente',       TRUE);
+    ('Javier',   'Torres',    'javier.torres@email.com',     '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'cliente',       TRUE),
+    ('María',    'Vega',      'maria.vega@email.com',        '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'cliente',       TRUE);
 
 -- ============================================================
 -- CLIENTES (perfiles que extienden a los usuarios con rol 'cliente')
---     usuario 6 = Pedro, usuario 7 = Sofía, usuario 8 = Javier
+--     usuario 6 = Pedro, usuario 7 = Sofía, usuario 8 = Javier, usuario 9 = María
 -- ============================================================
 INSERT INTO clientes (usuario_id, telefono, fecha_nacimiento, historial_salud, preferencias)
 VALUES
     (6, '555-1001', '1985-03-15', 'Alergia al polen. Lesión lumbar leve (2023).',                                             'Prefiere masajes de intensidad media. Horarios matutinos.'),
     (7, '555-1002', '1992-07-22', 'Piel sensible. No usar productos con fragancias artificiales.',                            'Faciales una vez al mes. Aromaterapia suave.'),
-    (8, '555-1003', '1978-11-02', 'Hipertensión controlada. Evitar sesiones de hidroterapia a más de 38°C.',                  'Masajes deportivos los viernes. Sesiones de 90 min.');
+    (8, '555-1003', '1978-11-02', 'Hipertensión controlada. Evitar sesiones de hidroterapia a más de 38°C.',                  'Masajes deportivos los viernes. Sesiones de 90 min.'),
+    (9, '555-1004', '1995-09-10', 'Sin condiciones preexistentes.',                                                           'Prefiere tratamientos faciales y aromaterapia.');
 
 -- ============================================================
 -- TERAPEUTAS (perfiles que extienden a los usuarios con rol 'terapeuta')
@@ -101,14 +103,14 @@ VALUES
     (2, 2, 2, '2026-05-25', '14:00:00', '15:45:00', 'confirmada',      120.00),
     -- Cita 3: pendiente - Javier / Elena / Aqua / Hidroterapia Corporal
     (3, 3, 3, '2026-05-23', '10:00:00', '11:00:00', 'pendiente',        60.00),
-    -- Cita 4: cancelada - Pedro / Laura / Aroma / Aromaterapia con Masaje
-    (1, 1, 4, '2026-05-18', '16:00:00', '17:15:00', 'cancelada',        65.00),
+    -- Cita 4: cancelada - Pedro / Laura / Serenidad / Masaje Relajante
+    (1, 1, 1, '2026-05-18', '16:00:00', '17:00:00', 'cancelada',        50.00),
     -- Cita 5: completada - Pedro / Miguel / Armonía / Limpieza Facial Profunda
     (1, 2, 2, '2026-05-21', '11:00:00', '11:45:00', 'completada',       40.00),
     -- Cita 6: confirmada - Javier / Laura / Serenidad / Masaje Deportivo
     (3, 1, 1, '2026-05-26', '09:00:00', '10:30:00', 'confirmada',       75.00),
-    -- Cita 7: cancelada con penalidad - Sofía / Elena / Aroma / Aromaterapia
-    (2, 3, 4, '2026-05-22', '08:00:00', '09:15:00', 'cancelada_penalidad', 65.00),
+    -- Cita 7: cancelada con penalidad - Sofía / Elena / Aqua / Hidroterapia Corporal
+    (2, 3, 3, '2026-05-22', '08:00:00', '09:00:00', 'cancelada_penalidad', 60.00),
     -- Cita 8: completada - Javier / Miguel / Armonía / Tratamiento Anti-edad
     (3, 2, 2, '2026-05-19', '15:00:00', '16:00:00', 'completada',       80.00);
 
@@ -124,14 +126,14 @@ VALUES
     (2, 6, 80.00),
     -- Cita 3: Hidroterapia Corporal
     (3, 4, 60.00),
-    -- Cita 4: Aromaterapia con Masaje
-    (4, 5, 65.00),
+    -- Cita 4: Masaje Relajante
+    (4, 1, 50.00),
     -- Cita 5: Limpieza Facial Profunda
     (5, 3, 40.00),
     -- Cita 6: Masaje Deportivo
     (6, 2, 75.00),
-    -- Cita 7: Aromaterapia con Masaje
-    (7, 5, 65.00),
+    -- Cita 7: Hidroterapia Corporal
+    (7, 4, 60.00),
     -- Cita 8: Tratamiento Anti-edad
     (8, 6, 80.00);
 
