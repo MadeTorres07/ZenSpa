@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: zenspa-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: zenspa_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/database:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./backend
+    container_name: zenspa-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: zenspa_db
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      SECRET_KEY: "cambiar-en-produccion-cambiame"
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 480
+      ALLOWED_ORIGINS: "http://localhost:4200,http://localhost"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
