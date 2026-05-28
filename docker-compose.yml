@@ -1,13 +1,14 @@
-version: "3.8"
-
 services:
   db:
     image: mysql:8.0
     container_name: zenspa-db
     restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: zenspa_db
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
     ports:
       - "3306:3306"
     volumes:
