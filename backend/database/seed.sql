@@ -6,6 +6,10 @@
 -- ADVERTENCIA: En producción cada usuario debe cambiar su contraseña.
 -- ============================================================
 
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
 -- ============================================================
 -- USUARIOS (9 en total: 1 admin, 1 recepcionista, 3 terapeutas, 4 clientes)
 -- ============================================================
@@ -151,3 +155,5 @@ VALUES
     -- Cita 8: Tratamiento Anti-edad consumió crema y mascarilla
     (8, 2, 1, 32000.00),   -- Crema Hidratante Facial (1 unidad)
     (8, 4, 2, 14000.00);    -- Mascarilla de Arcilla (2 unidades)
+
+SET FOREIGN_KEY_CHECKS = 1;

@@ -3,6 +3,9 @@
 -- Control de solapamiento de citas (terapeuta y cabina)
 -- ============================================================
 
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
 DELIMITER //
 
 -- ----------------------------------------------------------
