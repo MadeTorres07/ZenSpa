@@ -1,7 +1,7 @@
 from datetime import date, datetime, time
 from decimal import Decimal
 
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
 
 
 # ──────────────────────────── Usuario ────────────────────────────
@@ -192,26 +192,62 @@ class ProductoResponse(ProductoBase):
 
 
 # ──────────────────────────── Cita ───────────────────────────────
-class CitaBase(BaseModel):
+class ProductoUso(BaseModel):
+    producto_id: int
+    cantidad: int
+
+    @field_validator("cantidad")
+    @classmethod
+    def cantidad_mayor_que_cero(cls, v: int) -> int:
+        if v < 1:
+            raise ValueError("La cantidad debe ser mayor o igual a 1")
+        return v
+
+
+class CitaCreate(BaseModel):
     cliente_id: int
     terapeuta_id: int
     cabina_id: int
     fecha: date
     hora_inicio: time
     hora_fin: time
-    estado: str = "pendiente"
-    total: Decimal = Decimal("0.00")
+    servicios: list[int]
+    productos: list[ProductoUso] = []
 
 
-class CitaCreate(CitaBase):
-    pass
+class CitaUpdate(BaseModel):
+    estado: str | None = None
+    terapeuta_id: int | None = None
+    cabina_id: int | None = None
+    hora_inicio: time | None = None
+    hora_fin: time | None = None
 
 
-class CitaResponse(CitaBase):
+class CitaResponse(BaseModel):
     id: int
+    cliente_id: int
+    terapeuta_id: int
+    cabina_id: int
+    fecha: date
+    hora_inicio: time
+    hora_fin: time
+    estado: str
+    total: Decimal
     created_at: datetime | None = None
+    nombre_cliente: str
+    nombre_terapeuta: str
+    nombre_cabina: str
+    servicios: list[ServicioResponse]
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class ReporteCitasFilter(BaseModel):
+    terapeuta_id: int | None = None
+    tipo_terapia: str | None = None
+    fecha_inicio: date | None = None
+    fecha_fin: date | None = None
+    estado: str | None = None
 
 
 # ──────────────────────────── CitaServicio ───────────────────────

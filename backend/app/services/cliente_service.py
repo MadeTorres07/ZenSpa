@@ -45,28 +45,32 @@ def _cliente_to_dict(cliente: Cliente, include_historial: bool = True) -> dict:
 
 
 def create(db: Session, data: ClienteCreate) -> dict:
-    usuario = Usuario(
-        nombre=data.nombre,
-        apellido=data.apellido,
-        email=data.email,
-        password_hash=hash_password(data.password),
-        rol="cliente",
-        activo=True,
-    )
-    db.add(usuario)
-    db.flush()
+    try:
+        usuario = Usuario(
+            nombre=data.nombre,
+            apellido=data.apellido,
+            email=data.email,
+            password_hash=hash_password(data.password),
+            rol="cliente",
+            activo=True,
+        )
+        db.add(usuario)
+        db.flush()
 
-    cliente = Cliente(
-        usuario_id=usuario.id,
-        telefono=data.telefono,
-        fecha_nacimiento=data.fecha_nacimiento,
-        historial_salud=data.historial_salud,
-        preferencias=data.preferencias,
-    )
-    db.add(cliente)
-    db.commit()
-    db.refresh(cliente)
-    return _cliente_to_dict(cliente)
+        cliente = Cliente(
+            usuario_id=usuario.id,
+            telefono=data.telefono,
+            fecha_nacimiento=data.fecha_nacimiento,
+            historial_salud=data.historial_salud,
+            preferencias=data.preferencias,
+        )
+        db.add(cliente)
+        db.commit()
+        db.refresh(cliente)
+        return _cliente_to_dict(cliente)
+    except Exception:
+        db.rollback()
+        raise
 
 
 def update(db: Session, cliente_id: int, data: ClienteUpdate) -> dict | None:

@@ -40,26 +40,30 @@ def _terapeuta_to_dict(terapeuta: Terapeuta) -> dict:
 
 
 def create(db: Session, data: TerapeutaCreate) -> dict:
-    usuario = Usuario(
-        nombre=data.nombre,
-        apellido=data.apellido,
-        email=data.email,
-        password_hash=hash_password(data.password),
-        rol="terapeuta",
-        activo=True,
-    )
-    db.add(usuario)
-    db.flush()
+    try:
+        usuario = Usuario(
+            nombre=data.nombre,
+            apellido=data.apellido,
+            email=data.email,
+            password_hash=hash_password(data.password),
+            rol="terapeuta",
+            activo=True,
+        )
+        db.add(usuario)
+        db.flush()
 
-    terapeuta = Terapeuta(
-        usuario_id=usuario.id,
-        especialidad=data.especialidad,
-        certificaciones=data.certificaciones,
-    )
-    db.add(terapeuta)
-    db.commit()
-    db.refresh(terapeuta)
-    return _terapeuta_to_dict(terapeuta)
+        terapeuta = Terapeuta(
+            usuario_id=usuario.id,
+            especialidad=data.especialidad,
+            certificaciones=data.certificaciones,
+        )
+        db.add(terapeuta)
+        db.commit()
+        db.refresh(terapeuta)
+        return _terapeuta_to_dict(terapeuta)
+    except Exception:
+        db.rollback()
+        raise
 
 
 def update(db: Session, terapeuta_id: int, data: TerapeutaUpdate) -> dict | None:
