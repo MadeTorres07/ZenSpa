@@ -24,6 +24,14 @@ class UsuarioResponse(UsuarioBase):
     model_config = ConfigDict(from_attributes=True)
 
 
+class UsuarioUpdate(BaseModel):
+    nombre: str | None = None
+    apellido: str | None = None
+    email: EmailStr | None = None
+    rol: str | None = None
+    activo: bool | None = None
+
+
 # ──────────────────────────── Cliente ────────────────────────────
 class ClienteBase(BaseModel):
     telefono: str | None = None

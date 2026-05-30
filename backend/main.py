@@ -1,14 +1,24 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import router as v1_router
 from app.core.config import settings
-from app.core.database import check_db_connection, engine, Base
+from app.core.database import check_db_connection
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Servidor ZenSpa Bienestar corriendo")
+    yield
+
 
 app = FastAPI(
     title="ZenSpa Bienestar API",
     version="1.0.0",
     docs_url="/api/docs",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -26,9 +36,3 @@ app.include_router(v1_router)
 def health():
     check_db_connection()
     return {"status": "ok", "database": "connected"}
-
-
-@app.on_event("startup")
-def on_startup():
-    Base.metadata.create_all(bind=engine)
-    print("Servidor ZenSpa Bienestar corriendo")

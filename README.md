@@ -13,10 +13,12 @@ Sistema de gestión de citas y servicios para un spa. Desarrollado con **FastAPI
 | Seed data (pruebas) | ✅ `backend/database/seed.sql` |
 | Triggers (solapamiento citas) | ✅ `backend/database/triggers.sql` |
 | FastAPI + SQLAlchemy + Pydantic | ✅ |
-| Autenticación JWT (bcrypt + HS256) | ✅ |
-| Endpoints (scaffold) | ✅ `GET /health` — `GET /api/docs` (Swagger) |
-| Docker | ✅ `Dockerfile` + `docker-compose.yml` |
-| Alembic | ✅ Inicializado, sin migraciones aún |
+| Autenticación JWT (bcrypt + HS256) | ✅ Login, /me, roles |
+| CRUD Usuarios | ✅ Listar, crear, actualizar, desactivar (solo admin) |
+| CRUD Clientes/Terapeutas/Cabinas/Servicios/Productos/Citas | 🔜 Pendiente |
+| Docker | ✅ `Dockerfile` + `docker-compose.yml` con charset utf8mb4 |
+| Alembic | ✅ Configurado, migración inicial generada y aplicada |
+| Endpoints REST | ✅ 8 endpoints operativos |
 
 ---
 
@@ -46,7 +48,7 @@ uso_productos    (productos consumidos en citas completadas)
 - No permitir agendar una cabina en dos citas simultáneas
 
 ### Seed data
-- 9 usuarios (1 admin, 1 recepcionista, 3 terapeutas, 4 clientes)
+- 9 usuarios: Madeleine Torres (admin), Carlos López (recepcionista), 3 terapeutas, 4 clientes
 - 4 cabinas (Serenidad, Armonía, Aqua, Aroma)
 - 6 servicios, 8 citas en distintos estados
 - Productos con stock bajo para probar alertas
@@ -56,7 +58,18 @@ uso_productos    (productos consumidos en citas completadas)
 
 ## Cómo ejecutar
 
-### Opción 1: Local (desarrollo)
+### Opción 1: Docker (recomendado)
+
+```powershell
+# Requisito: Docker Desktop instalado y abierto
+docker compose up --build
+```
+
+Esto levanta:
+- **MySQL 8.0** con charset utf8mb4, schema + seed + triggers cargados automáticamente
+- **API** en `http://localhost:8000`
+
+### Opción 2: Local (desarrollo)
 
 ```powershell
 cd backend
@@ -68,7 +81,7 @@ pip install -r requirements.txt
 Crear `.env` desde `.env.example`:
 ```powershell
 copy .env.example .env
-# Editar: DB_USER, DB_PASSWORD, SECRET_KEY
+# Editar: DB_HOST, DB_USER, DB_PASSWORD, SECRET_KEY
 # Generar SECRET_KEY: python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
@@ -87,24 +100,85 @@ Arrancar:
 uvicorn main:app --reload --port 8000
 ```
 
-### Opción 2: Docker (recomendado para otros PCs)
+---
 
-```powershell
-# Requisito: Docker Desktop instalado y abierto
-docker compose up --build
+## Autenticación
+
+### Login
+
+`POST /api/v1/auth/login`
+
+Envía credenciales vía form-data (`grant_type=password`, `username`, `password`). El `username` es el email.
+
+Respuesta:
+```json
+{
+  "access_token": "eyJ...",
+  "token_type": "bearer",
+  "rol": "admin",
+  "nombre": "Madeleine"
+}
 ```
 
-Esto levanta:
-- **MySQL 8.0** con schema + seed + triggers cargados automáticamente
-- **API** en `http://localhost:8000`
+### Token JWT
 
-### Endpoints disponibles
+El payload incluye:
+- `sub`: ID del usuario
+- `rol`: rol del usuario
+- `nombre`: nombre del usuario
 
-| Ruta | Descripción |
-|---|---|
-| `GET /health` | Health check (status + conexión BD) |
-| `GET /api/docs` | Swagger UI (documentación interactiva) |
-| `GET /api/v1/...` | Endpoints REST (en construcción) |
+Duración: configurable via `ACCESS_TOKEN_EXPIRE_MINUTES` (default 480 min = 8 hrs).
+
+### Uso en Swagger
+
+1. `POST /api/v1/auth/login` → copiar `access_token`
+2. Arriba a la derecha: **Authorize** → pegar `Bearer <token>`
+3. Los endpoints protegidos ya muestran el candado cerrado
+
+---
+
+## Endpoints disponibles
+
+### Salud
+| Método | Ruta | Descripción | Auth |
+|---|---|---|---|
+| `GET` | `/health` | Health check + conexión BD | ❌ |
+| `GET` | `/api/docs` | Swagger UI | ❌ |
+
+### Autenticación (prefix: `/api/v1/auth`)
+| Método | Ruta | Descripción | Auth |
+|---|---|---|---|
+| `POST` | `/api/v1/auth/login` | Iniciar sesión (devuelve JWT) | ❌ |
+| `GET` | `/api/v1/auth/me` | Datos del usuario autenticado | ✅ |
+
+### Usuarios (prefix: `/api/v1/usuarios`)
+| Método | Ruta | Descripción | Auth |
+|---|---|---|---|
+| `GET` | `/api/v1/usuarios/` | Listar todos (filtro `?rol=`) | admin |
+| `GET` | `/api/v1/usuarios/{id}` | Detalle de usuario | admin o propio |
+| `POST` | `/api/v1/usuarios/` | Crear usuario | admin |
+| `PUT` | `/api/v1/usuarios/{id}` | Actualizar (excepto password) | admin |
+| `DELETE` | `/api/v1/usuarios/{id}` | Desactivar (soft delete) | admin |
+
+---
+
+## Migraciones con Alembic
+
+Alembic está configurado y la migración inicial está generada y aplicada.
+
+```powershell
+# Ver estado actual
+docker exec zenspa-api alembic current
+
+# Crear nueva migración (después de cambiar models.py)
+docker exec zenspa-api alembic revision --autogenerate -m "descripcion"
+
+# Aplicar migraciones pendientes
+docker exec zenspa-api alembic upgrade head
+
+# Revertir última migración
+docker exec zenspa-api alembic downgrade -1
+```
 
 ---
 
@@ -114,10 +188,10 @@ Esto levanta:
 |---|---|
 | Framework web | FastAPI 0.115 |
 | ORM | SQLAlchemy 2.0 |
-| Migraciones | Alembic 1.14 (inicializado) |
-| Base de datos | MySQL 8.0 |
-| Autenticación | JWT (python-jose) + bcrypt (passlib) |
-| Validación | Pydantic v2 |
+| Migraciones | Alembic 1.14 |
+| Base de datos | MySQL 8.0 (charset utf8mb4) |
+| Autenticación | JWT (python-jose) + bcrypt 4.0 |
+| Validación | Pydantic v2 + EmailStr |
 | Servidor | Uvicorn 0.34 |
 | Contenedores | Docker + Docker Compose |
 
@@ -125,8 +199,12 @@ Esto levanta:
 
 ## Próximos pasos
 
-- [ ] Endpoints CRUD para todas las entidades
-- [ ] Autenticación y registro de usuarios
+- [ ] CRUD Clientes
+- [ ] CRUD Terapeutas
+- [ ] CRUD Cabinas
+- [ ] CRUD Servicios
+- [ ] CRUD Productos
+- [ ] CRUD Citas + validación solapamiento
 - [ ] Lógica de negocio en capa de servicios
 - [ ] Frontend Angular
 - [ ] Pruebas automatizadas

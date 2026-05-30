@@ -2,7 +2,7 @@
 -- ZenSpa Bienestar - Datos de prueba
 -- Contraseña común para todos los usuarios de prueba:
 --   ZenSpa2024!
--- Hash bcrypt (12 rounds): $2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO
+-- Hash bcrypt (12 rounds): $2b$12$4OnEJI1eweZhLGyQIubdRuTNtVVXuB8RjUBWjvRuPg7orfuYfayNG
 -- ADVERTENCIA: En producción cada usuario debe cambiar su contraseña.
 -- ============================================================
 
@@ -15,15 +15,15 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ============================================================
 INSERT INTO usuarios (nombre, apellido, email, password_hash, rol, activo)
 VALUES
-    ('Ana',      'Martínez',  'admin@zenspa.com',           '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'admin',         TRUE),
-    ('Carlos',   'López',     'recepcion@zenspa.com',        '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'recepcionista', TRUE),
-    ('Laura',    'García',    'laura.garcia@zenspa.com',     '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'terapeuta',     TRUE),
-    ('Miguel',   'Sánchez',   'miguel.sanchez@zenspa.com',   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'terapeuta',     TRUE),
-    ('Elena',    'Rodríguez', 'elena.rodriguez@zenspa.com',  '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'terapeuta',     TRUE),
-    ('Pedro',    'Fernández', 'pedro.fernandez@email.com',   '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'cliente',       TRUE),
-    ('Sofía',    'Ramírez',   'sofia.ramirez@email.com',     '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'cliente',       TRUE),
-    ('Javier',   'Torres',    'javier.torres@email.com',     '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'cliente',       TRUE),
-    ('María',    'Vega',      'maria.vega@email.com',        '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TiGniYE6Ie.8a.ZL8mV5iR9yLQGO', 'cliente',       TRUE);
+    ('Madeleine','Torres',    'admin@zenspa.com',           '$2b$12$4OnEJI1eweZhLGyQIubdRuTNtVVXuB8RjUBWjvRuPg7orfuYfayNG', 'admin',         TRUE),
+    ('Carlos',   'López',     'recepcion@zenspa.com',        '$2b$12$4OnEJI1eweZhLGyQIubdRuTNtVVXuB8RjUBWjvRuPg7orfuYfayNG', 'recepcionista', TRUE),
+    ('Laura',    'García',    'laura.garcia@zenspa.com',     '$2b$12$4OnEJI1eweZhLGyQIubdRuTNtVVXuB8RjUBWjvRuPg7orfuYfayNG', 'terapeuta',     TRUE),
+    ('Miguel',   'Sánchez',   'miguel.sanchez@zenspa.com',   '$2b$12$4OnEJI1eweZhLGyQIubdRuTNtVVXuB8RjUBWjvRuPg7orfuYfayNG', 'terapeuta',     TRUE),
+    ('Elena',    'Rodríguez', 'elena.rodriguez@zenspa.com',  '$2b$12$4OnEJI1eweZhLGyQIubdRuTNtVVXuB8RjUBWjvRuPg7orfuYfayNG', 'terapeuta',     TRUE),
+    ('Pedro',    'Fernández', 'pedro.fernandez@email.com',   '$2b$12$4OnEJI1eweZhLGyQIubdRuTNtVVXuB8RjUBWjvRuPg7orfuYfayNG', 'cliente',       TRUE),
+    ('Sofía',    'Ramírez',   'sofia.ramirez@email.com',     '$2b$12$4OnEJI1eweZhLGyQIubdRuTNtVVXuB8RjUBWjvRuPg7orfuYfayNG', 'cliente',       TRUE),
+    ('Javier',   'Torres',    'javier.torres@email.com',     '$2b$12$4OnEJI1eweZhLGyQIubdRuTNtVVXuB8RjUBWjvRuPg7orfuYfayNG', 'cliente',       TRUE),
+    ('María',    'Vega',      'maria.vega@email.com',        '$2b$12$4OnEJI1eweZhLGyQIubdRuTNtVVXuB8RjUBWjvRuPg7orfuYfayNG', 'cliente',       TRUE);
 
 -- ============================================================
 -- CLIENTES (perfiles que extienden a los usuarios con rol 'cliente')
