@@ -33,39 +33,71 @@ class UsuarioUpdate(BaseModel):
 
 
 # ──────────────────────────── Cliente ────────────────────────────
-class ClienteBase(BaseModel):
+class ClienteCreate(BaseModel):
+    nombre: str
+    apellido: str
+    email: EmailStr
+    password: str
     telefono: str | None = None
     fecha_nacimiento: date | None = None
     historial_salud: str | None = None
     preferencias: str | None = None
 
 
-class ClienteCreate(ClienteBase):
-    usuario_id: int
+class ClienteUpdate(BaseModel):
+    nombre: str | None = None
+    apellido: str | None = None
+    email: EmailStr | None = None
+    password: str | None = None
+    telefono: str | None = None
+    fecha_nacimiento: date | None = None
+    historial_salud: str | None = None
+    preferencias: str | None = None
 
 
-class ClienteResponse(ClienteBase):
+class ClienteResponse(BaseModel):
     id: int
     usuario_id: int
+    nombre: str
+    apellido: str
+    email: EmailStr
+    telefono: str | None = None
+    fecha_nacimiento: date | None = None
+    historial_salud: str | None = None
+    preferencias: str | None = None
     created_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
 
 # ──────────────────────────── Terapeuta ──────────────────────────
-class TerapeutaBase(BaseModel):
+class TerapeutaCreate(BaseModel):
+    nombre: str
+    apellido: str
+    email: EmailStr
+    password: str
+    especialidad: str
+    certificaciones: str | None = None
+
+
+class TerapeutaUpdate(BaseModel):
+    nombre: str | None = None
+    apellido: str | None = None
+    email: EmailStr | None = None
+    password: str | None = None
+    especialidad: str | None = None
+    certificaciones: str | None = None
+
+
+class TerapeutaResponse(BaseModel):
+    id: int
+    usuario_id: int
+    nombre: str
+    apellido: str
+    email: EmailStr
     especialidad: str
     certificaciones: str | None = None
     activo: bool = True
-
-
-class TerapeutaCreate(TerapeutaBase):
-    usuario_id: int
-
-
-class TerapeutaResponse(TerapeutaBase):
-    id: int
-    usuario_id: int
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -80,6 +112,13 @@ class CabinaBase(BaseModel):
 
 class CabinaCreate(CabinaBase):
     pass
+
+
+class CabinaUpdate(BaseModel):
+    nombre: str | None = None
+    tipo_tratamiento: str | None = None
+    estado: str | None = None
+    equipamiento: str | None = None
 
 
 class CabinaResponse(CabinaBase):
@@ -98,6 +137,13 @@ class ServicioBase(BaseModel):
 
 class ServicioCreate(ServicioBase):
     pass
+
+
+class ServicioUpdate(BaseModel):
+    nombre: str | None = None
+    duracion_minutos: int | None = None
+    precio: Decimal | None = None
+    tipo_terapia: str | None = None
 
 
 class ServicioResponse(ServicioBase):
@@ -130,6 +176,13 @@ class ProductoBase(BaseModel):
 
 class ProductoCreate(ProductoBase):
     pass
+
+
+class ProductoUpdate(BaseModel):
+    nombre: str | None = None
+    stock: int | None = None
+    costo_unitario: Decimal | None = None
+    stock_minimo: int | None = None
 
 
 class ProductoResponse(ProductoBase):
