@@ -238,6 +238,8 @@ def update_estado(db: Session, cita_id: int, data: CitaUpdate, usuario_actual) -
             )
 
     try:
+        estado_anterior = cita.estado
+
         if data.estado is not None:
             cita.estado = data.estado
         if data.terapeuta_id is not None:
@@ -249,7 +251,8 @@ def update_estado(db: Session, cita_id: int, data: CitaUpdate, usuario_actual) -
         if data.hora_fin is not None:
             cita.hora_fin = data.hora_fin
 
-        if cita.estado in ("cancelada", "cancelada_penalidad"):
+        estados_cancelacion = ("cancelada", "cancelada_penalidad")
+        if cita.estado in estados_cancelacion and estado_anterior not in estados_cancelacion:
             for up in cita.uso_productos:
                 up.producto.stock += up.cantidad
 
