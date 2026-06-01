@@ -23,6 +23,7 @@ Sistema de gestión de citas y servicios para un spa. Desarrollado con **FastAPI
 | CRUD Citas | ✅ Con validación de solapamiento + snapshots de precio |
 | Reportes | ✅ Servicios populares + ingresos por terapeuta |
 | Docker | ✅ `Dockerfile` + `docker-compose.yml` con charset utf8mb4 |
+| Auto‑seed de contraseñas | ✅ Hashes regenerados al iniciar la API (portátil entre máquinas) |
 | Alembic | ✅ Configurado, migración inicial generada y aplicada |
 | Endpoints REST | **36 endpoints** operativos |
 
@@ -77,6 +78,8 @@ docker compose up --build
 Esto levanta:
 - **MySQL 8.0** con charset utf8mb4, schema + seed + triggers cargados automáticamente
 - **API** en `http://localhost:8000`
+
+> ⚡ **Contraseñas listas de inmediato:** Al arrancar, la API regenera automáticamente los hashes bcrypt de todos los usuarios (`ZenSpa2024!`). No importa en qué máquina corras — funciona siempre sin pasos extra. Ver `backend/app/core/seed_passwords.py`.
 
 ### Opción 2: Local (desarrollo)
 
@@ -245,7 +248,8 @@ backend/
 │   ├── core/
 │   │   ├── config.py              # Settings con pydantic-settings
 │   │   ├── database.py            # SQLAlchemy engine + session + Base
-│   │   └── security.py            # JWT, bcrypt, dependencias auth
+│   │   ├── security.py            # JWT, bcrypt, dependencias auth
+│   │   └── seed_passwords.py      # Regenera hashes bcrypt al arrancar
 │   ├── models/
 │   │   ├── models.py              # 10 modelos SQLAlchemy
 │   │   └── __init__.py            # Exporta Base + todos los modelos
@@ -311,6 +315,23 @@ docker exec zenspa-api alembic upgrade head
 # Revertir última migración
 docker exec zenspa-api alembic downgrade -1
 ```
+
+---
+
+## Auto‑seed de contraseñas (`seed_passwords.py`)
+
+El archivo `backend/app/core/seed_passwords.py` se ejecuta **cada vez que arranca la API** (vía el `lifespan` de FastAPI en `main.py`).
+
+**¿Qué hace?**
+- Conecta a la base de datos
+- Genera un hash bcrypt **fresco** de `ZenSpa2024!` (usando `bcrypt.gensalt()`)
+- Actualiza todos los usuarios con ese hash
+
+**¿Por qué?**
+Los hashes bcrypt son sensibles a diferencias entre entornos (versión de bcrypt, encoding, `$` en PowerShell). Al regenerarlos al inicio, el proyecto funciona en cualquier máquina sin depender del hash pre-generado en `seed.sql`.
+
+**¿Y si cambio la contraseña de un usuario?**
+El seed solo se aplica al arrancar, pisando TODAS las contraseñas con `ZenSpa2024!`. Si creas usuarios con otras contraseñas mediante la API, sus hashes se respetan (el script solo corre al inicio). Para desarrollo local es suficiente; en producción desactivarías este script.
 
 ---
 

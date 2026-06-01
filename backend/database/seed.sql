@@ -2,7 +2,9 @@
 -- ZenSpa Bienestar - Datos de prueba
 -- Contraseña común para todos los usuarios de prueba:
 --   ZenSpa2024!
--- Hash bcrypt (12 rounds): $2b$12$4OnEJI1eweZhLGyQIubdRuTNtVVXuB8RjUBWjvRuPg7orfuYfayNG
+-- NOTA: El hash aquí es un placeholder. Al arrancar la API,
+--       seed_passwords.py lo sobrescribe con un hash fresco,
+--       garantizando compatibilidad en cualquier máquina.
 -- ADVERTENCIA: En producción cada usuario debe cambiar su contraseña.
 -- ============================================================
 

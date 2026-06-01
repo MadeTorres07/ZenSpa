@@ -6,11 +6,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.router import router as v1_router
 from app.core.config import settings
 from app.core.database import check_db_connection
+from app.core.seed_passwords import seed_passwords
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Servidor ZenSpa Bienestar corriendo")
+    seed_passwords()
     yield
 
 
