@@ -1,10 +1,10 @@
 # ZenSpa Bienestar
 
-Sistema de gestión de citas y servicios para un spa. Desarrollado con **FastAPI** (backend) y **Angular** (frontend — próximamente).
+Sistema de gestión de citas y servicios para un spa. Desarrollado con **FastAPI** (backend) y **Angular 19** (frontend).
 
 ---
 
-## Estado del proyecto — Backend completo ✅
+## Estado del proyecto
 
 | Componente | Estado |
 |---|---|
@@ -26,6 +26,10 @@ Sistema de gestión de citas y servicios para un spa. Desarrollado con **FastAPI
 | Auto‑seed de contraseñas | ✅ Hashes regenerados al iniciar la API (portátil entre máquinas) |
 | Alembic | ✅ Configurado, migración inicial generada y aplicada |
 | Endpoints REST | **36 endpoints** operativos |
+| Angular 19 (standalone) | ✅ App shell, routing, guards, interceptor, auth |
+| Login funcional | ✅ Login con JWT, redirección por rol |
+| Módulos placeholder | ✅ 8 módulos esqueletos con rutas protegidas |
+| Paleta spa premium | ✅ Variables CSS, Playfair Display + Inter |
 
 ---
 
@@ -63,6 +67,25 @@ uso_productos    (productos consumidos en citas completadas)
 - 6 servicios, 8+ citas en distintos estados
 - Productos con stock bajo para probar alertas
 - Contraseña común de prueba: `ZenSpa2024!`
+
+---
+
+## Rutas del frontend
+
+| Ruta | Componente | Roles permitidos |
+|---|---|---|
+| `/login` | LoginComponent | público |
+| `/dashboard` | DashboardComponent | admin, recepcionista |
+| `/agenda` | AgendaComponent | admin, recepcionista, terapeuta |
+| `/clientes` | ClientesComponent | admin, recepcionista, terapeuta |
+| `/terapeutas` | TerapeutasComponent | admin |
+| `/servicios` | ServiciosComponent | admin |
+| `/cabinas` | CabinasComponent | admin, recepcionista |
+| `/inventario` | InventarioComponent | admin |
+| `/reportes` | ReportesComponent | admin |
+| `/sin-permiso` | SinPermisoComponent | público |
+
+> Todos los módulos excepto login contienen solo un placeholder. El contenido visual se implementa en fases posteriores.
 
 ---
 
@@ -111,6 +134,30 @@ Arrancar:
 ```powershell
 uvicorn main:app --reload --port 8000
 ```
+
+### Frontend (Angular)
+
+```powershell
+cd frontend\zenspa
+npx -y @angular/cli@19 serve
+```
+
+Esto arranca en `http://localhost:4200`. La app usa el proxy directo a `http://localhost:8000/api/v1` definido en `src/environments/environment.ts`.
+
+Para login rápido: `admin@zenspa.com` / `ZenSpa2024!` → redirige a `/dashboard`.
+
+---
+
+## Autenticación en frontend
+
+El frontend implementa autenticación vía OAuth2 Password Grant:
+
+1. El componente **Login** envía `email` + `password` como `FormData` a `POST /auth/login`
+2. El backend devuelve un `access_token` JWT + `rol` + `nombre`
+3. `AuthService` guarda el token en `localStorage` (`zenspa_token`) y los datos de sesión (`zenspa_session`)
+4. El **interceptor HTTP** inyecta `Authorization: Bearer <token>` en todas las requests a la API
+5. Si el backend responde 401, el interceptor hace `logout()` automáticamente
+6. **AuthGuard** protege las rutas; **RoleGuard** verifica el rol contra los permitidos en cada ruta
 
 ---
 
@@ -236,6 +283,63 @@ Duración: configurable via `ACCESS_TOKEN_EXPIRE_MINUTES` (default 480 min = 8 h
 
 ---
 
+## Arquitectura del frontend
+
+```
+frontend/zenspa/src/
+├── main.ts                        # Punto de entrada (bootstrap Angular)
+├── index.html
+├── styles.scss                    # Variables CSS globales (paleta spa)
+├── environments/
+│   ├── environment.ts             # apiUrl: http://localhost:8000/api/v1
+│   └── environment.prod.ts
+└── app/
+    ├── app.component.ts           # <router-outlet /> raíz
+    ├── app.config.ts              # Http interceptor, router, animaciones
+    ├── app.routes.ts              # 10 rutas con guards por rol
+    ├── core/
+    │   ├── guards/
+    │   │   ├── auth.guard.ts      # Redirige a /login si no hay token
+    │   │   └── role.guard.ts      # Redirige a /sin-permiso si rol no autorizado
+    │   ├── interceptors/
+    │   │   └── auth.interceptor.ts # Inyecta Bearer token en cada request
+    │   ├── models/
+    │   │   └── index.ts           # Interfaces: Usuario, Cliente, Cita, AuthResponse…
+    │   └── services/
+    │       ├── auth.service.ts    # login, logout, sesión localStorage
+    │       ├── cliente.service.ts # CRUD HTTP clientes
+    │       ├── terapeuta.service.ts
+    │       ├── cabina.service.ts
+    │       ├── servicio.service.ts
+    │       ├── producto.service.ts
+    │       └── cita.service.ts    # CRUD + filtros + reportes
+    ├── shared/components/
+    │   ├── navbar/                # (pendiente)
+    │   └── sidebar/               # (pendiente)
+    └── modules/
+        ├── auth/login/            # LoginComponent (funcional)
+        ├── dashboard/             # Placeholder
+        ├── agenda/                # Placeholder
+        ├── clientes/              # Placeholder
+        ├── terapeutas/            # Placeholder
+        ├── servicios/             # Placeholder
+        ├── cabinas/               # Placeholder
+        ├── inventario/            # Placeholder
+        └── reportes/              # Placeholder + SinPermisoComponent
+```
+
+### Patrón de flujo de autenticación
+
+```
+Login → AuthService.login() → POST /auth/login → JWT → localStorage
+                                                      ↓
+Interceptor → Authorization: Bearer JWT → cada GET/POST a la API
+                                                      ↓
+                                        401? → AuthService.logout() → /login
+```
+
+---
+
 ## Arquitectura del backend
 
 ```
@@ -337,6 +441,7 @@ El seed solo se aplica al arrancar, pisando TODAS las contraseñas con `ZenSpa20
 
 ## Stack tecnológico
 
+### Backend
 | Capa | Tecnología |
 |---|---|
 | Framework web | FastAPI 0.115 |
@@ -348,11 +453,26 @@ El seed solo se aplica al arrancar, pisando TODAS las contraseñas con `ZenSpa20
 | Servidor | Uvicorn 0.34 |
 | Contenedores | Docker + Docker Compose |
 
+### Frontend
+| Capa | Tecnología |
+|---|---|
+| Framework | Angular 19 (standalone, signals-ready) |
+| UI / CDK | @angular/cdk 19 |
+| Gráficos | Chart.js + ng2-charts |
+| Fechas | date-fns |
+| Tipografía | Playfair Display (headings) + Inter (cuerpo) |
+| Paleta | Terracota #C8956C / Crema #FAF7F2
+
 ---
 
 ## Próximos pasos
 
-- [ ] Frontend Angular
-- [ ] Pruebas automatizadas (pytest)
+- [ ] Navbar + Sidebar (shared components)
+- [ ] Dashboard con tarjetas de resumen y gráficos
+- [ ] Módulo de agenda (calendario de citas)
+- [ ] CRUD visual: Clientes, Terapeutas, Cabinas, Servicios, Productos
+- [ ] Creación y edición de citas desde el frontend
+- [ ] Reportes con gráficos (Chart.js)
+- [ ] Pruebas automatizadas (pytest backend + Jasmine/Karma frontend)
 - [ ] Módulo de experiencia / fidelización
-- [ ] Reportes adicionales (dashboard)
+- [ ] Despliegue con Docker compose completo (backend + frontend + nginx)

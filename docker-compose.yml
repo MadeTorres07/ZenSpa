@@ -35,10 +35,19 @@ services:
       SECRET_KEY: "cambiar-en-produccion-cambiame"
       ALGORITHM: HS256
       ACCESS_TOKEN_EXPIRE_MINUTES: 480
-      ALLOWED_ORIGINS: "http://localhost:4200,http://localhost"
+      ALLOWED_ORIGINS: "http://localhost:4200,http://localhost,http://localhost:80"
     depends_on:
       db:
         condition: service_healthy
+
+  frontend:
+    build: ./frontend/zenspa
+    container_name: zenspa-frontend
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
 
 volumes:
   mysql_data:
