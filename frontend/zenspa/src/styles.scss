@@ -1,27 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --color-bg: #FAF7F2;
+  --color-bg: #F6F1EA;
+  --color-bg-secondary: #EFE7DD;
   --color-surface: #FFFFFF;
-  --color-primary: #C8956C;
-  --color-primary-dark: #A67550;
-  --color-primary-light: #F0DDD0;
-  --color-text: #2C2C2C;
-  --color-text-muted: #6B6B6B;
-  --color-border: #E8E0D8;
-  --color-success: #4CAF82;
-  --color-warning: #E8A838;
-  --color-danger: #E05C5C;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.10);
+  --color-primary: #C96A2B;
+  --color-primary-hover: #B85D24;
+  --color-secondary: #D9B48F;
+  --color-text: #2B2B2B;
+  --color-text-secondary: #6B625C;
+  --color-text-aux: #7A736D;
+  --color-border: #E7DDD3;
+  --color-success: #6F9F78;
+  --color-warning: #D6A04B;
+  --color-error: #C96A6A;
+
+  --color-header: #F8F3EC;
+  --color-sidebar: #FAF7F2;
+
+  --estado-confirmada-bg: #EDF7EE; --estado-confirmada-text: #4D8A5C;
+  --estado-pendiente-bg: #FFF4E6; --estado-pendiente-text: #C67B28;
+  --estado-cancelada-bg: #FDECEC; --estado-cancelada-text: #C15A5A;
+  --estado-penalidad-bg: #F6E6E6; --estado-penalidad-text: #9D3F3F;
+
+  --shadow-card: 0 8px 30px rgba(43, 43, 43, 0.06);
+  --shadow-card-hover: 0 12px 40px rgba(43, 43, 43, 0.10);
+
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
+  --radius-pill: 999px;
+
   --font-heading: 'Playfair Display', serif;
   --font-body: 'Inter', sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); }
-h1, h2, h3 { font-family: var(--font-heading); }
+html, body { height: 100%; }
+body { background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); font-size: 14px; }
+h1, h2, h3 { font-family: var(--font-heading); font-weight: 600; color: var(--color-text); }

@@ -1,0 +1,11 @@
+/* shell layout is managed in app.component.scss */
+
+.main-content {
+  min-height: calc(100vh - 72px);
+  background: var(--color-bg);
+  padding: 32px;
+}
+.full-screen {
+  min-height: 100vh;
+  padding: 0;
+}

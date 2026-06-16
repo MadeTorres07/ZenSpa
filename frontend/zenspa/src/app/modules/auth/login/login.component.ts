@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -20,6 +20,15 @@ export class LoginComponent {
   });
   loading = false;
   error = '';
+  mostrarPassword = signal(false);
+
+  togglePassword(): void {
+    this.mostrarPassword.update((v) => !v);
+  }
+
+  prevenirDefault(e: Event): void {
+    e.preventDefault();
+  }
 
   onSubmit(): void {
     if (this.form.invalid) return;

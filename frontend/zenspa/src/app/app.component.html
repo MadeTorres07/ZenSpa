@@ -1,0 +1,6 @@
+@if (showNavbar()) {
+  <app-navbar />
+}
+<main class="main-content" [class.full-screen]="!showNavbar()">
+  <router-outlet />
+</main>
