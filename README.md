@@ -27,8 +27,11 @@ Sistema de gestión de citas y servicios para un spa. Desarrollado con **FastAPI
 | Alembic | ✅ Configurado, migración inicial generada y aplicada |
 | Endpoints REST | **36 endpoints** operativos |
 | Angular 19 (standalone) | ✅ App shell, routing, guards, interceptor, auth |
-| Login funcional | ✅ Login con JWT, redirección por rol |
-| Módulos placeholder | ✅ 8 módulos esqueletos con rutas protegidas |
+| Login split‑screen | ✅ Panel decorativo + formulario con toggle password, recordarme |
+| Navbar responsive | ✅ Logo lotus + links por rol + avatar + hamburguesa |
+| Dashboard Admin/Recep | ✅ Hero contextual + KPIs + agenda lateral + mini‑calendario |
+| Docker frontend | ✅ Multi‑stage build (node → nginx), reverse proxy `/api/` |
+| Módulos placeholder restantes | 7 módulos esqueletos con rutas protegidas |
 | Paleta spa premium | ✅ Variables CSS, Playfair Display + Inter |
 
 ---
@@ -85,7 +88,7 @@ uso_productos    (productos consumidos en citas completadas)
 | `/reportes` | ReportesComponent | admin |
 | `/sin-permiso` | SinPermisoComponent | público |
 
-> Todos los módulos excepto login contienen solo un placeholder. El contenido visual se implementa en fases posteriores.
+> Login, Navbar y Dashboard ya tienen contenido visual completo (Fase 7A‑C). Los demás módulos son placeholders.
 
 ---
 
@@ -101,6 +104,7 @@ docker compose up --build
 Esto levanta:
 - **MySQL 8.0** con charset utf8mb4, schema + seed + triggers cargados automáticamente
 - **API** en `http://localhost:8000`
+- **Frontend** (Angular + nginx) en `http://localhost:4200`
 
 > ⚡ **Contraseñas listas de inmediato:** Al arrancar, la API regenera automáticamente los hashes bcrypt de todos los usuarios (`ZenSpa2024!`). No importa en qué máquina corras — funciona siempre sin pasos extra. Ver `backend/app/core/seed_passwords.py`.
 
@@ -145,6 +149,8 @@ npx -y @angular/cli@19 serve
 Esto arranca en `http://localhost:4200`. La app usa el proxy directo a `http://localhost:8000/api/v1` definido en `src/environments/environment.ts`.
 
 Para login rápido: `admin@zenspa.com` / `ZenSpa2024!` → redirige a `/dashboard`.
+
+> **Con Docker**: el frontend se sirve vía nginx con proxy inverso `/api/` → `api:8000`, sin CORS. Usa el perfil `environment.docker.ts` (cambia `apiUrl` a `/api/v1`).
 
 ---
 
@@ -314,11 +320,10 @@ frontend/zenspa/src/
     │       ├── producto.service.ts
     │       └── cita.service.ts    # CRUD + filtros + reportes
     ├── shared/components/
-    │   ├── navbar/                # (pendiente)
-    │   └── sidebar/               # (pendiente)
+    │   └── navbar/                # Logo lotus + menú por rol + avatar + responsive
     └── modules/
-        ├── auth/login/            # LoginComponent (funcional)
-        ├── dashboard/             # Placeholder
+        ├── auth/login/            # Login split-screen (panel decorativo + formulario)
+        ├── dashboard/             # Hero + KPIs + agenda lateral + mini‑calendario
         ├── agenda/                # Placeholder
         ├── clientes/              # Placeholder
         ├── terapeutas/            # Placeholder
@@ -467,12 +472,11 @@ El seed solo se aplica al arrancar, pisando TODAS las contraseñas con `ZenSpa20
 
 ## Próximos pasos
 
-- [ ] Navbar + Sidebar (shared components)
-- [ ] Dashboard con tarjetas de resumen y gráficos
+- [ ] Conectar dashboard a datos reales del backend (endpoints de KPIs)
+- [ ] Tabla de próximas citas, terapeutas activos, acciones rápidas
 - [ ] Módulo de agenda (calendario de citas)
 - [ ] CRUD visual: Clientes, Terapeutas, Cabinas, Servicios, Productos
 - [ ] Creación y edición de citas desde el frontend
 - [ ] Reportes con gráficos (Chart.js)
 - [ ] Pruebas automatizadas (pytest backend + Jasmine/Karma frontend)
 - [ ] Módulo de experiencia / fidelización
-- [ ] Despliegue con Docker compose completo (backend + frontend + nginx)
