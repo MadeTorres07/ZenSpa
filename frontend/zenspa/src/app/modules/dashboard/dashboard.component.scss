@@ -1,6 +1,30 @@
 .dashboard {
   max-width: 1360px;
   margin: 0 auto;
+  position: relative;
+}
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(246, 241, 234, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* ─── Hero ─── */
@@ -111,7 +135,7 @@
 .mini-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   margin-bottom: 12px;
 }
 
@@ -119,15 +143,7 @@
   font-size: 12px;
   font-weight: 600;
   color: var(--color-text);
-}
-
-.mini-arrow {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-text-aux);
-  display: flex;
-  padding: 4px;
+  text-transform: capitalize;
 }
 
 .mini-dias {
@@ -214,6 +230,13 @@
   color: var(--color-text-secondary);
 }
 
+.citas-empty {
+  padding: 32px 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-aux);
+}
+
 .cita-badge {
   font-size: 11px;
   font-weight: 600;
@@ -282,11 +305,16 @@
 
 /* ─── Columna derecha ─── */
 
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 .kpis-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  margin-bottom: 24px;
 }
 
 .kpi-card {
@@ -330,14 +358,378 @@
   margin-top: 4px;
 }
 
+/* ─── Próximas citas ─── */
+
+.proximas-citas {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.section-link {
+  color: var(--color-primary);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.section-link:hover {
+  text-decoration: underline;
+}
+
+.citas-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.citas-table th {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-aux);
+  text-transform: uppercase;
+  padding: 0 12px 12px;
+  text-align: left;
+}
+
+.citas-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.td-hora {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.td-servicio {
+  color: var(--color-text-secondary);
+}
+
+.td-empty {
+  text-align: center;
+  color: var(--color-text-aux);
+  padding: 32px 12px;
+}
+
+.cliente-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cliente-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-bg-secondary, #EADBCB);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.cliente-nombre {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.estado-badge {
+  display: inline-block;
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.bg-confirmada {
+  background: var(--estado-confirmada-bg);
+  color: var(--estado-confirmada-text);
+}
+
+.bg-pendiente {
+  background: var(--estado-pendiente-bg);
+  color: var(--estado-pendiente-text);
+}
+
+.bg-completada {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.bg-cancelada {
+  background: var(--estado-cancelada-bg);
+  color: var(--estado-cancelada-text);
+}
+
+/* ─── Terapeutas activos ─── */
+
+.terapeutas-activos {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+}
+
+.terapeutas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.terapeuta-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  transition: box-shadow 0.2s;
+}
+
+.terapeuta-card:hover {
+  box-shadow: var(--shadow-card);
+}
+
+.terapeuta-avatar-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.terapeuta-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-bg-secondary, #EADBCB);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.terapeuta-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2E7D32;
+  border: 2px solid var(--color-surface);
+}
+
+.terapeuta-nombre {
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.terapeuta-especialidad {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* ─── Bottom grid ─── */
+
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.bottom-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bottom-card-title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+/* servicios */
+
+.servicios-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.servicio-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.servicio-icon {
+  flex-shrink: 0;
+}
+
+.servicio-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.servicio-nombre {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.servicio-reservas {
+  font-size: 11px;
+  color: var(--color-text-aux);
+}
+
+.sparkline {
+  flex-shrink: 0;
+}
+
+/* inventario bajo */
+
+.productos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.producto-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.producto-item:last-child {
+  border-bottom: none;
+}
+
+.producto-nombre {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.producto-stock {
+  font-size: 12px;
+}
+
+.stock-bajo {
+  color: var(--color-warning, #E65100);
+}
+
+.stock-cero {
+  color: var(--color-error, #C62828);
+}
+
+.bottom-card .section-link {
+  margin-top: 12px;
+  display: inline-block;
+}
+
+/* acciones rápidas */
+
+.acciones-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.accion-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  text-decoration: none;
+  font-family: inherit;
+  line-height: 1;
+}
+
+.accion-btn:hover {
+  background: var(--color-bg-secondary, #F0EBE4);
+  border-color: var(--color-primary);
+}
+
+/* helpers */
+
+.sin-datos {
+  font-size: 13px;
+  color: var(--color-text-aux);
+  text-align: center;
+  padding: 24px 0;
+  margin: 0;
+}
+
 /* ─── Responsive ─── */
+
+@media (max-width: 1200px) {
+  .kpis-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .terapeutas-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
 @media (max-width: 1024px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
+}
+
+@media (max-width: 768px) {
   .kpis-grid {
+    grid-template-columns: 1fr;
+  }
+  .terapeutas-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .acciones-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -348,7 +740,7 @@
   .hero-greeting, .hero-name {
     font-size: 28px;
   }
-  .kpis-grid {
-    grid-template-columns: 1fr;
+  .terapeutas-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }

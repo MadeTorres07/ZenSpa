@@ -1,3 +1,9 @@
+@if (cargando()) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+}
+
 <div class="dashboard">
   <section class="hero-section">
     <div class="hero-text">
@@ -17,13 +23,7 @@
           <h3 class="agenda-title">Agenda de hoy</h3>
           <div class="mini-calendario">
             <div class="mini-header">
-              <button class="mini-arrow" aria-label="Semana anterior">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-              </button>
-              <span class="mini-mes">Mayo 2026</span>
-              <button class="mini-arrow" aria-label="Semana siguiente">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-              </button>
+              <span class="mini-mes">{{ mesTexto }}</span>
             </div>
             <div class="mini-dias">
               @for (d of semana; track d.label) {
@@ -37,24 +37,31 @@
         </div>
 
         <div class="citas-lista">
-          @for (cita of citasHoy; track cita.hora + cita.cliente) {
+          @for (cita of citasHoy(); track cita.id) {
             <div class="cita-row">
-              <span class="cita-hora">{{ cita.hora }}</span>
-              <span class="cita-dot" [style.background]="cita.estado === 'confirmada' ? 'var(--estado-confirmada-text)' : cita.estado === 'pendiente' ? 'var(--estado-pendiente-text)' : 'var(--estado-cancelada-text)'"></span>
+              <span class="cita-hora">{{ formatHora(cita.hora_inicio) }}</span>
+              <span class="cita-dot"
+                [style.background]="
+                  esConfirmada(cita.estado) ? 'var(--estado-confirmada-text)' :
+                  esPendiente(cita.estado) ? 'var(--estado-pendiente-text)' :
+                  'var(--estado-cancelada-text)'
+                "></span>
               <div class="cita-info">
-                <span class="cita-servicio">{{ cita.servicio }}</span>
-                <span class="cita-cliente">{{ cita.cliente }} · {{ cita.sala }}</span>
+                <span class="cita-servicio">{{ servicioNombre(cita) }}</span>
+                <span class="cita-cliente">{{ cita.nombre_cliente }} · {{ cita.nombre_cabina }}</span>
               </div>
               <span class="cita-badge"
-                [class.badge-confirmada]="cita.estado === 'confirmada'"
-                [class.badge-pendiente]="cita.estado === 'pendiente'"
-                [class.badge-cancelada]="cita.estado === 'cancelada'"
+                [class.badge-confirmada]="esConfirmada(cita.estado)"
+                [class.badge-pendiente]="esPendiente(cita.estado)"
+                [class.badge-cancelada]="esCancelada(cita.estado)"
               >{{ estadoTexto(cita.estado) }}</span>
             </div>
+          } @empty {
+            <div class="citas-empty">No hay citas programadas para hoy</div>
           }
         </div>
 
-        <a href="/agenda" class="agenda-link">Ver agenda completa →</a>
+        <a routerLink="/agenda" class="agenda-link">Ver agenda completa →</a>
       </div>
 
       <div class="promo-card">
@@ -67,39 +74,209 @@
 
     <div class="dashboard-right">
       <div class="kpis-grid">
-        @for (kpi of kpis; track kpi.label) {
-          <div class="kpi-card">
-            <div class="kpi-top">
-              <span class="kpi-label">{{ kpi.label }}</span>
-              <span class="kpi-icon">
-                @switch (kpi.icono) {
-                  @case ('ingresos') {
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
-                    </svg>
-                  }
-                  @case ('ocupacion') {
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-                    </svg>
-                  }
-                  @case ('citas') {
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-                    </svg>
-                  }
-                  @case ('clientes') {
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
-                    </svg>
-                  }
-                }
-              </span>
-            </div>
-            <span class="kpi-valor">{{ kpi.valor }}</span>
-            <span class="kpi-sub">{{ kpi.sub }}</span>
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Ingresos de hoy</span>
+            <span class="kpi-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
+              </svg>
+            </span>
           </div>
-        }
+          <span class="kpi-valor">$ {{ ingresosHoy().toLocaleString('es-CO') }}</span>
+          <span class="kpi-sub">{{ completadasHoyCount() }} citas completadas</span>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Ocupación de cabinas</span>
+            <span class="kpi-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+              </svg>
+            </span>
+          </div>
+          <span class="kpi-valor">{{ ocupacion() }}%</span>
+          <span class="kpi-sub">{{ cabinas().length }} cabinas disponibles</span>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Citas de hoy</span>
+            <span class="kpi-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </span>
+          </div>
+          <span class="kpi-valor">{{ citasHoyCount() }}</span>
+          <span class="kpi-sub">{{ pendientesHoy() }} pendiente{{ pendientesHoy() !== 1 ? 's' : '' }}</span>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Nuevos clientes</span>
+            <span class="kpi-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
+              </svg>
+            </span>
+          </div>
+          <span class="kpi-valor">{{ nuevosClientes() }}</span>
+          <span class="kpi-sub">registrados hoy</span>
+        </div>
+      </div>
+
+      <div class="proximas-citas">
+        <div class="section-header">
+          <h3 class="section-title">Próximas citas</h3>
+          <a routerLink="/agenda" class="section-link">Ver todas →</a>
+        </div>
+
+        <table class="citas-table">
+          <thead>
+            <tr>
+              <th>HORA</th>
+              <th>CLIENTE</th>
+              <th>SERVICIO</th>
+              <th>TERAPEUTA</th>
+              <th>SALA</th>
+              <th>ESTADO</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (cita of proximasCitas(); track cita.id) {
+              <tr>
+                <td class="td-hora">{{ formatHora(cita.hora_inicio) }}</td>
+                <td>
+                  <div class="cliente-cell">
+                    <span class="cliente-avatar">{{ getInitiales(cita.nombre_cliente) }}</span>
+                    <span class="cliente-nombre">{{ cita.nombre_cliente }}</span>
+                  </div>
+                </td>
+                <td class="td-servicio">{{ servicioNombre(cita) }}</td>
+                <td>{{ cita.nombre_terapeuta }}</td>
+                <td>{{ cita.nombre_cabina }}</td>
+                <td>
+                  <span class="estado-badge"
+                    [class.bg-confirmada]="esConfirmada(cita.estado)"
+                    [class.bg-pendiente]="esPendiente(cita.estado)"
+                    [class.bg-completada]="esCompletada(cita.estado)"
+                    [class.bg-cancelada]="esCancelada(cita.estado)"
+                  >{{ estadoTexto(cita.estado) }}</span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="td-empty">No hay próximas citas</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="terapeutas-activos">
+        <h3 class="section-title">Terapeutas activos</h3>
+        <div class="terapeutas-grid">
+          @for (t of terapeutasActivos(); track t.id) {
+            <div class="terapeuta-card">
+              <div class="terapeuta-avatar-wrapper">
+                <div class="terapeuta-avatar">{{ getInitiales(t.nombre + ' ' + t.apellido) }}</div>
+                <span class="terapeuta-dot" title="Activo"></span>
+              </div>
+              <span class="terapeuta-nombre">{{ t.nombre }} {{ t.apellido }}</span>
+              <span class="terapeuta-especialidad">{{ t.especialidad }}</span>
+            </div>
+          } @empty {
+            <p class="sin-datos">No hay terapeutas activos</p>
+          }
+        </div>
+      </div>
+
+      <div class="bottom-grid">
+        <div class="bottom-card">
+          <h3 class="bottom-card-title">Servicios más reservados</h3>
+          <div class="servicios-lista">
+            @for (s of serviciosPopulares(); track s.servicio_id) {
+              <div class="servicio-item">
+                <svg class="servicio-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2C8 2 4 5 4 9c0 3 2 7 8 13 6-6 8-10 8-13 0-4-4-7-8-7z"/>
+                  <path d="M12 2C8 2 4 5 4 9c0 3 2 7 8 13"/>
+                </svg>
+                <div class="servicio-info">
+                  <span class="servicio-nombre">{{ s.nombre }}</span>
+                  <span class="servicio-reservas">{{ s.total_reservas }} reserva{{ pluralReservas(s.total_reservas) }}</span>
+                </div>
+                <svg class="sparkline" width="48" height="24" viewBox="0 0 48 24">
+                  <polyline points="0,18 12,12 24,16 36,6 48,10"
+                    fill="none" stroke="var(--color-primary)" stroke-width="1.5" opacity="0.5"/>
+                </svg>
+              </div>
+            } @empty {
+              <p class="sin-datos">Sin datos disponibles</p>
+            }
+          </div>
+        </div>
+
+        <div class="bottom-card">
+          <h3 class="bottom-card-title">Inventario bajo</h3>
+          <div class="productos-lista">
+            @for (p of productosBajoStock(); track p.id) {
+              <div class="producto-item">
+                <span class="producto-nombre">{{ p.nombre }}</span>
+                <span class="producto-stock"
+                  [class.stock-bajo]="p.stock > 0"
+                  [class.stock-cero]="p.stock === 0"
+                >Stock: {{ p.stock }} unidad{{ pluralStock(p.stock) }}</span>
+              </div>
+            } @empty {
+              <p class="sin-datos">Todo en stock suficiente</p>
+            }
+          </div>
+          <a routerLink="/inventario" class="section-link">Ver inventario →</a>
+        </div>
+
+        <div class="bottom-card">
+          <h3 class="bottom-card-title">Acciones rápidas</h3>
+          <div class="acciones-grid">
+            <a routerLink="/agenda" class="accion-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              Nueva cita
+            </a>
+            <a routerLink="/clientes" class="accion-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
+              </svg>
+              Nuevo cliente
+            </a>
+            <a routerLink="/agenda" class="accion-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20v-6M9 17h6"/><rect x="3" y="4" width="18" height="18" rx="2"/>
+              </svg>
+              Cobrar servicio
+            </a>
+            <a routerLink="/inventario" class="accion-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+              Venta de producto
+            </a>
+            <a routerLink="/inventario" class="accion-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/>
+              </svg>
+              Uso de inventario
+            </a>
+            <a routerLink="/reportes" class="accion-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+              </svg>
+              Generar reporte
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
