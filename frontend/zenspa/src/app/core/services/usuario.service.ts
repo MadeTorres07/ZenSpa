@@ -14,4 +14,8 @@ export class UsuarioService {
     if (rol) { params = params.set('rol', rol); }
     return this.http.get<Usuario[]>(this.base + '/', { params });
   }
+
+  create(data: any): Observable<Usuario> {
+    return this.http.post<Usuario>(this.base + '/', data);
+  }
 }

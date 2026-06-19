@@ -337,6 +337,25 @@
   cursor: not-allowed;
 }
 
+/* ─── Registro link ─── */
+
+.registro-link {
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-top: 20px;
+}
+
+.registro-link a {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.registro-link a:hover {
+  text-decoration: underline;
+}
+
 /* ─── Badges de seguridad ─── */
 
 .security-badges {
