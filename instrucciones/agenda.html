@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ZenSpa Bienestar - Agendamiento de Citas</title>
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts: Inter or similar for a clean look -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style data-purpose="custom-typography">
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f9fafb;
+        color: #374151;
+      }
+      .accent-text {
+        color: #b45309; /* Spa-like warm accent color */
+      }
+    </style>
+    <style data-purpose="layout-adjustments">
+      /* Custom scrollbar for better aesthetics */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 10px;
+      }
+      .card-shadow {
+        box-shadow:
+          0 1px 3px 0 rgba(0, 0, 0, 0.05),
+          0 1px 2px 0 rgba(0, 0, 0, 0.03);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <!-- BEGIN: MainHeader -->
+    <header
+      class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-50"
+    >
+      <div class="flex items-center space-x-12">
+        <!-- Logo placeholder -->
+        <div class="flex items-center space-x-2">
+          <div
+            class="w-8 h-8 bg-orange-200 rounded-full flex items-center justify-center"
+          >
+            <span class="text-orange-800 font-bold">Z</span>
+          </div>
+          <div class="leading-tight">
+            <h1 class="font-bold text-lg text-gray-800">ZenSpa</h1>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">
+              Bienestar
+            </p>
+          </div>
+        </div>
+        <!-- Navigation -->
+        <nav class="hidden md:flex space-x-8 text-sm font-medium text-gray-500">
+          <a class="hover:text-orange-600" href="#">Inicio</a>
+          <a class="text-orange-600 border-b-2 border-orange-600 pb-1" href="#"
+            >Agenda</a
+          >
+          <a class="hover:text-orange-600" href="#">Clientes</a>
+          <a class="hover:text-orange-600" href="#">Terapeutas</a>
+          <a class="hover:text-orange-600" href="#">Servicios</a>
+          <a class="hover:text-orange-600" href="#">Inventario</a>
+          <a class="hover:text-orange-600" href="#">Reportes</a>
+          <a class="hover:text-orange-600" href="#">Experiencia</a>
+        </nav>
+      </div>
+      <!-- User Profile & Notifications -->
+      <div class="flex items-center space-x-6">
+        <button class="text-gray-400 hover:text-gray-600">
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            ></path>
+          </svg>
+        </button>
+        <div class="relative">
+          <button class="text-gray-400 hover:text-gray-600">
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              ></path>
+            </svg>
+          </button>
+          <span
+            class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center"
+            >3</span
+          >
+        </div>
+        <div class="flex items-center space-x-3 border-l pl-6">
+          <div class="text-right">
+            <p class="text-sm font-semibold">Elena García</p>
+            <p class="text-xs text-gray-400">Administradora</p>
+          </div>
+          <img
+            alt="Admin Avatar"
+            class="w-10 h-10 rounded-full border border-gray-200"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5Qelp2aZjPau-HJ_KJzFMr2rcK8T0KEU8Op7soskhcG9RCG_5KH1JKkHGqjnL2S-aCmn8kqkdhe3TolqsJj5sksekMzZXta1c3Tee7qA9jXmhFaaZmXm3DNUoJwxs6N6EDL0FdeGiMacxLZxB72PmAYBbzVNv3B5HrTSnVDQd1xeU4gPZ3CugGa15tb43hq1pPX-ZHUc0nMvNYOrrk3eByekyuc3h9zy17xee0sKAJK-qsGVvtKIpMS5t2M7GgHBQ-9QEcswT7XXe"
+          />
+        </div>
+      </div>
+    </header>
+    <!-- END: MainHeader -->
+    <main class="max-w-[1600px] mx-auto p-8">
+      <!-- BEGIN: Title Section -->
+      <div class="flex justify-between items-end mb-8">
+        <div>
+          <h2 class="text-3xl font-bold text-gray-800">
+            Agendamiento de citas
+          </h2>
+          <p class="text-gray-500 mt-1">
+            Crea, gestiona y programa citas para tus clientes.
+          </p>
+        </div>
+        <div class="flex space-x-4">
+          <button
+            class="px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 flex items-center"
+          >
+            <svg
+              class="h-5 w-5 mr-2 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              ></path>
+            </svg>
+            Ver calendario
+          </button>
+          <button
+            class="px-6 py-2 bg-orange-700 text-white rounded-lg text-sm font-medium hover:bg-orange-800 flex items-center"
+          >
+            <span class="mr-2 text-xl">+</span> Nueva cita
+          </button>
+        </div>
+      </div>
+      <!-- END: Title Section -->
+      <div class="grid grid-cols-12 gap-6">
+        <!-- BEGIN: LeftSidebar (Cliente) -->
+        <aside class="col-span-3 space-y-6">
+          <!-- Section 1: Seleccionar cliente -->
+          <section
+            class="bg-white rounded-xl border border-gray-100 p-5 card-shadow"
+          >
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-bold text-gray-800">1. Seleccionar cliente</h3>
+            </div>
+            <div class="relative mb-4">
+              <span
+                class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
+              >
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </span>
+              <input
+                class="w-full pl-9 pr-4 py-2 border-gray-200 rounded-lg text-sm focus:ring-orange-500 focus:border-orange-500"
+                placeholder="Buscar cliente..."
+                type="text"
+              />
+            </div>
+            <div class="flex justify-end mb-3">
+              <button class="text-xs font-bold text-orange-700 hover:underline">
+                + Nuevo cliente
+              </button>
+            </div>
+            <div class="space-y-3">
+              <!-- Selected Client Item -->
+              <div
+                class="flex items-center p-3 rounded-lg border-2 border-orange-200 bg-orange-50 cursor-pointer"
+              >
+                <img
+                  alt="Sofia Ramirez"
+                  class="w-10 h-10 rounded-full mr-3"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtHCYCa5fhgUAMhJPcigUDOZeURDPC3HsaxhvpX-uDaQUbpfULbEDj4VV5Ae9MSBVg0dOGyzz_7eSzfcQYXfMBoPuRHiewnZ8zIg3V950ln0_tvXZQ64bXMEjvt-UnSSiqSSH0yK2-uv6mkRUTiqMG6nT5qyKeVCNwNrhF1rLmzsThmUc741LhLKtjYeel8Sv8uvQ-vl40r_5WiT2ayXRbsgIMiLaLfuj_FTUB38W75LOpLx2MbgjZttVdrCTr6x9gOAcNa_heHBPi"
+                />
+                <div class="flex-1">
+                  <p class="text-sm font-bold text-gray-800">Sofía Ramírez</p>
+                  <p class="text-[11px] text-gray-500">
+                    sofia.ramirez@email.com
+                  </p>
+                  <p class="text-[11px] text-gray-500">310 765 4321</p>
+                </div>
+                <svg
+                  class="h-4 w-4 text-orange-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 5l7 7-7 7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <!-- Other Clients -->
+              <div
+                class="flex items-center p-3 rounded-lg border border-gray-100 hover:bg-gray-50 cursor-pointer"
+              >
+                <img
+                  alt="Maria Lopez"
+                  class="w-10 h-10 rounded-full mr-3"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOT7KQQ7n-L7ysXy3YWkCAV5Nb5pv-HMELZKLVgcRcPe--PZfiMkVTN9Pl_rrZOIhHWqoJ0Pd4xkUgdte_D_gF0xVFNszz3B1etEqJF4FHvEbHX_ZioNUMVh7B-gJGtZUixzNNOS7Bs_RjmY2bieZM2Am-DPEsLnvRrXpDcYgaKpQCJBjfnhfCwy9Lg7Fb8ryuD9LTdw7T5pOq1_lJ8gjrcrH33xovgkVjvmQkProrT-53f-2nm3KRGLinkihqcJ1LTo-5yekZpga7"
+                />
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-gray-800">María López</p>
+                  <p class="text-[11px] text-gray-500">321 456 7890</p>
+                </div>
+              </div>
+              <div
+                class="flex items-center p-3 rounded-lg border border-gray-100 hover:bg-gray-50 cursor-pointer"
+              >
+                <img
+                  alt="Javier Torres"
+                  class="w-10 h-10 rounded-full mr-3"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBSkhc7lMpNamqf3NFPpCfvylBrH9TYqM430vJLgdxt2c-Re_SXLYmzb6p45KDvvj-p5PMKuSIflb_dzb3BhQapbv-3ogeuEPZaXNfBhKKKweOcktNW1MuWRjpWnr8j2-KqEo45EeAq4iyPUq5xqAcy4k90XjiAz9WZC_Iu4GahYW5eoEmvXh_bsb3p7uDIVB61k2BBUNxKEfoC__k_vdi3F4QU5-UlTb3ZCjcJ1vsen-oCWJkDY5klIWPmdld4jIWGZv5WJfBFxxf"
+                />
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-gray-800">Javier Torres</p>
+                  <p class="text-[11px] text-gray-500">300 555 1234</p>
+                </div>
+              </div>
+            </div>
+            <button
+              class="w-full mt-4 text-center text-xs font-semibold text-orange-700 hover:underline"
+            >
+              Ver todos los clientes →
+            </button>
+          </section>
+          <!-- Section: Información del cliente -->
+          <section
+            class="bg-white rounded-xl border border-gray-100 p-5 card-shadow"
+          >
+            <h3 class="font-bold text-gray-800 mb-4">
+              Información del cliente
+            </h3>
+            <div class="flex items-center mb-4">
+              <img
+                alt="Sofia Ramirez"
+                class="w-12 h-12 rounded-full mr-4"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEM4WAG6SiGKutUXYVul2ISxmOnen52bSArPS9Y0EQwD0NiuJepg0raopHC6H04l4GfhSHQd9-96b0VS3ONSl0Iqs3AR6iXJBIIRbdYjaSe-bbIHMDzIH_71UiXTbT-J-6BWt7eer10gwOyNPPToMIKsJSutB1c5ghezPFBxJQSjM31k7KHhox6Sg6uxuamyim_24A92iAhSseR10G9KFpbLUUDkdxzsKMTSvDKaQ2-bGx6-QsGG-F3kh895o5kpbkngdc0ETewhNB"
+              />
+              <div>
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm font-bold text-gray-800">Sofía Ramírez</p>
+                  <span
+                    class="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full font-bold"
+                    >Activo</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="space-y-3 text-xs text-gray-600">
+              <div class="flex items-start">
+                <svg
+                  class="h-4 w-4 mr-2 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+                <span>22 de julio de 1992 (31 años)</span>
+              </div>
+              <div class="flex items-start">
+                <svg
+                  class="h-4 w-4 mr-2 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+                <span>Piel sensible. No usar fragancias artificiales.</span>
+              </div>
+              <div class="flex items-start">
+                <svg
+                  class="h-4 w-4 mr-2 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+                <span>Prefiere faciales y aromaterapia.</span>
+              </div>
+            </div>
+            <button
+              class="w-full mt-6 py-2 border border-gray-200 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center"
+            >
+              <svg
+                class="h-4 w-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                ></path>
+              </svg>
+              Ver historial completo
+            </button>
+          </section>
+        </aside>
+        <!-- END: LeftSidebar -->
+        <!-- BEGIN: CenterPanel (Configurar cita) -->
+        <main class="col-span-6 space-y-6">
+          <div
+            class="bg-white rounded-xl border border-gray-100 p-6 card-shadow"
+          >
+            <h3 class="font-bold text-gray-800 mb-6">2. Configurar cita</h3>
+            <!-- Row: Fecha, Duración, Hora -->
+            <div class="grid grid-cols-3 gap-4 mb-8">
+              <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-2"
+                  >Fecha</label
+                >
+                <div class="relative">
+                  <input
+                    class="w-full py-2.5 pl-10 pr-4 border-gray-200 rounded-lg text-sm"
+                    type="text"
+                    value="14 de mayo de 2024"
+                  />
+                  <svg
+                    class="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-2"
+                  >Duración aproximada</label
+                >
+                <div class="relative">
+                  <select
+                    class="w-full py-2.5 pl-10 pr-4 border-gray-200 rounded-lg text-sm appearance-none"
+                  >
+                    <option>60 min</option>
+                    <option>90 min</option>
+                    <option>120 min</option>
+                  </select>
+                  <svg
+                    class="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-2"
+                  >Buscar horario disponible</label
+                >
+                <select
+                  class="w-full py-2.5 px-4 border-gray-200 rounded-lg text-sm appearance-none"
+                >
+                  <option>Cualquier hora</option>
+                  <option>Mañana</option>
+                  <option>Tarde</option>
+                </select>
+              </div>
+            </div>
+            <!-- Section: Terapeuta -->
+            <div class="mb-8">
+              <label class="block text-xs font-semibold text-gray-500 mb-3"
+                >Terapeuta</label
+              >
+              <div class="flex space-x-4">
+                <!-- Selected Therapist -->
+                <div
+                  class="flex-1 flex items-center p-2 rounded-lg border-2 border-orange-200 bg-orange-50 cursor-pointer"
+                >
+                  <img
+                    alt="Ana Torres"
+                    class="w-10 h-10 rounded-full mr-3 border-2 border-green-500"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5WCB6diCaQs0Le6f7L5Ly1OvfDpAAkAXlf8Xq9qeVcYBm08mw3OLe66OqmVd_3iremGX8zp79WNVduOCOsI3g5VLY3Al02i4AGJ9RX5zjKIebio2cXZ5VlcV74rgmKsv62bjbn7MpngWTC7UpgS7JqlL2tR4YS3VP1OSJpDPI_PxaZqwVAT1HQEL-V9f6aVQNDlJxRrdaXQGIOqtt4FUKaLzILSUIo6c0eiGGhBPbbRyF_gZIeweD5E2jpPEY7NpMV6jaexYiAFNj"
+                  />
+                  <div>
+                    <p class="text-xs font-bold text-gray-800">Ana Torres</p>
+                    <p class="text-[10px] text-gray-500 uppercase">Masajes</p>
+                  </div>
+                </div>
+                <!-- Other Therapist -->
+                <div
+                  class="flex-1 flex items-center p-2 rounded-lg border border-gray-100 hover:bg-gray-50 cursor-pointer"
+                >
+                  <img
+                    alt="Carla Ruiz"
+                    class="w-10 h-10 rounded-full mr-3 border-2 border-green-500"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYX63WIix4z8L9w8kkdsYZL-2qBj1O5e5674n1SR_TSUN8ruBf9m0kEgCum_v9j0J1z7hNP2n_5f_ZJqGWB80BqRHJS8Es8ih3X2a2OIA33FIRK16MgTFYv62eV3FmxaOIJo7BFnqGvYqd0BN_h_toXh7JdMVGiE8oCX5VXp9LFs1-MSq8dtUN50qe8PFFN0qWCttikGHzP7VrOB3pBS3jfPCeWZZpL2sHLutm_DdAlhfeg8ULhKyAe1hrv8NGIcYzlqBTIuLnRmgF"
+                  />
+                  <div>
+                    <p class="text-xs font-bold text-gray-800">Carla Ruiz</p>
+                    <p class="text-[10px] text-gray-500 uppercase">Faciales</p>
+                  </div>
+                </div>
+                <div
+                  class="flex-1 flex items-center p-2 rounded-lg border border-gray-100 hover:bg-gray-50 cursor-pointer"
+                >
+                  <img
+                    alt="Miguel Angel"
+                    class="w-10 h-10 rounded-full mr-3 border-2 border-green-500"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6BlFaUZAsfUiBO24rqnOID5u3xOzUx8O8wzb-waX0_nQ8fi6_WcPTkymrhfkqIQZi8pHcdb7L9f9n8_6qnV1WlKL6tfHJSXId03dLKL3wVLi8yIY6cxS0WsUl38tM6ZGYSrVnnNVHuH2dUJXYJr0UkQF0dBVToiEsE3-vv8oM5EZlrFshDzyBVa-hOIP86_-0r16mWarmPOPYstzJUC8sD6npK5u6Wfo9srX5iqvAvxax46IFhrYFSkdxCxya5wqD8M4tLH-BvPPJ"
+                  />
+                  <div>
+                    <p class="text-xs font-bold text-gray-800">Miguel Ángel</p>
+                    <p class="text-[10px] text-gray-500 uppercase">Terapias</p>
+                  </div>
+                </div>
+                <!-- Carousel Navigation -->
+                <button class="p-2 text-gray-300 hover:text-gray-500">
+                  <svg
+                    class="h-6 w-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M9 5l7 7-7 7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <!-- Section: Servicios -->
+            <div class="grid grid-cols-2 gap-8 mb-8">
+              <div data-purpose="service-list">
+                <label class="block text-xs font-semibold text-gray-500 mb-3"
+                  >Servicio(s)</label
+                >
+                <div class="space-y-1">
+                  <!-- Service Item -->
+                  <div
+                    class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 group border border-transparent hover:border-gray-100"
+                  >
+                    <div class="flex items-center">
+                      <div
+                        class="w-8 h-8 bg-orange-100 rounded flex items-center justify-center mr-3"
+                      >
+                        <span class="text-orange-600 text-[10px]">🌸</span>
+                      </div>
+                      <div>
+                        <p class="text-xs font-bold text-gray-800">
+                          Masaje Relajante
+                        </p>
+                        <p class="text-[10px] text-gray-500">
+                          Relaja tu cuerpo y mente.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-6">
+                      <span class="text-[10px] text-gray-400">60 min</span>
+                      <span class="text-[11px] font-bold text-gray-800"
+                        >$ 85,000</span
+                      >
+                      <button
+                        class="text-gray-300 group-hover:text-orange-600 font-bold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                  <!-- Service Item -->
+                  <div
+                    class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 group"
+                  >
+                    <div class="flex items-center">
+                      <div
+                        class="w-8 h-8 bg-orange-100 rounded flex items-center justify-center mr-3"
+                      >
+                        <span class="text-orange-600 text-[10px]">💆</span>
+                      </div>
+                      <div>
+                        <p class="text-xs font-bold text-gray-800">
+                          Masaje Deportivo
+                        </p>
+                        <p class="text-[10px] text-gray-500">
+                          Alivia tensión muscular profunda.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-6">
+                      <span class="text-[10px] text-gray-400">90 min</span>
+                      <span class="text-[11px] font-bold text-gray-800"
+                        >$ 130,000</span
+                      >
+                      <button
+                        class="text-gray-300 group-hover:text-orange-600 font-bold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                  <!-- Service Item Active -->
+                  <div
+                    class="flex items-center justify-between p-3 rounded-lg bg-orange-50 border border-orange-100"
+                  >
+                    <div class="flex items-center">
+                      <div
+                        class="w-8 h-8 bg-orange-200 rounded flex items-center justify-center mr-3"
+                      >
+                        <span class="text-orange-800 text-[10px]">🧖</span>
+                      </div>
+                      <div>
+                        <p class="text-xs font-bold text-gray-800">
+                          Aromaterapia con Masaje
+                        </p>
+                        <p class="text-[10px] text-gray-500">
+                          Relajación con aceites esenciales.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="flex items-center space-x-6">
+                      <span class="text-[10px] text-gray-600">75 min</span>
+                      <span class="text-[11px] font-bold text-gray-800"
+                        >$ 120,000</span
+                      >
+                      <button class="text-orange-600 font-bold">✓</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Selected Services Summary Sub-box -->
+              <div class="bg-gray-50 rounded-xl p-5 border border-gray-100">
+                <label
+                  class="block text-[11px] font-bold text-gray-700 mb-4 uppercase tracking-wider"
+                  >Servicios seleccionados</label
+                >
+                <div class="space-y-3 mb-10">
+                  <div class="flex justify-between items-center text-[11px]">
+                    <div>
+                      <p class="font-bold">Masaje Relajante</p>
+                      <p class="text-gray-500">60 min | $ 85,000</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-red-500">✕</button>
+                  </div>
+                  <div class="flex justify-between items-center text-[11px]">
+                    <div>
+                      <p class="font-bold">Aromaterapia con Masaje</p>
+                      <p class="text-gray-500">75 min | $ 120,000</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-red-500">✕</button>
+                  </div>
+                </div>
+                <div
+                  class="flex justify-between items-baseline border-t border-gray-200 pt-4"
+                >
+                  <span class="text-xs font-bold text-gray-500">Subtotal</span>
+                  <span class="text-lg font-bold accent-text">$ 205,000</span>
+                </div>
+              </div>
+            </div>
+            <!-- Section: Cabina -->
+            <div class="mb-8">
+              <label class="block text-xs font-semibold text-gray-500 mb-4"
+                >Cabina</label
+              >
+              <div class="grid grid-cols-4 gap-4">
+                <!-- Cabin Selection: Serenidad -->
+                <div
+                  class="relative rounded-xl border-2 border-orange-500 overflow-hidden cursor-pointer group"
+                >
+                  <img
+                    alt="Cabina Serenidad"
+                    class="w-full h-24 object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuByuWiwL1uGip25EvAMLvlerFcJs0Zs4lCqbHPJI9HQaYb9i9IsF6390UTQJylxQbT_rjA0YbR1soAAvf4dxiPVQDK-491VpC1_rDMDSDvWz-HwvLCeb4tk4uSYTTDv0ycAyBaV9zew1FMVbxvt8npa-qs8Y_9TB81LTMA3vbtPdsG8zKrJQDhRH4hgOH_rBIdY1M0UCJNkv9Bl4IkXw-Xphj1LRmfasQK-_fg0tPJyd4_ZX6WL6SnN_3ROiEhyowRyTjx615afQCbl"
+                  />
+                  <div
+                    class="absolute top-2 right-2 bg-orange-600 text-white p-1 rounded-full"
+                  >
+                    <svg
+                      class="h-3 w-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5 13l4 4L19 7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="3"
+                      ></path>
+                    </svg>
+                  </div>
+                  <div class="p-2 bg-white">
+                    <p class="text-[11px] font-bold">Serenidad</p>
+                    <p class="text-[9px] text-gray-500 uppercase">Masajes</p>
+                    <p class="text-[9px] text-green-600 font-semibold mt-1">
+                      Disponible
+                    </p>
+                  </div>
+                </div>
+                <!-- Cabin Selection: Armonia -->
+                <div
+                  class="rounded-xl border border-gray-200 overflow-hidden cursor-pointer hover:border-orange-300"
+                >
+                  <img
+                    alt="Cabina Armonia"
+                    class="w-full h-24 object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8Jei3ZmpPNd-oARpPN7reJ4bnbZsD1B3ZRrTf1LyDtSBokgF7BPdnhsGZKRui-_M2hKPtIIojT_wzRlG7Zc1K-ZY54cGD8nAKnJDwuRHBeGJVT2GAOrB9M_rsCOfdwOdr7q_N49n8muJm_HJDGdxZJTNWd7pu9ktCU4RYWTFrBwLvMiLOye3pSYaAWbGzFX4z_GpkH_7rx_jCuQ2RggJSmZAHSbuiepYJy-zZWGUJQdMaAcLEANaRip7rw7CE1m_IfVI4nDm4o3xb"
+                  />
+                  <div class="p-2">
+                    <p class="text-[11px] font-bold">Armonía</p>
+                    <p class="text-[9px] text-gray-500 uppercase">Faciales</p>
+                    <p class="text-[9px] text-green-600 font-semibold mt-1">
+                      Disponible
+                    </p>
+                  </div>
+                </div>
+                <!-- Cabin Selection: Aqua -->
+                <div
+                  class="rounded-xl border border-gray-200 overflow-hidden cursor-pointer hover:border-orange-300"
+                >
+                  <img
+                    alt="Cabina Aqua"
+                    class="w-full h-24 object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-rWl2O4KBPhJr_C3cN8XFz4faRxVxDx7umlz7DQUg67DFQQ4e1MKeHzTg2y-0TLdTfeB3Y_OM8OjwRJeYDtWBYxohmUE6ax1liqb1CSesMxCg7O5EqJQ9sGr6-rJL_GgPfCkDdlvZUz5q4wrBa3pH2qAD0YtSZZNy5HDQTr2TQwJGc7n1yNdAi1Xbsv_kVYyk0rvGFpiFvM36qPizldVF5bUXWV-xqxZq097CNRBzq_MzIWTwW9yqbM6NQnV2pArwQWq1REk9X7Ol"
+                  />
+                  <div class="p-2">
+                    <p class="text-[11px] font-bold">Aqua</p>
+                    <p class="text-[9px] text-gray-500 uppercase">
+                      Hidroterapia
+                    </p>
+                    <p class="text-[9px] text-green-600 font-semibold mt-1">
+                      Disponible
+                    </p>
+                  </div>
+                </div>
+                <!-- Cabin Selection: Aroma -->
+                <div
+                  class="rounded-xl border border-gray-200 overflow-hidden cursor-pointer hover:border-orange-300"
+                >
+                  <img
+                    alt="Cabina Aroma"
+                    class="w-full h-24 object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5MhV2ERFb0J7G2LwEggycXgbXg6CDbHknzPUQNvNwos1zECKtNXqOzv6oeJ714KCUflZHIpCwdPBKDXhO72fO7L-_6PlC45fs5_0tpCm1R9CmaU8ajPBH_eMxwohzLOzk6bFK9OwdiIUreckdbToMChaJC7OtDse542QZa8p6D6vZBeSfXbEz-uDURT6ATC_bEa49MGGEeSuMxBVHvVifzBcrfjeudXOzTVwSxLy8kx5uE1VVNT-NOyti2r9hbHQGTpg6AHyL86QC"
+                  />
+                  <div class="p-2">
+                    <p class="text-[11px] font-bold">Aroma</p>
+                    <p class="text-[9px] text-gray-500 uppercase">
+                      Aromaterapia
+                    </p>
+                    <p class="text-[9px] text-green-600 font-semibold mt-1">
+                      Disponible
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Section: Observaciones -->
+            <div>
+              <label class="block text-xs font-semibold text-gray-500 mb-2"
+                >Observaciones (opcional)</label
+              >
+              <textarea
+                class="w-full border-gray-200 rounded-lg text-sm h-24 p-4"
+                placeholder="Notas especiales, preferencias del cliente, recomendaciones..."
+              ></textarea>
+              <p class="text-right text-[10px] text-gray-400 mt-1">0/250</p>
+            </div>
+          </div>
+        </main>
+        <!-- END: CenterPanel -->
+        <!-- BEGIN: RightSidebar (Resumen) -->
+        <aside class="col-span-3">
+          <section
+            class="bg-white rounded-xl border border-gray-100 p-6 card-shadow sticky top-28"
+          >
+            <h3 class="font-bold text-gray-800 mb-6">3. Resumen de la cita</h3>
+            <div class="space-y-6">
+              <!-- Client Summary -->
+              <div data-purpose="client-summary">
+                <label
+                  class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3"
+                  >Cliente</label
+                >
+                <div class="flex items-center">
+                  <img
+                    alt="Sofia Ramirez"
+                    class="w-10 h-10 rounded-full mr-3"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBhwg6XPz39U04PhWvAlBQM73qkEozUwzYCaGHBfxxfyHHRVvFb2s9-cWpDLEI4VFxUBRhjK9raqnGt0HRxXRU2mpqXF6mEBr-XfrpyoVyXLSknQZvzD7A96ZG-8O5nkDeVIxL9GvAFynDu1KFT81D2alfNtOP3o0-ix_B__YKtjQ-d04GBarIMw4qo33UiM8FfmpCfAu2TPz5AwP-PH1rGHGVW-bfktFpZZbmn9n4hSBzLDCCSf4wYYKXznT3GwWaMrWfd4dNZrp8"
+                  />
+                  <div>
+                    <p class="text-sm font-bold text-gray-800">Sofía Ramírez</p>
+                    <p class="text-xs text-gray-500">310 765 4321</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Therapist Summary -->
+              <div data-purpose="therapist-summary">
+                <label
+                  class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3"
+                  >Terapeuta</label
+                >
+                <div class="flex items-center">
+                  <img
+                    alt="Ana Torres"
+                    class="w-10 h-10 rounded-full mr-3"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmbYzzTB6g14Lju4_6DLwkD5PpvkfGvfb-2gDekaf7hjkzqPaKbyP_3599vFejhAmadDkg46MK1bHBQAOZ07OTe4Dq0GjDTy7einTyfYBKLv6ycx8SEfXENig6rFnOO8l1v6MBh_Ibycd9nQyBDwvxaBv0HdjO9TQi_VlnZz-0PziwarSTu-iXvE18qaX-gciatAv8IrfElP_NvqJdaE20VNX2FOtw01jil1e2CLzbvcztHG04Mlb_8kv1acOTwYtoK43UJK3AWJVr"
+                  />
+                  <div>
+                    <p class="text-sm font-bold text-gray-800">Ana Torres</p>
+                    <p class="text-xs text-gray-500">Masajes</p>
+                  </div>
+                </div>
+              </div>
+              <!-- DateTime Summary -->
+              <div data-purpose="datetime-summary">
+                <label
+                  class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3"
+                  >Fecha y hora</label
+                >
+                <div class="space-y-2 text-xs font-medium text-gray-700">
+                  <div class="flex items-center">
+                    <svg
+                      class="h-4 w-4 mr-2 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                      ></path>
+                    </svg>
+                    <span>Martes, 14 de mayo de 2024</span>
+                  </div>
+                  <div class="flex items-center">
+                    <svg
+                      class="h-4 w-4 mr-2 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                      ></path>
+                    </svg>
+                    <span>10:30 AM - 12:15 PM</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Cabin Summary -->
+              <div data-purpose="cabin-summary">
+                <label
+                  class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3"
+                  >Cabina</label
+                >
+                <div class="flex items-center">
+                  <div
+                    class="w-10 h-10 bg-orange-50 rounded flex items-center justify-center mr-3 border border-orange-100"
+                  >
+                    <span class="text-lg">🏨</span>
+                  </div>
+                  <div>
+                    <p class="text-sm font-bold text-gray-800">Serenidad</p>
+                    <p class="text-[10px] text-gray-500">Masajes</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Services Detail -->
+              <div data-purpose="services-summary">
+                <label
+                  class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3"
+                  >Servicios (2)</label
+                >
+                <div class="space-y-3 text-[11px]">
+                  <div class="flex justify-between">
+                    <span class="text-gray-700">Masaje Relajante</span>
+                    <div class="space-x-4">
+                      <span class="text-gray-400">60 min</span>
+                      <span class="font-bold text-gray-800">$ 85,000</span>
+                    </div>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-700">Aromaterapia con Masaje</span>
+                    <div class="space-x-4">
+                      <span class="text-gray-400">75 min</span>
+                      <span class="font-bold text-gray-800">$ 120,000</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Price Breakdown -->
+              <div class="border-t border-gray-100 pt-6 space-y-3">
+                <div
+                  class="flex justify-between text-xs font-medium text-gray-500"
+                >
+                  <span>Subtotal</span>
+                  <span>$ 205,000</span>
+                </div>
+                <div
+                  class="flex justify-between text-xs font-medium text-gray-500"
+                >
+                  <span>IVA (19%)</span>
+                  <span>$ 38,950</span>
+                </div>
+                <div class="flex justify-between items-center pt-2">
+                  <span class="text-sm font-bold text-gray-800">Total</span>
+                  <span class="text-2xl font-bold accent-text">$ 243,950</span>
+                </div>
+              </div>
+              <!-- Confirm Button -->
+              <button
+                class="w-full py-4 bg-orange-700 text-white rounded-xl font-bold text-sm hover:bg-orange-800 shadow-lg shadow-orange-700/20 transition-all flex items-center justify-center"
+              >
+                <svg
+                  class="h-5 w-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+                Confirmar cita
+              </button>
+              <p
+                class="text-[10px] text-gray-400 text-center px-4 leading-relaxed"
+              >
+                Se enviará una confirmación al cliente por email y WhatsApp.
+              </p>
+            </div>
+          </section>
+        </aside>
+        <!-- END: RightSidebar -->
+      </div>
+    </main>
+  </body>
+</html>

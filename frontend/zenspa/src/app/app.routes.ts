@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
+import { LandingComponent } from './modules/landing/landing.component';
 import { LoginComponent } from './modules/auth/login/login.component';
 import { DashboardComponent } from './modules/dashboard/dashboard.component';
 import { AgendaComponent } from './modules/agenda/agenda.component';
@@ -13,6 +14,7 @@ import { ReportesComponent } from './modules/reportes/reportes.component';
 import { SinPermisoComponent } from './modules/reportes/sin-permiso.component';
 
 export const routes: Routes = [
+  { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },
   {
     path: '',

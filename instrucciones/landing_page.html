@@ -1,0 +1,441 @@
+<!DOCTYPE html><html lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ZenSpa Bienestar - Bienestar que transforma tu día</title>
+<!-- Google Fonts: Libre Caslon Text and Inter (system default fallback) -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            terracota: '#c2541a',
+            cream: '#fcf8f3',
+            'soft-green': '#e8f0e6',
+            'deep-green': '#2c4c3e',
+            'sage': '#8ea693'
+          },
+          fontFamily: {
+            serif: ['"Libre Caslon Text"', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-typography">
+    .heading-serif { font-family: "Libre Caslon Text", serif; }
+    .italic-accent { font-style: italic; font-family: "Libre Caslon Text", serif; }
+  </style>
+<style data-purpose="layout-adjustments">
+    .card-shadow { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05); }
+    .hero-mask {
+      clip-path: circle(70% at 90% 50%);
+    }
+    @media (max-width: 768px) {
+      .hero-mask { clip-path: none; }
+    }
+  </style>
+</head>
+<body class="bg-cream font-sans text-gray-800 antialiased">
+<!-- BEGIN: MainHeader -->
+<header class="sticky top-0 z-50 bg-cream/90 backdrop-blur-md border-b border-gray-100">
+<div class="container mx-auto px-4 py-4 flex items-center justify-between">
+<!-- Logo -->
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 bg-terracota rounded-full flex items-center justify-center">
+<img alt="Logo Icon" class="rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzp5woU_aRH9SSkfXyUx7B9d15NA-6a-CKA08XhsWzdYowhk68ZzCzumFzDvA0DvicUBYC55KVL_WxE-KQLMQnvMfCwr1nicfaTnECgmKxZUzCO19AYZqvU_LYZY3YN2EcaXziTQm-I25lBHS_N0uygJkvbQ8CNqJlUx4nEAoxbWknqzz_NPhLVjhSolA6r2EGGodTGMb8T3cMlRKRuctN-cmN-WqEc1bOdSqyclQbaSExKzsMamMbwpnY5kZeXHrZyp2hriQOvymF">
+</div>
+<div class="flex flex-col leading-none">
+<span class="text-xl font-serif font-bold text-gray-900 tracking-tight">ZENSPA</span>
+<span class="text-[10px] tracking-[0.2em] font-semibold text-gray-500">BIENESTAR</span>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+<a class="text-terracota border-b-2 border-terracota pb-1" href="#">Inicio</a>
+<a class="hover:text-terracota transition-colors" href="#">Servicios</a>
+<a class="hover:text-terracota transition-colors" href="#">Terapeutas</a>
+<a class="hover:text-terracota transition-colors" href="#">Experiencia</a>
+<a class="hover:text-terracota transition-colors" href="#">Nosotros</a>
+<a class="hover:text-terracota transition-colors" href="#">Contacto</a>
+</nav>
+<!-- CTA Button -->
+<div class="flex items-center gap-4">
+<a class="hidden lg:flex items-center gap-2 bg-terracota text-white px-6 py-2.5 rounded-md font-medium text-sm hover:bg-opacity-90 transition-all shadow-lg shadow-terracota/20" href="#">
+          Reservar ahora
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+<button class="md:hidden p-2 text-gray-600">
+<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M4 12h16m-7 6h7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: HeroSection -->
+<section class="relative overflow-hidden pt-12 pb-24 md:pt-20 md:pb-32" data-purpose="hero-container">
+<div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
+<!-- Content -->
+<div class="w-full md:w-1/2 z-10">
+<h1 class="text-5xl md:text-7xl font-serif text-gray-900 leading-[1.1] mb-6">
+          Bienestar que<br>
+<span class="italic-accent text-terracota">transforma tu día.</span>
+</h1>
+<p class="text-lg text-gray-600 mb-10 max-w-lg leading-relaxed">
+          En ZenSpa Bienestar creamos experiencias únicas de relajación, cuidado y equilibrio para tu cuerpo, mente y espíritu.
+        </p>
+<div class="flex flex-wrap gap-4 mb-12">
+<button class="bg-terracota text-white px-8 py-4 rounded-md font-semibold flex items-center gap-2 hover:translate-y-[-2px] transition-all shadow-xl shadow-terracota/20">
+            Reservar una sesión
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" fill-rule="evenodd"></path></svg>
+</button>
+<button class="border border-gray-300 bg-white/50 backdrop-blur-sm text-gray-700 px-8 py-4 rounded-md font-semibold flex items-center gap-2 hover:bg-white transition-all">
+            Conoce nuestros servicios
+            <span class="w-6 h-6 rounded-full border border-gray-400 flex items-center justify-center">
+<svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" fill-rule="evenodd"></path></svg>
+</span>
+</button>
+</div>
+<!-- Social Proof Avatars -->
+<div class="flex items-center gap-4">
+<div class="flex -space-x-3">
+<img alt="User 1" class="w-10 h-10 rounded-full border-2 border-cream" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1VAU7RchoyJDmAla8JcMnKKS5CoY3asZw30kxxlNqtz0tJZTeS_J5xuuzHLT8a1R5KTvdQPcERNk9jgxPny911or4pAEnOzbEftFRyVv7NpUJhNDbZfMh4UkBNje4BvEcpt6V5-s3klofiPk1QnU3Rmxtvezfsx0IRkDQ1Pa9cLTaG3HhThQ4lrZ177WtwxSopU4Hxsc_8NGsX0FKJ0g-XWU8PGGmpGIzNQGPJ3xAz2qq9qcGssWqm-GrM_W5bAlbJjvVd9DMKFJs">
+<img alt="User 2" class="w-10 h-10 rounded-full border-2 border-cream" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCA9Dc2NYyI4X2g5wziiKV_2q50376IUFurFPmauU5c1DozBZhw6Knx4f38zMD5SHQlOavBtQsW4r1Biz3CxYdmBEElOztLCE0pxvYknnkpDkD7t6ObmU7Jy-DHQMndGfvroEYvNs6JR350LHTKvKQ0q0TyilLBYHgH9EyJ0yfm1TqvPaUZ4rZUDIvOyhhzPrPUydQiWADt6yN2mfjugL4xcchnrSBX7EoANDgCloIJVECwEr-RqXCK0z0NuId_dT1J9cLMz4V0xmvj">
+<img alt="User 3" class="w-10 h-10 rounded-full border-2 border-cream" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8i396tDAQbAsvg8Trw8k7cqUZ3yK23hOoD7cNTTiqDkazJ0jsnjdwihUjI6gBWiGD_5H1pClz4bDrExCXZ1bM8Zd-NcWHqkMX-P-lv94EheBQwOaRSdKck8W-B4f087SHiUc0O6BRoG_WZpPBuoDxz3Cbj9gRWtWwIfkeQ60RdUMFREN6AkBiedTvREpGzdihg28_E2RBxCnJdYqQkkoSQHAvX8JJDzk0pk412BE4yzJOyTyVaa-JNmkMwWy6exnBBgXFbrGv8aig">
+<img alt="User 4" class="w-10 h-10 rounded-full border-2 border-cream" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARecAiXndBqYzPtfxqtoaf4ijRyKhai4hEgzz-IH83Zz109T7AamsMnN30HfUDgm20CkVVAqTfumjHgrMfEDtqB6keVOi6rIsMPkxkEQ0qoKQcJTo5O6_-whDAhiF5na17t1TrKRLXh_3Z8i2OfTFRY3q6aeJwFFJrC4_2tNf4rukB0eidUaSeCUF95KOEK5nBoQXcom6zrIKNU0tLxqtXvG3ep1LXGCT2_zqeyHwTvThCwi5P8B1kAmDp37qHzZrIE3dbrf-bHCdL">
+</div>
+<div>
+<p class="text-sm font-semibold text-gray-900">+2.500 clientes satisfechos</p>
+<div class="flex items-center gap-1">
+<div class="flex text-yellow-400">
+<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+</div>
+<span class="text-xs font-bold text-gray-500">4.9/5</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Hero Image (Circle Mask/Floating Layout) -->
+<div class="w-full md:w-1/2 relative">
+<div class="rounded-3xl overflow-hidden shadow-2xl">
+<img alt="Main Zen Garden Scene" class="w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbj6HzPymXjYItnHb4WsIA4rhGoZ3ZmskQiw-2jHnJOpq1jS7-CnsnS-v-IwFVRdt2vX8otPdRzCqiD6PsWvJfOMV9SQiSDM4ct5kXNOqRiCdpILOQn1Wg0VLl6TEBnA82gs1IU1A5Z4NXSZXzqrMS1LSeMTZoi44ztpYzXVq_jdPPYEB-u1rLBlt1sFAf-ReRhHaIXYC9U0bt9y2CzvYXadzRXBeNB1SIK-5dnVCINWKxArsYMYQzQbHLioj1bJ2M7K8SA8Q_7nhT">
+</div>
+</div>
+</div>
+</section>
+<!-- END: HeroSection -->
+<!-- BEGIN: ServicesSection -->
+<section class="py-24 bg-cream" id="servicios">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<p class="text-terracota font-bold text-xs uppercase tracking-widest mb-3">Nuestros Servicios</p>
+<h2 class="heading-serif text-4xl md:text-5xl text-gray-900">Encuentra tu experiencia ideal</h2>
+<div class="w-12 h-0.5 bg-terracota mx-auto mt-6"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+<!-- Service Card 1 -->
+<div class="bg-white rounded-2xl overflow-hidden card-shadow group transition-transform hover:-translate-y-2">
+<div class="h-48 overflow-hidden">
+<img alt="Masajes" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD75-mi8fcIlGaZ9mHIUgJv3Z9ZmnOfXaKi3tHpxDDTWt3ko-VtzaYfrP6qeHrlpgl3aPgQybSp6BdWZaJfGzwSCYKH48ruKQBxBUi_IPPMyzPgYkz6DCJ7OZkMo3mnFQAhW6ytV2H15p683RUjAHhtspa655abjj6yfojAYl7GRihNSBKiba1TDwkoEneJAwiSDh2m8G5u18cLJos4xN5I2dVBF7g1wOQVMjwJ4I4cA_Jmp1IlcZwVruzj54mRTVzTbMfLTp96JNc3">
+</div>
+<div class="p-6">
+<div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center mb-4">
+<img alt="Icon" class="rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_Zdk1rUODAFFwkI7KaL7Ffa_kxhjYhHMTV59qMzyfiGrkEGPxv2iVFKPFGIpVT9NT_7UP7XlSKi8r62ioxpg03eHCKnWyKRgc5ZOqvbJBUPpURW1S-K-bc9Z9uIz05A7061cSOx1872MlMonHFD_ijisa7oFEkqNuGOUz-WwEtUde9viPl-v4UvxrPR63Hrso8UmDEjukjQo6d0KeRQLLLKFCXWTAlgjBe73p_N2ePudk6jUK5-AXbTueqxl4CI8-Tn0H_jcfZYPm">
+</div>
+<h3 class="font-bold text-lg mb-2">Masajes Terapéuticos</h3>
+<p class="text-sm text-gray-500 mb-4 line-clamp-2">Relaja tu cuerpo, alivia tensiones y recupera tu energía.</p>
+<a class="text-terracota font-semibold text-sm flex items-center gap-1 group/link" href="#">
+              Ver más 
+              <span class="group-hover/link:translate-x-1 transition-transform">→</span>
+</a>
+</div>
+</div>
+<!-- Service Card 2 -->
+<div class="bg-white rounded-2xl overflow-hidden card-shadow group transition-transform hover:-translate-y-2">
+<div class="h-48 overflow-hidden">
+<img alt="Facial" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2ucuc2oMWOajzW4r1gBFw7Wq-BGkN0cNJ-u8WwssJsdBSALCQurKimlh02VTWH4_MPEavunGwPW9R7-H3-vvmGPblEQFB53VeCEtWiQq7N81D4GvlvgAktizPS8_Vx2ZSwGM7QvLxCpj0slF6iXRskBY94-VA8ycf5fZhjbOTOifah8GJgG3Sd1ZCezKAjUkh4YregZsTMzcpq2RxT7zuxhEkn3UWsKWQkbQQooTml3r-7JrK4K_FMYNRXihacHT-62kGuATFyEXF">
+</div>
+<div class="p-6">
+<div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center mb-4">
+<img alt="Icon" class="rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeWnOeHHN2h6BrYsbguC63pBt3Vw_IqYRuqkJLClE1PsSArlgoVtwvmkCzxvwgRnboeANWmI0c-napvwyYTvdHSukZJ4OiVnTKmlWS5HvzLveU01hZAARBI_eaXqcxoKTNEEYyuM9z--DRLSJEzHjKgwOSxQtRV2uLfB0hQ6AMhxh5U_aYDNyI8_-XOA0gs9La-YRxYiP7SMRXOX8OfKhtbRgSGIEznDG7QgW_YCwWuJkdE0m8cDkxHd5aq0fqQDt6bEH263Ij_LjP">
+</div>
+<h3 class="font-bold text-lg mb-2">Tratamientos Faciales</h3>
+<p class="text-sm text-gray-500 mb-4 line-clamp-2">Limpieza profunda, nutrición e hidratación para tu piel.</p>
+<a class="text-terracota font-semibold text-sm flex items-center gap-1 group/link" href="#">
+              Ver más 
+              <span class="group-hover/link:translate-x-1 transition-transform">→</span>
+</a>
+</div>
+</div>
+<!-- Service Card 3 -->
+<div class="bg-white rounded-2xl overflow-hidden card-shadow group transition-transform hover:-translate-y-2">
+<div class="h-48 overflow-hidden">
+<img alt="Hidroterapia" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARnnKZaj3eX62Xn9gn1Hri9A25OP6QMpT9XilKLpJmGaITsr8VHJ2WYdvnN4AG87uSkMpE09ywvnyuGHZBolIjI_vNXns81fcD4kNRZwwJPHZldxUILIROVhgtabJNhqPMZCcSY9XN_BBuvcUi4Z_qgXP6xCpnln8m6RQ9WyRbeode_Iza5RQjeBUlC2JIz9-w68O-BLR_FdLx_gVlK57-YzZd87NzjddQvfZ5YDYc_0t03WqYuDjZQrHsj13Wsr7VSsl_taXYncP_">
+</div>
+<div class="p-6">
+<div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center mb-4">
+<img alt="Icon" class="rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzesOephF847XZ7BmNDDCDTSilbh4CisulsSp4Dxf3QOha_VeHduRBkkZQB6cBMOvxYrgAOtfjcAahHf7w0df_Z784ZTe3JvvYQwxw2CSrvwTe2D-8uYiBZDsSQXaIP4Jfkqi2-URIxIkWwCqWIxcHo_cLRxoBB0wnfh8TsmdUUW8NxAypKFb9b1PPjcuFds-QxzLQPaTUyCpZWqF752vzNeOohR1_IPhubKkp_-tMqxPwDv1nx2tpBMszVopKean2SQ1mxs-mzoTH">
+</div>
+<h3 class="font-bold text-lg mb-2">Hidroterapia</h3>
+<p class="text-sm text-gray-500 mb-4 line-clamp-2">Equilibra tu cuerpo con el poder vitalizante del agua.</p>
+<a class="text-terracota font-semibold text-sm flex items-center gap-1 group/link" href="#">
+              Ver más 
+              <span class="group-hover/link:translate-x-1 transition-transform">→</span>
+</a>
+</div>
+</div>
+<!-- Service Card 4 -->
+<div class="bg-white rounded-2xl overflow-hidden card-shadow group transition-transform hover:-translate-y-2">
+<div class="h-48 overflow-hidden">
+<img alt="Aromaterapia" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrPLEBg9qe4vY-wQ8cYTYvFDhq1MyhFmNxwcm6JEvxCl_uxBmEMzElzYGgOr4usvn7DmOgSGt-saVgqOpioB_oNLuIaFaIjutFjrA44lNge1vHiRc6554bpUjEOYo4hDPiGd7De3sStzhWJrmlXT2t46F5X2tkTud5zE7LpWzzVwNnziOsAgRJM-nOWx0ex5bNisFv1L84YD50K74QHIXM8vqmpXuMJnsD903Pre4QbgbPtkUyVxt4xx8-DvM__quAp192yCMso-yD">
+</div>
+<div class="p-6">
+<div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center mb-4">
+<img alt="Icon" class="rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBffxBVKfcE1HU-USLXzIqvuiJKuyO5KqNhS5Dw25B0GqJIns-DtJ4f-35lRCgSeKv_Ar7p3bouv_4WXdGM0OC0GLOXb9kGii7NMMAZRAQ0wP1KvU_MRBt2HArb5595rbfToWnKgmK9bw-PL7faOqhFYxyiWbCoBCVj_he1Z-igZF3xhtMOYamgI30fcZ2aBiLX_LWtD5nOltHRFTgeE8U41FK_3uxrYzB1gsbK5CVKfbA_Dg4AcbU-kKyFTG12Qfoix2q_0uB2lbBp">
+</div>
+<h3 class="font-bold text-lg mb-2">Aromaterapia</h3>
+<p class="text-sm text-gray-500 mb-4 line-clamp-2">Aromas que armonizan tu mente y todas tus emociones.</p>
+<a class="text-terracota font-semibold text-sm flex items-center gap-1 group/link" href="#">
+              Ver más 
+              <span class="group-hover/link:translate-x-1 transition-transform">→</span>
+</a>
+</div>
+</div>
+<!-- Service Card 5 -->
+<div class="bg-white rounded-2xl overflow-hidden card-shadow group transition-transform hover:-translate-y-2">
+<div class="h-48 overflow-hidden">
+<img alt="Experiencias" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ-DPKVJ3h4TGeDXAqhNcpzjwo8D9oz9EruBRo4sOEmMpmspWW_euIG8AMcxU9nWiU9JV1lvE1xn6OWviqbcJ2dIwhg4U49OcHwwa39aGq3svA6hzF-vzGY61rabZ_jpA2SwwkcniVZaBr0X8okJzBuKDFHzzGQiuovKZUwmE-OZMSvrtNfzYUdk574nTF_eizajbTBy47iChLCT0Kd4wTBqN7cH9CEaIQvLEylC-XWLPBzlJ_Yh1V4qTgRQCJf0AEKMWCCbIm6e75">
+</div>
+<div class="p-6">
+<div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center mb-4">
+<img alt="Icon" class="rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0i-Tozxl7lPqu8c1hr83n6_ZUon0sdD6oj6qPYrSOXwaZ0-9vk-fLk7sgu-_VFlfrvUMIrzpTBDYPpDd4vL6QSZpEycmPydt125W7HCEVUja2icx0NielOObNyT4iC1WxGGiPX5em8vKawlMShgsEKH-8nSZfyUq5eRhoSf_5AfrZS9_BOXsBk6v1SQ6VuxEdGZC6JQrFvy5ZUrDdrTKcTtg9FSvM51BqHa_8t92L8RKW2t9yU1Kg1GXSDSiZ95m68XKaqKz6fjrF">
+</div>
+<h3 class="font-bold text-lg mb-2">Experiencias Especiales</h3>
+<p class="text-sm text-gray-500 mb-4 line-clamp-2">Paquetes personalizados para esos momentos únicos.</p>
+<a class="text-terracota font-semibold text-sm flex items-center gap-1 group/link" href="#">
+              Ver más 
+              <span class="group-hover/link:translate-x-1 transition-transform">→</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: ServicesSection -->
+<!-- BEGIN: ValuePropSection -->
+<section class="py-12 bg-white/50 border-y border-gray-100">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-terracota flex items-center justify-center flex-shrink-0">
+<img alt="Experts" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiChVxH558CZ4saKoFwUPDyCCcmyoxwi3CAdQKd43n-e7VwrtLRbGukmjLhUkfFZYDbxWI9AIdQr1hQ9zl9g-3Kl3XKXVeCvWucXtJaBiyPg8Vv1Z8yFhvkjG9-PZZwop7AXXCaFFp0vU9DGG1OismcX-4se2slCohr2o-oO0Sn7A9cMltSKkD5aweUr_r2GSacR4BogNUuN4GCotGGcY7EaacuhzHevBa-MZJthZkMPQjT31Xz72M-UQbGjFXPSJuxDQ1rEjT_cBa">
+</div>
+<div>
+<h4 class="font-bold text-sm">Terapeutas Expertos</h4>
+<p class="text-[11px] text-gray-500">Profesionales certificados y en constante formación.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-terracota flex items-center justify-center flex-shrink-0">
+<img alt="Products" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUNx-iBtGHiF_uS8QSQca0WjLi5vTdBlwG4HHpj9IkGUNRMi9Fc8LGXUVl8hY3QV-9a75d2bQVRhj-d4gNnPt13kAvfVh5-6KzYhJ9A4hE2_kEqbiR24xxj2rNTG2ndSljfBwqgUkcaFivDdOuzyfYx_2FCRshO29nCB_YHV5B0VIzjEreFomh4xnS2dTn-n2dwVgGH0aSohJAKgQIqAn4rObkY_Z2jV1V1JxpZVbkZ7wHOJ1MhczktxHd2lyGspW57jbcz54xUEus">
+</div>
+<div>
+<h4 class="font-bold text-sm">Productos Premium</h4>
+<p class="text-[11px] text-gray-500">Usamos productos de alta calidad y origen natural.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-terracota flex items-center justify-center flex-shrink-0">
+<img alt="Ambience" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnPgV1xQ2xMkLb1-LHosLPkDdjtF_737SIvVkYNeaLTHbBIHObfc_JstP0Dmo0Ri5-LoZ0RAqi8Px9lxM_wruW5wA7HCSfFznijclw3NzCuAErf31X6vr11QqmzN4syO9QrnHBiR3_2y8FIydEVlMQ0aaRLyZYcBFRdOIZNazNkWd8iWaarof7eHHgWMHx676MjVBzc64o0W1PMCDSaXlMfqCwb0KCLS0Gj1e3i68Dqai9rsAHZBavTDL9zpd-ALmESm_uxox1QLO3">
+</div>
+<div>
+<h4 class="font-bold text-sm">Ambiente Relajante</h4>
+<p class="text-[11px] text-gray-500">Espacios diseñados para tu confort y bienestar total.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-terracota flex items-center justify-center flex-shrink-0">
+<img alt="Service" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0F09czM9e3-xvxuP3-avHp4ImRDwSrQO7d7aDJyzaIiv7bSPQBnDJTZZr1w9e0OcV1Z_XIkAbHw1uzouqP1i_WqvLBbgAubAyjHY6ucNHcV3OKT590hwANTKiPDbBkeiINCnHkVeSKPQ-dxW7eX5e2aXpLRk1YCeK5-HGZYiXAdEuX_k-u_I8gDskMvgyK4BI_zqBqV4ECIwEpMCUR8ZKC5vrKB4E7GMM7wuXyJxWuNuV8DPkTacRLBGw_9XqP3lsJI_5V2IYlL90">
+</div>
+<div>
+<h4 class="font-bold text-sm">Atención Personalizada</h4>
+<p class="text-[11px] text-gray-500">Cada experiencia es única, enfocada solo en ti.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: ValuePropSection -->
+<!-- BEGIN: StatsSection -->
+<section class="py-20 relative">
+<div class="container mx-auto px-4">
+<div class="relative rounded-3xl overflow-hidden bg-deep-green text-white p-12 md:p-20">
+<!-- Background decorative image with low opacity -->
+<div class="absolute inset-0 opacity-20">
+<img alt="Background" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS09Rt706xO4RgkTVGcYmQd3DoyHxp7C9YLpdQgm55JADiq_iuKlBe7TgkFWKu2ex6R0XhPHQtf6jCxa5ofTqJ36-IqCp7IP9HE3ueMAKqNCQU7AZX0P26XW_O1bNfHYvGodDE3-xk6aD0AM-WJsEiLY48Gg2gsv02llfSHH8LszH6X_JJ5yWnKqmz5RmQEz-Oy0MaHOwZ3yZTbnwrKioBqds_hkRNF-21sLwCdnvk8xc0r0yIXCK3H03DyCGcyLndwGJVGmhD-DFK">
+</div>
+<div class="relative grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+<div>
+<div class="flex justify-center mb-4">
+<img alt="Clients Icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBreqXY_vuS-TWwT6aso1gEQL_tgoabO6-gYBpnQg5FnBotcyr8dOxpEg28dHoewlnTsd4kfiPW2HwqVDZwKk5aDW5GlKR10G05zkvVau-dPByvTJEyA0HQcFUCuK23vTLAFQNTT2FPmHsvhtNNN5HdJfY_B0MzbgtbVdie8Ee6RDezLF5nuXtxH8BxHeMiOP9xB7v8SfdTsVXO7bOHnURVDrjvnwPy64XlQbsQjq0eSfIOPWO-NnCIQ9HLNiTfWfZoz9kETWeOHOq4">
+</div>
+<p class="text-4xl font-serif font-bold mb-1">+2.500</p>
+<p class="text-xs uppercase tracking-widest text-white/70">Clientes satisfechos</p>
+</div>
+<div>
+<div class="flex justify-center mb-4">
+<img alt="Star Icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPehqmL1ceyK4euRnKV2lT5BeRFGwV-weWopJo9Jb296RfTtC3J-iHlm2btwMlvwfbYgMGbRoBExA_wJcxVJyZ-J5DQ37I1He4dUWdoe7gvTCRxHEJvjipcW-nlWBbj_FjbS5mqzbKFvJyTmH_9HKeGA-9cEwQyI7ZO7WxkF6tN9kcdagZ1N-tJIU6v4yF24VbkM0Xb1P5xzPjjC0eB08I-4c_AwMDFndky1gytjMeK2C1axe_Gcpdx5kjs61jYFS8TMRdzkBpyAZ6">
+</div>
+<p class="text-4xl font-serif font-bold mb-1">4.9/5</p>
+<p class="text-xs uppercase tracking-widest text-white/70">Calificación promedio</p>
+</div>
+<div>
+<div class="flex justify-center mb-4">
+<img alt="Leaf Icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXBED0H2Jn9gaY3MQ1zYWocMNuxdprX_uQmcBZPV9Pzz3RsWxNvmHmqeRDJWpf2LsOCjUt1X4KtjV_z11czn8-Z3l6gnHYAL4gN_967tMsvxfW1Bke2tC0-nnIGZ-3HJKGddCfXrizNMuPrQwVATt9Zz3br9_BWAYK2cZgY_CWkt9hPagx0cB5MbSwMMwVkExQkpH8oJJESOoxDxGdTu2lI_Qumw3rNB6VXZMOPwA4nadotwU-fRvtsWEJ1MsbyR_0tCw-VEVWkhbx">
+</div>
+<p class="text-4xl font-serif font-bold mb-1">12+</p>
+<p class="text-xs uppercase tracking-widest text-white/70">Años de experiencia</p>
+</div>
+<div>
+<div class="flex justify-center mb-4">
+<img alt="Cabin Icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6lfyEl5LLywk-kLzt5n5rhJK_zoxWjBjAZYshlkEtoGrWZesDT_BVqN9IfAk6tbB34iAst8sXG7YaflHMB4pNTsQE48dcPXnRf2xS9_7TSz4EnHFO0Uk246j-SPgU_MX-TnuQDun8bKTyppF4ymgi_obncznzynppwXYPHGxlaV3IQWCOdtXWtF0vjW_IJT0AdiK1BtvpoGj_nAXIdX2-Ft94eWwd5dDMlzK8kAXBGAH3F63YmUKA-JYeLRtBpxC5vbVZfEzTwLL9">
+</div>
+<p class="text-4xl font-serif font-bold mb-1">8</p>
+<p class="text-xs uppercase tracking-widest text-white/70">Cabinas de atención</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: StatsSection -->
+<!-- BEGIN: TestimonialsSection -->
+<section class="py-24 bg-cream">
+<div class="container mx-auto px-4">
+<div class="flex flex-col md:flex-row gap-16 items-center">
+<div class="w-full md:w-1/3">
+<p class="text-terracota font-bold text-xs uppercase tracking-widest mb-3">Lo que dicen nuestros clientes</p>
+<h2 class="heading-serif text-5xl text-gray-900 leading-tight mb-8">Historias que<br>nos <span class="italic-accent text-terracota">inspiran.</span></h2>
+<a class="text-terracota font-bold flex items-center gap-2 group" href="#">
+            Ver más testimonios 
+            <span class="group-hover:translate-x-2 transition-transform">→</span>
+</a>
+</div>
+<div class="w-full md:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Testimonial 1 -->
+<div class="bg-white p-8 rounded-2xl card-shadow border-t-4 border-terracota">
+<div class="text-terracota text-4xl mb-6">“</div>
+<p class="text-gray-600 text-sm mb-8 leading-relaxed italic">La mejor experiencia que he tenido. El ambiente te transporta a otro nivel de calma.</p>
+<div class="flex items-center gap-3">
+<img alt="Maria" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmUeAP6GtIGf_73Sy7UI7g12p8cP0hepfFsn-v8fFjBO9zmGFDIgpeE19Gn7rAzfI5MYkFUE0fO7TI7PbmuK-xMMTY2IyGTV-GAJcCuBzEl53e1U92oQ0Qh0Wt1Fu50PQzClflVIhC57JYTpVsXgwapXxZRG0kp4LubJjxhEzpVimRQRAV2d3R4RJoxQf7g-Mc_3z7uRvft4Hyj1pHhMAF_fJ0yiK1OL7qDpIOcwxrDYj3S4toq6eLpiR9JGzWh-GlREiiHjp4fflD">
+<div>
+<p class="font-bold text-sm">María López</p>
+<div class="flex text-yellow-400 text-[10px]">★★★★★</div>
+</div>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="bg-white p-8 rounded-2xl card-shadow border-t-4 border-terracota">
+<div class="text-terracota text-4xl mb-6">“</div>
+<p class="text-gray-600 text-sm mb-8 leading-relaxed italic">Los terapeutas son increíbles, se nota la profesionalidad y el amor por lo que hacen.</p>
+<div class="flex items-center gap-3">
+<img alt="Carlos" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDas-gYQYnz3_AJ2suKoZJH8OSQrpS5AkpJsx9O_0wtmkQ_bLZcgfxG1_LZW9XUmu_7JhNdKwY3xGGQgkIKaA_Z_ULDrm9UdKwea4LVGYK_6abFDi5dLoy6dq6pVXGCArTaDTvtohsBzjnBqhm_tBdWv9sOapzbNWiqfUr2uKVI5Ta3ePmpPgJZ1YZRjTG2TkcsJEB_pgLVZ2HA15f6pjVc7VU9d3gW37HNJbAOGQNIxW_9JmdLVTLZrx6EuOc7Q8xl5DHiJrLcgClD">
+<div>
+<p class="font-bold text-sm">Carlos Ramírez</p>
+<div class="flex text-yellow-400 text-[10px]">★★★★★</div>
+</div>
+</div>
+</div>
+<!-- Testimonial 3 -->
+<div class="bg-white p-8 rounded-2xl card-shadow border-t-4 border-terracota">
+<div class="text-terracota text-4xl mb-6">“</div>
+<p class="text-gray-600 text-sm mb-8 leading-relaxed italic">Cada sesión me ayuda a reconectar conmigo misma. 100% recomendado para todos.</p>
+<div class="flex items-center gap-3">
+<img alt="Valeria" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbEHpYBeLemuEk0mygCYg4YHID6zh7Vup8i8OqveShV30hmyqoCgEe9a4KNkfS8LhWhIpMxrnNweFfCD-YfiMBZXgweZYm0zY8RMwB00f95d4C5lf2IFQ_WdPMnP954LaivTPbwSk2yMVxq1bjAaSAnx9UwAjA9k2X6IUKnlgMb2PdHjmBinX9ApYhyEZLdKnTtivqSdn0wgqCdM4MASVbN_oHCIJDv6dMNBUeQXEFgxppN-JqoguQSHCL8zYlXFhdVCW9m4-RwS26">
+<div>
+<p class="font-bold text-sm">Valeria Soto</p>
+<div class="flex text-yellow-400 text-[10px]">★★★★★</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: TestimonialsSection -->
+<!-- BEGIN: BottomCTA -->
+<section class="py-20">
+<div class="container mx-auto px-4">
+<div class="relative h-[450px] rounded-[40px] overflow-hidden group">
+<img alt="Zen Spa Background" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtKRzU5RSG02TFP5wee6UxAijy6piXm7JNx2Dxzc3J3lBuvzRgEB5r6e824_7p02-mY72WXA5xB6m0ctnP3zqNDJpPQj-QlGr6rKGBYkAEVrosRJRy3ZcEe1kTf7DKpqw4Qua6mAiuN9wJ4fJsd-iahv1iU8shVBIi1luZuL_EuO9gFFWdZt_mhDGN5CJ3EEHqvYRPLOveVnizKQkl0qDuRYUeC1s04WYG2YrYynbMkYJOZ-S198bwWPO75Be6q-c5qBe3IzI341So">
+<div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex flex-col justify-center px-12 md:px-20">
+<h2 class="heading-serif text-white text-5xl md:text-6xl mb-6">Tu bienestar te espera.</h2>
+<p class="text-white/80 text-lg max-w-md mb-10 leading-relaxed">Reserva tu experiencia y regálate un momento para ti. Estamos listos para cuidarte como mereces.</p>
+<div>
+<button class="bg-terracota text-white px-10 py-4 rounded-md font-bold text-lg hover:bg-opacity-90 transition-all flex items-center gap-3">
+              Reservar ahora
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" fill-rule="evenodd"></path></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: BottomCTA -->
+<!-- BEGIN: Footer -->
+<footer class="bg-cream pt-20 pb-10 border-t border-gray-100">
+<div class="container mx-auto px-4">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-8">
+<div class="flex items-center gap-10">
+<div class="flex flex-col leading-none">
+<span class="text-2xl font-serif font-bold text-gray-900 tracking-tight">ZENSPA</span>
+<span class="text-[11px] tracking-[0.2em] font-semibold text-gray-500">BIENESTAR</span>
+</div>
+<p class="heading-serif text-xl italic text-gray-700 hidden lg:block">“Tu bienestar es nuestra prioridad.”</p>
+</div>
+<div class="w-full md:w-auto">
+<p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-3">Recibe consejos, promociones y novedades exclusivas.</p>
+<div class="flex flex-col sm:flex-row gap-2">
+<div class="relative flex-grow min-w-[280px]">
+<input class="w-full border-gray-300 rounded-md py-3 pl-4 pr-10 focus:ring-terracota focus:border-terracota" placeholder="Tu correo electrónico" type="email">
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</span>
+</div>
+<button class="bg-terracota text-white px-8 py-3 rounded-md font-bold text-sm hover:bg-opacity-90">Suscribirme</button>
+</div>
+</div>
+<div>
+<p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-4">Síguenos</p>
+<div class="flex gap-4">
+<a class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-terracota hover:text-white transition-colors" href="#">
+<span class="text-xs">IG</span>
+</a>
+<a class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-terracota hover:text-white transition-colors" href="#">
+<span class="text-xs">FB</span>
+</a>
+<a class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-terracota hover:text-white transition-colors" href="#">
+<span class="text-xs">WA</span>
+</a>
+<a class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-terracota hover:text-white transition-colors" href="#">
+<span class="text-xs">TK</span>
+</a>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-100 gap-4">
+<p class="text-xs text-gray-400">© 2023 ZenSpa Bienestar. Todos los derechos reservados.</p>
+<div class="flex gap-6 text-[10px] font-bold uppercase tracking-widest text-gray-500">
+<a class="hover:text-terracota" href="#">Privacidad</a>
+<a class="hover:text-terracota" href="#">Términos</a>
+<a class="hover:text-terracota" href="#">Cookies</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- END: Footer -->
+</body></html>
