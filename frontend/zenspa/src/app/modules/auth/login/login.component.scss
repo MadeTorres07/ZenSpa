@@ -113,6 +113,24 @@
   overflow: hidden;
 }
 
+.back-link {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-text-aux);
+  text-decoration: none;
+  z-index: 1;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+}
+
 .decorative-leaf {
   position: absolute;
   top: -40px;

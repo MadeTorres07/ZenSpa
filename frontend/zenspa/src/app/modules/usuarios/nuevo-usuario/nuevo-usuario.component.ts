@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsuarioService } from '../../../core/services/usuario.service';
 
@@ -14,6 +15,7 @@ export class NuevoUsuarioComponent {
   private fb = inject(FormBuilder);
   private usuarioService = inject(UsuarioService);
   private router = inject(Router);
+  private location = inject(Location);
 
   error = signal('');
   loading = signal(false);
@@ -56,7 +58,7 @@ export class NuevoUsuarioComponent {
   }
 
   cancelar() {
-    this.router.navigate(['/usuarios']);
+    this.location.back();
   }
 
   onSubmit() {
