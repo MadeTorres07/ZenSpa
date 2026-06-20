@@ -177,6 +177,20 @@ class TerapeutaUpdate(BaseModel):
     especialidad: str | None = None
     certificaciones: str | None = None
 
+    @field_validator("nombre")
+    @classmethod
+    def validar_nombre(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
+        return _validar_nombre_apellido(v)
+
+    @field_validator("apellido")
+    @classmethod
+    def validar_apellido(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
+        return _validar_nombre_apellido(v)
+
 
 class TerapeutaResponse(BaseModel):
     id: int

@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.security import hash_password
-from app.models.models import Usuario
+from app.models.models import Usuario, Terapeuta, Cliente
 from app.schemas.schemas import UsuarioCreate, UsuarioUpdate
 
 
@@ -24,6 +24,22 @@ def create_usuario(db: Session, data: UsuarioCreate) -> Usuario:
         activo=data.activo,
     )
     db.add(usuario)
+    db.flush()
+
+    if data.rol == "terapeuta":
+        terapeuta = Terapeuta(
+            usuario_id=usuario.id,
+            especialidad="general",
+            certificaciones="",
+            activo=True,
+        )
+        db.add(terapeuta)
+    elif data.rol == "cliente":
+        cliente = Cliente(
+            usuario_id=usuario.id,
+        )
+        db.add(cliente)
+
     db.commit()
     db.refresh(usuario)
     return usuario

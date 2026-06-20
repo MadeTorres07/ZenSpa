@@ -1,3 +1,9 @@
+@if (mensaje()) {
+  <div class="toast" [class.toast-success]="!mensaje().includes('Error')" [class.toast-error]="mensaje().includes('Error')">
+    <span>{{ mensaje() }}</span>
+  </div>
+}
+
 <div class="page">
   <div class="page-header">
     <div>
@@ -79,10 +85,10 @@
                     <button class="btn-icon" title="Ver detalle" (click)="$event.stopPropagation(); seleccionarTerapeuta(t)">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
-                    <button class="btn-icon" title="Editar">
+                    <button class="btn-icon" title="Editar" (click)="$event.stopPropagation(); editarTerapeuta(t)">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     </button>
-                    <button class="btn-icon btn-icon-danger" title="Desactivar" (click)="$event.stopPropagation(); confirmarDesactivar(t)">
+                    <button class="btn-icon btn-icon-danger" title="Eliminar" (click)="$event.stopPropagation(); confirmarEliminar(t)">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
                     </button>
                   </div>
@@ -175,22 +181,70 @@
         </div>
 
         <div class="panel-actions">
-          <button class="btn-outline">Editar terapeuta</button>
-          <button class="btn-danger" (click)="confirmarDesactivar(t)">Desactivar terapeuta</button>
+          <button class="btn-outline" (click)="editarTerapeuta(t)">Editar terapeuta</button>
+          <button class="btn-danger" (click)="confirmarEliminar(t)">Eliminar</button>
         </div>
       </aside>
     }
   </div>
 </div>
 
-@if (modalDesactivar(); as t) {
+@if (modalEditar(); as t) {
+  <div class="modal-overlay" (click)="cerrarModalEditar()">
+    <div class="modal-card modal-card-lg" (click)="$event.stopPropagation()">
+      <h3>Editar terapeuta</h3>
+      <p>{{ t.nombre }} {{ t.apellido }}</p>
+
+      @if (mensaje() && modalEditar()) {
+        <div class="toast" [class.toast-success]="!mensaje().includes('Error')" [class.toast-error]="mensaje().includes('Error')">{{ mensaje() }}</div>
+      }
+
+      <form [formGroup]="formEditar" (ngSubmit)="guardarEdicion()" class="edit-form">
+        <div class="edit-grid">
+          <div class="field">
+            <label>Nombre</label>
+            <input type="text" formControlName="nombre" [class.input-error]="formEditar.get('nombre')?.touched && formEditar.get('nombre')?.invalid" />
+            @if (campoError('nombre')) { <span class="field-error">{{ campoError('nombre') }}</span> }
+          </div>
+          <div class="field">
+            <label>Apellido</label>
+            <input type="text" formControlName="apellido" [class.input-error]="formEditar.get('apellido')?.touched && formEditar.get('apellido')?.invalid" />
+            @if (campoError('apellido')) { <span class="field-error">{{ campoError('apellido') }}</span> }
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" formControlName="email" [class.input-error]="formEditar.get('email')?.touched && formEditar.get('email')?.invalid" />
+            @if (campoError('email')) { <span class="field-error">{{ campoError('email') }}</span> }
+          </div>
+          <div class="field">
+            <label>Especialidad</label>
+            <input type="text" formControlName="especialidad" [class.input-error]="formEditar.get('especialidad')?.touched && formEditar.get('especialidad')?.invalid" />
+            @if (campoError('especialidad')) { <span class="field-error">{{ campoError('especialidad') }}</span> }
+          </div>
+        </div>
+        <div class="field">
+          <label>Certificaciones</label>
+          <textarea formControlName="certificaciones" rows="3" placeholder="Una por línea o separadas por punto"></textarea>
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" (click)="cerrarModalEditar()">Cancelar</button>
+          <button type="submit" class="btn-primary-sm" [disabled]="formEditar.invalid || editando()">
+            {{ editando() ? 'Guardando…' : 'Guardar cambios' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (modalEliminar(); as t) {
   <div class="modal-overlay" (click)="cerrarModal()">
     <div class="modal-card" (click)="$event.stopPropagation()">
-      <h3>Desactivar terapeuta</h3>
-      <p>¿Estás seguro de que deseas desactivar a <strong>{{ t.nombre }} {{ t.apellido }}</strong>?</p>
+      <h3>Eliminar terapeuta</h3>
+      <p>¿Estás seguro de que deseas eliminar a <strong>{{ t.nombre }} {{ t.apellido }}</strong>? Esta acción no se puede deshacer.</p>
       <div class="modal-buttons">
         <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
-        <button class="btn-danger" (click)="desactivarTerapeuta()">Desactivar</button>
+        <button class="btn-danger" (click)="eliminarTerapeuta()">Eliminar</button>
       </div>
     </div>
   </div>
