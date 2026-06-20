@@ -238,10 +238,14 @@ export class ServiciosComponent implements OnInit {
     return '';
   }
 
-  cabinasCompatibles(servicio: Servicio): Cabina[] {
+  cabinasAsignadas(servicio: Servicio): Cabina[] {
+    return this.cabinas().filter(c => (servicio.cabinas_ids || []).includes(c.id));
+  }
+
+  cabinasFiltradas(tipo: string): Cabina[] {
     return this.cabinas().filter(c =>
       c.tipo_tratamiento === 'multiple' ||
-      c.tipo_tratamiento === servicio.tipo_terapia
+      c.tipo_tratamiento === tipo
     );
   }
 }

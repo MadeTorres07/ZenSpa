@@ -61,6 +61,11 @@ export interface Producto {
   stock: number;
   costo_unitario: number;
   stock_minimo: number;
+  descripcion?: string;
+  presentacion?: string;
+  uso_recomendado?: string;
+  fecha_vencimiento?: string;
+  proveedor?: string;
 }
 
 export interface Cita {

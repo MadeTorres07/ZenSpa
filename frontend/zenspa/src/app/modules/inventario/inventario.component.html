@@ -1,10 +1,16 @@
+@if (mensaje()) {
+  <div class="toast" [class.toast-success]="!mensaje().includes('Error')" [class.toast-error]="mensaje().includes('Error')">
+    <span>{{ mensaje() }}</span>
+  </div>
+}
+
 <div class="page">
   <div class="page-header">
     <div>
       <h2 class="page-title">Inventario</h2>
       <p class="page-subtitle">Control de stock y productos del spa.</p>
     </div>
-    <a routerLink="/inventario" class="btn-primary">+ Nuevo producto</a>
+    <button class="btn-primary" (click)="abrirCrear()">+ Nuevo producto</button>
   </div>
 
   <div class="kpi-grid">
@@ -76,7 +82,7 @@
                     <button class="btn-icon" title="Ver" (click)="$event.stopPropagation(); seleccionar(p)">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
-                    <button class="btn-icon" title="Editar">
+                    <button class="btn-icon" title="Editar" (click)="$event.stopPropagation(); abrirEditar(p)">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     </button>
                     <button class="btn-icon btn-icon-danger" title="Eliminar" (click)="$event.stopPropagation(); confirmarEliminar(p)">
@@ -102,29 +108,28 @@
         <div class="panel-img" style="background: linear-gradient(135deg, #E8F0E6, #8EA693);"></div>
         <div class="panel-body">
           <span class="panel-nombre">{{ p.nombre }}</span>
-          <span class="panel-meta">Código: AE-{{ p.nombre.substring(0,3).toUpperCase() }}-{{ p.id }}</span>
+          @if (p.proveedor) {
+            <span class="panel-meta">Proveedor: {{ p.proveedor }}</span>
+          }
         </div>
 
         <div class="panel-tabs">
           <button class="tab-btn" [class.tab-active]="tabActivo() === 'info'" (click)="tabActivo.set('info')">Información</button>
           <button class="tab-btn" [class.tab-active]="tabActivo() === 'stock'" (click)="tabActivo.set('stock')">Stock y movimientos</button>
-          <button class="tab-btn" [class.tab-active]="tabActivo() === 'proveedores'" (click)="tabActivo.set('proveedores')">Proveedores</button>
         </div>
 
         <div class="panel-tab-content">
           @if (tabActivo() === 'info') {
-            <div class="info-block"><label>Descripción</label><p>Producto profesional para tratamientos de spa.</p></div>
-            <div class="info-block"><label>Presentación</label><p>Presentación estándar</p></div>
-            <div class="info-block"><label>Uso recomendado</label><p>Uso exclusivo por terapeutas certificados.</p></div>
-            <div class="info-block"><label>Fecha de vencimiento</label><p>Por definir</p></div>
-            <div class="info-block"><label>Proveedor</label><p>Proveedor habitual</p></div>
-          } @else if (tabActivo() === 'stock') {
+            <div class="info-block"><label>Descripción</label><p>{{ p.descripcion || 'Sin descripción' }}</p></div>
+            <div class="info-block"><label>Presentación</label><p>{{ p.presentacion || 'Sin especificar' }}</p></div>
+            <div class="info-block"><label>Uso recomendado</label><p>{{ p.uso_recomendado || 'Sin especificar' }}</p></div>
+            <div class="info-block"><label>Fecha de vencimiento</label><p>{{ p.fecha_vencimiento || 'Sin especificar' }}</p></div>
+            <div class="info-block"><label>Proveedor</label><p>{{ p.proveedor || 'Sin especificar' }}</p></div>
+          } @else {
             <div class="info-block"><label>Stock actual</label><p class="stock-num" [class.stock-bajo]="p.stock > 0 && p.stock <= p.stock_minimo" [class.stock-cero]="p.stock === 0">{{ p.stock }} unidades</p></div>
             <div class="info-block"><label>Stock mínimo</label><p>{{ p.stock_minimo }} unidades</p></div>
             <div class="info-block"><label>Costo unitario</label><p>{{ currency.format(p.costo_unitario) }}</p></div>
             <div class="info-block"><label>Valor total</label><p>{{ currency.format(p.stock * p.costo_unitario) }}</p></div>
-          } @else {
-            <p class="tab-empty">Información de proveedores próxima a implementar.</p>
           }
         </div>
 
@@ -136,7 +141,7 @@
         </div>
 
         <div class="panel-actions">
-          <button class="btn-outline">Editar producto</button>
+          <button class="btn-outline" (click)="abrirEditar(p)">Editar producto</button>
           <button class="btn-ajuste" (click)="abrirAjuste(p)">Ajustar stock</button>
           <button class="btn-danger" (click)="confirmarEliminar(p)">Eliminar producto</button>
         </div>
@@ -146,16 +151,92 @@
 </div>
 
 @if (modalEliminar(); as p) {
-  <div class="modal-overlay" (click)="cerrarModal()">
+  <div class="modal-overlay" (click)="cerrarModalEliminar()">
     <div class="modal-card" (click)="$event.stopPropagation()">
       <h3>Eliminar producto</h3>
       <p>¿Estás seguro de que deseas eliminar <strong>{{ p.nombre }}</strong>?</p>
       <div class="modal-buttons">
-        <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+        <button class="btn-cancel" (click)="cerrarModalEliminar()">Cancelar</button>
         <button class="btn-danger" (click)="eliminar()">Eliminar</button>
       </div>
     </div>
   </div>
+}
+
+@if (modalFormulario(); as m) {
+  @if (m.abierto) {
+    <div class="modal-overlay" (click)="cerrarFormulario()">
+      <div class="modal-card modal-card-lg" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>{{ m.editando ? 'Editar producto' : 'Nuevo producto' }}</h3>
+          <button class="panel-close" (click)="cerrarFormulario()">✕</button>
+        </div>
+
+        @if (mensaje()) {
+          <div class="toast-inline" [class.toast-success]="!mensaje().includes('Error')" [class.toast-error]="mensaje().includes('Error')">{{ mensaje() }}</div>
+        }
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre *</label>
+            <input type="text" class="form-input" [class.input-error]="campoError('nombre')" placeholder="Nombre del producto"
+              [ngModel]="formData().nombre" (ngModelChange)="updateFormField('nombre', $event)" />
+            @if (campoError('nombre'); as err) { <span class="field-error">{{ err }}</span> }
+          </div>
+          <div class="form-group">
+            <label>Proveedor</label>
+            <input type="text" class="form-input" placeholder="Proveedor"
+              [ngModel]="formData().proveedor" (ngModelChange)="updateFormField('proveedor', $event)" />
+          </div>
+          <div class="form-group">
+            <label>Presentación</label>
+            <input type="text" class="form-input" placeholder="Ej: Frasco 500ml"
+              [ngModel]="formData().presentacion" (ngModelChange)="updateFormField('presentacion', $event)" />
+          </div>
+          <div class="form-group">
+            <label>Fecha de vencimiento</label>
+            <input type="date" class="form-input"
+              [ngModel]="formData().fecha_vencimiento" (ngModelChange)="updateFormField('fecha_vencimiento', $event)" />
+          </div>
+          <div class="form-group form-group-full">
+            <label>Descripción</label>
+            <textarea class="form-input form-textarea" placeholder="Descripción del producto"
+              [ngModel]="formData().descripcion" (ngModelChange)="updateFormField('descripcion', $event)"></textarea>
+          </div>
+          <div class="form-group form-group-full">
+            <label>Uso recomendado</label>
+            <textarea class="form-input form-textarea" placeholder="Instrucciones de uso"
+              [ngModel]="formData().uso_recomendado" (ngModelChange)="updateFormField('uso_recomendado', $event)"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Costo unitario *</label>
+            <input type="number" class="form-input" [class.input-error]="campoError('costo_unitario')" placeholder="0" min="1"
+              [ngModel]="formData().costo_unitario" (ngModelChange)="updateFormField('costo_unitario', $event)" />
+            @if (campoError('costo_unitario'); as err) { <span class="field-error">{{ err }}</span> }
+          </div>
+          <div class="form-group">
+            <label>Stock inicial *</label>
+            <input type="number" class="form-input" [class.input-error]="campoError('stock')" placeholder="0" min="0"
+              [ngModel]="formData().stock" (ngModelChange)="updateFormField('stock', $event)" />
+            @if (campoError('stock'); as err) { <span class="field-error">{{ err }}</span> }
+          </div>
+          <div class="form-group">
+            <label>Stock mínimo *</label>
+            <input type="number" class="form-input" [class.input-error]="campoError('stock_minimo')" placeholder="5" min="0"
+              [ngModel]="formData().stock_minimo" (ngModelChange)="updateFormField('stock_minimo', $event)" />
+            @if (campoError('stock_minimo'); as err) { <span class="field-error">{{ err }}</span> }
+          </div>
+        </div>
+
+        <div class="modal-buttons">
+          <button class="btn-cancel" (click)="cerrarFormulario()">Cancelar</button>
+          <button class="btn-primary-sm" [disabled]="guardando()" (click)="guardarProducto()">
+            {{ guardando() ? 'Guardando…' : m.editando ? 'Actualizar producto' : 'Crear producto' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 }
 
 @if (modalAjuste(); as p) {

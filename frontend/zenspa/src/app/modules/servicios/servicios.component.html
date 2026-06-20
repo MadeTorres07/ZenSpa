@@ -114,13 +114,13 @@
             }
           } @else {
             <div class="info-block"><label>Cabinas compatibles</label></div>
-            @for (c of cabinasCompatibles(s); track c.id) {
+            @for (c of cabinasAsignadas(s); track c.id) {
               <div class="cabina-chip">
                 <span>{{ c.nombre }}</span>
                 <span class="chip-tipo">{{ c.tipo_tratamiento }}</span>
               </div>
             } @empty {
-              <p class="tab-empty">Sin cabinas compatibles registradas</p>
+              <p class="tab-empty">Sin cabinas asignadas a este servicio</p>
             }
           }
         </div>
@@ -193,15 +193,20 @@
 
         <div class="field">
           <label>Cabinas compatibles</label>
+          @if (!formServicio.get('tipo_terapia')?.value) {
+            <p class="field-msg">Selecciona un tipo de terapia para ver las cabinas disponibles.</p>
+          } @else {
+            <p class="field-msg">Mostrando cabinas compatibles con <strong>{{ formServicio.get('tipo_terapia')?.value }}</strong>. Las cabinas de tipo <em>multiple</em> siempre aparecen.</p>
+          }
           <div class="cabinas-check-grid">
-            @for (c of cabinas(); track c.id) {
+            @for (c of cabinasFiltradas(formServicio.get('tipo_terapia')?.value || ''); track c.id) {
               <label class="cabina-check-item">
                 <input type="checkbox" [checked]="(formServicio.get('cabinas_ids')?.value || []).includes(c.id)" (change)="toggleCabina(c.id)" />
                 <span>{{ c.nombre }}</span>
                 <span class="chip-tipo">{{ c.tipo_tratamiento }}</span>
               </label>
             } @empty {
-              <p class="tab-empty">No hay cabinas registradas</p>
+              <p class="tab-empty">No hay cabinas compatibles con este tipo de terapia</p>
             }
           </div>
         </div>

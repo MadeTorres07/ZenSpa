@@ -341,10 +341,44 @@ class ProductoBase(BaseModel):
     stock: int = 0
     costo_unitario: Decimal
     stock_minimo: int = 5
+    descripcion: str | None = None
+    presentacion: str | None = None
+    uso_recomendado: str | None = None
+    fecha_vencimiento: date | None = None
+    proveedor: str | None = None
 
 
 class ProductoCreate(ProductoBase):
-    pass
+    @field_validator("nombre")
+    @classmethod
+    def validar_nombre(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("El nombre no puede estar vacío")
+        if len(v) < 2 or len(v) > 100:
+            raise ValueError("El nombre debe tener entre 2 y 100 caracteres")
+        return v
+
+    @field_validator("stock")
+    @classmethod
+    def validar_stock(cls, v: int) -> int:
+        if v < 0:
+            raise ValueError("El stock no puede ser negativo")
+        return v
+
+    @field_validator("costo_unitario")
+    @classmethod
+    def validar_costo(cls, v: Decimal) -> Decimal:
+        if v <= 0:
+            raise ValueError("El costo unitario debe ser mayor a 0")
+        return v
+
+    @field_validator("stock_minimo")
+    @classmethod
+    def validar_stock_minimo(cls, v: int) -> int:
+        if v < 0:
+            raise ValueError("El stock mínimo no puede ser negativo")
+        return v
 
 
 class ProductoUpdate(BaseModel):
@@ -352,6 +386,51 @@ class ProductoUpdate(BaseModel):
     stock: int | None = None
     costo_unitario: Decimal | None = None
     stock_minimo: int | None = None
+    descripcion: str | None = None
+    presentacion: str | None = None
+    uso_recomendado: str | None = None
+    fecha_vencimiento: date | None = None
+    proveedor: str | None = None
+
+    @field_validator("nombre")
+    @classmethod
+    def validar_nombre(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
+        v = v.strip()
+        if not v:
+            raise ValueError("El nombre no puede estar vacío")
+        if len(v) < 2 or len(v) > 100:
+            raise ValueError("El nombre debe tener entre 2 y 100 caracteres")
+        return v
+
+    @field_validator("stock")
+    @classmethod
+    def validar_stock(cls, v: int | None) -> int | None:
+        if v is None:
+            return None
+        if v < 0:
+            raise ValueError("El stock no puede ser negativo")
+        return v
+
+    @field_validator("costo_unitario")
+    @classmethod
+    def validar_costo(cls, v: Decimal | None) -> Decimal | None:
+        if v is None:
+            return None
+        if v <= 0:
+            raise ValueError("El costo unitario debe ser mayor a 0")
+        return v
+
+    @field_validator("stock_minimo")
+    @classmethod
+    def validar_stock_minimo(cls, v: int | None) -> int | None:
+        if v is None:
+            return None
+        if v < 0:
+            raise ValueError("El stock mínimo no puede ser negativo")
+        return v
+
 
 
 class ProductoResponse(ProductoBase):

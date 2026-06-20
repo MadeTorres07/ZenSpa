@@ -136,6 +136,11 @@ class Producto(Base):
     stock = Column(Integer, default=0)
     costo_unitario = Column(DECIMAL(10, 2), nullable=False)
     stock_minimo = Column(Integer, default=5)
+    descripcion = Column(Text, nullable=True)
+    presentacion = Column(String(100), nullable=True)
+    uso_recomendado = Column(Text, nullable=True)
+    fecha_vencimiento = Column(Date, nullable=True)
+    proveedor = Column(String(100), nullable=True)
 
     uso_productos = relationship("UsoProducto", back_populates="producto")
 

@@ -1,5 +1,4 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductoService } from '../../core/services/producto.service';
 import type { Producto } from '../../core/models';
@@ -7,7 +6,7 @@ import type { Producto } from '../../core/models';
 @Component({
   selector: 'app-inventario',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [FormsModule],
   templateUrl: './inventario.component.html',
   styleUrl: './inventario.component.scss',
 })
@@ -21,12 +20,16 @@ export class InventarioComponent implements OnInit {
   searchTerm = signal('');
   filtroEstado = signal<string>('todos');
   productoSeleccionado = signal<Producto | null>(null);
-  tabActivo = signal<'info' | 'stock' | 'proveedores'>('info');
+  tabActivo = signal<'info' | 'stock'>('info');
   modalEliminar = signal<Producto | null>(null);
   modalAjuste = signal<Producto | null>(null);
   ajusteCantidad = signal<number>(0);
   ajusteTipo = signal<'entrada' | 'salida'>('entrada');
   ajusteCargando = signal(false);
+  mensaje = signal('');
+  modalFormulario = signal<{ abierto: boolean; editando: boolean; producto: Producto | null }>({ abierto: false, editando: false, producto: null });
+  formData = signal<Partial<Producto>>({});
+  guardando = signal(false);
 
   // Filtros
   filtered = computed(() => {
@@ -52,7 +55,35 @@ export class InventarioComponent implements OnInit {
     return 'ok';
   }
 
+  campoError(campo: string): string | null {
+    const fd = this.formData();
+    const val = (fd as any)[campo];
+    if (campo === 'nombre' && val !== undefined && val !== null) {
+      const v = String(val).trim();
+      if (!v) return 'El nombre no puede estar vacío';
+      if (v.length < 2) return 'Debe tener al menos 2 caracteres';
+      if (v.length > 100) return 'Debe tener máximo 100 caracteres';
+    }
+    if (campo === 'stock' && val !== undefined && val !== null && val !== '') {
+      const n = Number(val);
+      if (isNaN(n) || n < 0) return 'No puede ser negativo';
+    }
+    if (campo === 'stock_minimo' && val !== undefined && val !== null && val !== '') {
+      const n = Number(val);
+      if (isNaN(n) || n < 0) return 'No puede ser negativo';
+    }
+    if (campo === 'costo_unitario' && val !== undefined && val !== null && val !== '') {
+      const n = Number(val);
+      if (isNaN(n) || n <= 0) return 'Debe ser mayor a 0';
+    }
+    return null;
+  }
+
   ngOnInit() {
+    this.cargarProductos();
+  }
+
+  cargarProductos() {
     this.productoService.getAll().subscribe({
       next: (data) => { this.productos.set(data); this.cargando.set(false); },
       error: () => this.cargando.set(false),
@@ -62,8 +93,89 @@ export class InventarioComponent implements OnInit {
   seleccionar(p: Producto) { this.productoSeleccionado.set(p); this.tabActivo.set('info'); }
   cerrarPanel() { this.productoSeleccionado.set(null); }
 
-  confirmarEliminar(p: Producto) { this.modalEliminar.set(p); }
-  cerrarModal() { this.modalEliminar.set(null); }
+  abrirCrear() {
+    this.formData.set({ nombre: '', stock: 0, costo_unitario: null as any, stock_minimo: 5, descripcion: '', presentacion: '', uso_recomendado: '', fecha_vencimiento: '', proveedor: '' });
+    this.mensaje.set('');
+    this.modalFormulario.set({ abierto: true, editando: false, producto: null });
+  }
+
+  abrirEditar(p: Producto) {
+    this.formData.set({ ...p });
+    this.mensaje.set('');
+    this.modalFormulario.set({ abierto: true, editando: true, producto: p });
+  }
+
+  updateFormField(field: string, value: any) {
+    this.formData.update(fd => ({ ...fd, [field]: value }));
+  }
+
+  cerrarFormulario() {
+    this.modalFormulario.set({ abierto: false, editando: false, producto: null });
+    this.mensaje.set('');
+  }
+
+  guardarProducto() {
+    const fd = this.formData();
+    const error = this.campoError('nombre') || this.campoError('costo_unitario');
+    if (error) {
+      this.mensaje.set(error);
+      setTimeout(() => this.mensaje.set(''), 3000);
+      return;
+    }
+    this.guardando.set(true);
+    this.mensaje.set('');
+    const m = this.modalFormulario();
+    const payload: any = { ...fd };
+    if (payload.fecha_vencimiento === '') payload.fecha_vencimiento = null;
+
+    if (m.editando && m.producto) {
+      this.productoService.update(m.producto.id, payload).subscribe({
+        next: (res: any) => {
+          this.productos.update(list => list.map(x => x.id === m.producto!.id ? { ...x, ...res } : x));
+          this.productoSeleccionado.update(v => v?.id === m.producto!.id ? { ...v, ...res } : v);
+          this.mensaje.set('Producto actualizado correctamente');
+          setTimeout(() => this.mensaje.set(''), 3000);
+          this.guardando.set(false);
+          this.cerrarFormulario();
+        },
+        error: (err) => {
+          this.guardando.set(false);
+          const detalle = err.error?.detail;
+          if (typeof detalle === 'string') this.mensaje.set(detalle);
+          else if (Array.isArray(detalle)) this.mensaje.set(detalle.map((e: any) => e.msg?.replace('Value error, ', '') || e).join('. '));
+          else this.mensaje.set('Error al actualizar el producto');
+          setTimeout(() => this.mensaje.set(''), 3000);
+        },
+      });
+    } else {
+      this.productoService.create(payload).subscribe({
+        next: (res: any) => {
+          this.productos.update(list => [...list, res]);
+          this.mensaje.set('Producto creado correctamente');
+          setTimeout(() => this.mensaje.set(''), 3000);
+          this.guardando.set(false);
+          this.cerrarFormulario();
+        },
+        error: (err) => {
+          this.guardando.set(false);
+          const detalle = err.error?.detail;
+          if (typeof detalle === 'string') this.mensaje.set(detalle);
+          else if (Array.isArray(detalle)) this.mensaje.set(detalle.map((e: any) => e.msg?.replace('Value error, ', '') || e).join('. '));
+          else this.mensaje.set('Error al crear el producto');
+          setTimeout(() => this.mensaje.set(''), 3000);
+        },
+      });
+    }
+  }
+
+  confirmarEliminar(p: Producto) {
+    this.mensaje.set('');
+    this.modalEliminar.set(p);
+  }
+  cerrarModalEliminar() {
+    this.modalEliminar.set(null);
+    this.mensaje.set('');
+  }
 
   eliminar() {
     const p = this.modalEliminar();
@@ -72,9 +184,16 @@ export class InventarioComponent implements OnInit {
       next: () => {
         this.productos.update(list => list.filter(x => x.id !== p.id));
         if (this.productoSeleccionado()?.id === p.id) this.cerrarPanel();
-        this.cerrarModal();
+        this.cerrarModalEliminar();
+        this.mensaje.set('Producto eliminado correctamente');
+        setTimeout(() => this.mensaje.set(''), 3000);
       },
-      error: () => this.cerrarModal(),
+      error: (err) => {
+        const detalle = err.error?.detail;
+        this.mensaje.set(detalle || 'Error al eliminar el producto');
+        setTimeout(() => this.mensaje.set(''), 3000);
+        this.cerrarModalEliminar();
+      },
     });
   }
 
