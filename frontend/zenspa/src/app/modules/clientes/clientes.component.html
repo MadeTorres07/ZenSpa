@@ -83,7 +83,7 @@
                     <button class="btn-icon" title="Editar" (click)="$event.stopPropagation(); editarCliente(c)">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     </button>
-                    <button class="btn-icon btn-icon-danger" title="Desactivar" (click)="$event.stopPropagation(); confirmarEliminar(c)">
+                    <button class="btn-icon btn-icon-danger" title="Eliminar" (click)="$event.stopPropagation(); confirmarEliminar(c)">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
                     </button>
                   </div>
@@ -201,7 +201,7 @@
 
         <div class="panel-actions">
           <button class="btn-outline" (click)="editarCliente(c)">Editar cliente</button>
-          <button class="btn-danger" (click)="confirmarEliminar(c)">Eliminar cliente</button>
+          <button class="btn-danger" (click)="confirmarEliminar(c)">Eliminar</button>
         </div>
       </aside>
     }
@@ -222,19 +222,31 @@
         <div class="edit-grid">
           <div class="field">
             <label>Nombre</label>
-            <input type="text" formControlName="nombre" />
+            <input type="text" formControlName="nombre" [class.input-error]="formEditar.get('nombre')?.touched && formEditar.get('nombre')?.invalid" />
+            @if (campoError('nombre')) { <span class="field-error">{{ campoError('nombre') }}</span> }
           </div>
           <div class="field">
             <label>Apellido</label>
-            <input type="text" formControlName="apellido" />
+            <input type="text" formControlName="apellido" [class.input-error]="formEditar.get('apellido')?.touched && formEditar.get('apellido')?.invalid" />
+            @if (campoError('apellido')) { <span class="field-error">{{ campoError('apellido') }}</span> }
           </div>
           <div class="field">
             <label>Email</label>
-            <input type="email" formControlName="email" />
+            <input type="email" formControlName="email" [class.input-error]="formEditar.get('email')?.touched && formEditar.get('email')?.invalid" />
+            @if (campoError('email')) { <span class="field-error">{{ campoError('email') }}</span> }
           </div>
           <div class="field">
             <label>Teléfono</label>
-            <input type="text" formControlName="telefono" />
+            <input type="text" formControlName="telefono" [class.input-error]="formEditar.get('telefono')?.touched && formEditar.get('telefono')?.invalid" />
+            @if (campoError('telefono')) { <span class="field-error">{{ campoError('telefono') }}</span> }
+          </div>
+          <div class="field">
+            <label>Fecha de nacimiento</label>
+            <input type="date" formControlName="fecha_nacimiento" />
+          </div>
+          <div class="field">
+            <label>Historial de salud</label>
+            <textarea formControlName="historial_salud" rows="2"></textarea>
           </div>
         </div>
         <div class="field">
@@ -255,11 +267,11 @@
 @if (modalEliminar(); as c) {
   <div class="modal-overlay" (click)="cerrarModal()">
     <div class="modal-card" (click)="$event.stopPropagation()">
-      <h3>Desactivar cliente</h3>
-      <p>¿Estás seguro de que deseas desactivar a <strong>{{ c.nombre }} {{ c.apellido }}</strong>?</p>
+      <h3>Eliminar cliente</h3>
+      <p>¿Estás seguro de que deseas eliminar a <strong>{{ c.nombre }} {{ c.apellido }}</strong>? Esta acción no se puede deshacer.</p>
       <div class="modal-buttons">
         <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
-        <button class="btn-danger" (click)="eliminarCliente()">Desactivar</button>
+        <button class="btn-danger" (click)="eliminarCliente()">Eliminar</button>
       </div>
     </div>
   </div>

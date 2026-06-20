@@ -41,7 +41,9 @@ export class ClientesComponent implements OnInit {
     nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
     apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
     email: ['', [Validators.required, Validators.email]],
-    telefono: [''],
+    telefono: ['', [Validators.pattern(/^[\d\s+\-()]{7,20}$/)]],
+    fecha_nacimiento: [''],
+    historial_salud: [''],
     preferencias: [''],
   });
 
@@ -117,6 +119,8 @@ export class ClientesComponent implements OnInit {
       apellido: c.apellido,
       email: c.email,
       telefono: c.telefono || '',
+      fecha_nacimiento: c.fecha_nacimiento || '',
+      historial_salud: c.historial_salud || '',
       preferencias: c.preferencias || '',
     });
     this.modalEditar.set(c);
@@ -134,11 +138,13 @@ export class ClientesComponent implements OnInit {
     if (!c) return;
     this.editando.set(true);
     this.mensaje.set('');
-    const data = {
+    const data: Record<string, any> = {
       nombre: this.formEditar.value.nombre?.trim(),
       apellido: this.formEditar.value.apellido?.trim(),
       email: this.formEditar.value.email?.trim(),
       telefono: this.formEditar.value.telefono?.trim() || null,
+      fecha_nacimiento: this.formEditar.value.fecha_nacimiento || null,
+      historial_salud: this.formEditar.value.historial_salud?.trim() || null,
       preferencias: this.formEditar.value.preferencias?.trim() || null,
     };
     this.clienteService.update(c.id, data).subscribe({
@@ -149,8 +155,15 @@ export class ClientesComponent implements OnInit {
         this.editando.set(false);
         setTimeout(() => this.cerrarModalEditar(), 1000);
       },
-      error: () => {
-        this.mensaje.set('Error al actualizar el cliente');
+      error: (err: any) => {
+        const detalle = err.error?.detail;
+        if (typeof detalle === 'string') {
+          this.mensaje.set(detalle);
+        } else if (Array.isArray(detalle)) {
+          this.mensaje.set(detalle.map((e: any) => e.msg).join('. '));
+        } else {
+          this.mensaje.set('Error al actualizar el cliente');
+        }
         this.editando.set(false);
       },
     });
@@ -190,20 +203,37 @@ export class ClientesComponent implements OnInit {
     if (!c) return;
     this.clienteService.delete(c.id).subscribe({
       next: () => {
-        this.clientes.update(list => list.map(x => x.id === c.id ? { ...x, activo: false } : x));
+        this.clientes.update(list => list.filter(x => x.id !== c.id));
         if (this.clienteSeleccionado()?.id === c.id) {
-          this.clienteSeleccionado.set({ ...this.clienteSeleccionado()!, activo: false });
+          this.cerrarPanel();
         }
-        this.mensaje.set('Cliente desactivado correctamente');
+        this.mensaje.set('Cliente eliminado correctamente');
         this.cerrarModal();
         setTimeout(() => this.mensaje.set(''), 3000);
       },
-      error: () => {
+      error: (err: any) => {
         this.cerrarModal();
-        this.mensaje.set('Error al desactivar el cliente');
+        const detalle = err.error?.detail;
+        if (typeof detalle === 'string') {
+          this.mensaje.set(detalle);
+        } else {
+          this.mensaje.set('Error al eliminar el cliente');
+        }
         setTimeout(() => this.mensaje.set(''), 3000);
       },
     });
+  }
+
+  campoError(campo: string): string {
+    const control = this.formEditar.get(campo);
+    if (!control || !control.touched || control.valid) return '';
+    if (control.errors?.['required']) return 'Este campo es obligatorio';
+    if (control.errors?.['pattern']) {
+      if (campo === 'telefono') return 'Debe tener entre 7 y 20 dígitos';
+      return 'Solo se permiten letras y espacios';
+    }
+    if (control.errors?.['email']) return 'Correo electrónico inválido';
+    return '';
   }
 
   readonly Math = Math;
