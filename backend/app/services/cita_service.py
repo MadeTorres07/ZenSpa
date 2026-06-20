@@ -1,7 +1,7 @@
 from datetime import date, datetime, time, timedelta, timezone
 
 from fastapi import HTTPException, status
-from sqlalchemy import func
+from sqlalchemy import case, func, and_
 from sqlalchemy.orm import Session
 
 from app.models.models import (
@@ -329,17 +329,41 @@ def get_by_id(db: Session, cita_id: int) -> dict | None:
 # ──────────────────────────────── REPORTES ─────────────────────────────
 
 
-def get_reporte_servicios_populares(db: Session) -> list[dict]:
+def _condiciones_cita_completada(fecha_inicio: date | None, fecha_fin: date | None):
+    """Construye condiciones para LEFT JOIN con citas completadas + rango de fechas."""
+    condiciones = [Cita.estado == "completada"]
+    if fecha_inicio:
+        condiciones.append(Cita.fecha >= fecha_inicio)
+    if fecha_fin:
+        condiciones.append(Cita.fecha <= fecha_fin)
+    return and_(*condiciones)
+
+
+def get_reporte_servicios_populares(
+    db: Session,
+    fecha_inicio: date | None = None,
+    fecha_fin: date | None = None,
+) -> list[dict]:
+    """Ranking de servicios por cantidad de reservas (solo citas completadas).
+    Usa LEFT JOIN para incluir servicios sin reservas (total=0, ingresos=0).
+    Usa case() para que SUM solo considere cita_servicios de citas completadas."""
+    condiciones = _condiciones_cita_completada(fecha_inicio, fecha_fin)
     resultados = (
         db.query(
             Servicio.id.label("servicio_id"),
             Servicio.nombre,
-            func.count(CitaServicio.cita_id).label("total_reservas"),
-            func.sum(CitaServicio.precio_aplicado).label("ingresos_generados"),
+            func.count(Cita.id).label("total_reservas"),
+            func.coalesce(
+                func.sum(
+                    case((Cita.id.isnot(None), CitaServicio.precio_aplicado), else_=0)
+                ), 0
+            ).label("ingresos_generados"),
         )
-        .join(CitaServicio, Servicio.id == CitaServicio.servicio_id)
+        .select_from(Servicio)
+        .outerjoin(CitaServicio, Servicio.id == CitaServicio.servicio_id)
+        .outerjoin(Cita, and_(Cita.id == CitaServicio.cita_id, condiciones))
         .group_by(Servicio.id, Servicio.nombre)
-        .order_by(func.count(CitaServicio.cita_id).desc())
+        .order_by(func.count(Cita.id).desc())
         .all()
     )
     return [
@@ -347,13 +371,20 @@ def get_reporte_servicios_populares(db: Session) -> list[dict]:
             "servicio_id": r.servicio_id,
             "nombre": r.nombre,
             "total_reservas": r.total_reservas,
-            "ingresos_generados": float(r.ingresos_generados) if r.ingresos_generados else 0,
+            "ingresos_generados": float(r.ingresos_generados),
         }
         for r in resultados
     ]
 
 
-def get_reporte_ingresos_terapeuta(db: Session) -> list[dict]:
+def get_reporte_ingresos_terapeuta(
+    db: Session,
+    fecha_inicio: date | None = None,
+    fecha_fin: date | None = None,
+) -> list[dict]:
+    """Ingresos generados por cada terapeuta (solo citas completadas).
+    Usa LEFT JOIN para incluir terapeutas sin ingresos ($0)."""
+    condiciones = _condiciones_cita_completada(fecha_inicio, fecha_fin)
     resultados = (
         db.query(
             Terapeuta.id.label("terapeuta_id"),
@@ -364,8 +395,9 @@ def get_reporte_ingresos_terapeuta(db: Session) -> list[dict]:
         )
         .select_from(Terapeuta)
         .join(Usuario, Terapeuta.usuario_id == Usuario.id)
-        .outerjoin(Cita, (Cita.terapeuta_id == Terapeuta.id) & (Cita.estado == "completada"))
+        .outerjoin(Cita, and_(Cita.terapeuta_id == Terapeuta.id, condiciones))
         .group_by(Terapeuta.id, Usuario.nombre, Usuario.apellido)
+        .order_by(func.coalesce(func.sum(Cita.total), 0).desc())
         .all()
     )
     return [

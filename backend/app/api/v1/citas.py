@@ -14,18 +14,22 @@ router = APIRouter(prefix="/citas", tags=["Citas"])
 
 @router.get("/reportes/servicios-populares")
 def reporte_servicios_populares(
+    fecha_inicio: date | None = Query(None),
+    fecha_fin: date | None = Query(None),
     db: Session = Depends(get_db),
     current_user: Usuario = Depends(require_roles("admin")),
 ):
-    return cita_service.get_reporte_servicios_populares(db)
+    return cita_service.get_reporte_servicios_populares(db, fecha_inicio, fecha_fin)
 
 
 @router.get("/reportes/ingresos-terapeutas")
 def reporte_ingresos_terapeutas(
+    fecha_inicio: date | None = Query(None),
+    fecha_fin: date | None = Query(None),
     db: Session = Depends(get_db),
     current_user: Usuario = Depends(require_roles("admin")),
 ):
-    return cita_service.get_reporte_ingresos_terapeuta(db)
+    return cita_service.get_reporte_ingresos_terapeuta(db, fecha_inicio, fecha_fin)
 
 
 @router.get("/")

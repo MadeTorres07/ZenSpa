@@ -15,6 +15,13 @@
     <div class="loading-state">Cargando reportes…</div>
   }
 
+  <div class="update-info">
+    @if (ultimaActualizacion()) {
+      <span>Última actualización: {{ ultimaActualizacion() }} · </span>
+    }
+    <span>Período: {{ periodo() === 'semana' ? 'Esta semana' : periodo() === 'mes' ? 'Este mes' : 'Este año' }}</span>
+  </div>
+
   <div class="reportes-grid">
     <div class="card card-span-2">
       <h3 class="card-title">Servicios más reservados</h3>

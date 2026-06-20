@@ -26,11 +26,17 @@ export class CitaService {
   update(id: number, data: any): Observable<Cita> { return this.http.put<Cita>(`${this.base}/${id}`, data); }
   delete(id: number): Observable<any> { return this.http.delete(`${this.base}/${id}`); }
 
-  getReporteServicios(): Observable<ReporteServicio[]> {
-    return this.http.get<ReporteServicio[]>(`${this.base}/reportes/servicios-populares`);
+  getReporteServicios(fecha_inicio?: string, fecha_fin?: string): Observable<ReporteServicio[]> {
+    let params = new HttpParams();
+    if (fecha_inicio) params = params.set('fecha_inicio', fecha_inicio);
+    if (fecha_fin) params = params.set('fecha_fin', fecha_fin);
+    return this.http.get<ReporteServicio[]>(`${this.base}/reportes/servicios-populares`, { params });
   }
 
-  getReporteTerapeutas(): Observable<ReporteTerapeuta[]> {
-    return this.http.get<ReporteTerapeuta[]>(`${this.base}/reportes/ingresos-terapeutas`);
+  getReporteTerapeutas(fecha_inicio?: string, fecha_fin?: string): Observable<ReporteTerapeuta[]> {
+    let params = new HttpParams();
+    if (fecha_inicio) params = params.set('fecha_inicio', fecha_inicio);
+    if (fecha_fin) params = params.set('fecha_fin', fecha_fin);
+    return this.http.get<ReporteTerapeuta[]>(`${this.base}/reportes/ingresos-terapeutas`, { params });
   }
 }

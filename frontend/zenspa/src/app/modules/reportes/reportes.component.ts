@@ -21,9 +21,11 @@ export class ReportesComponent implements OnInit, AfterViewInit, OnDestroy {
   serviciosPopulares = signal<ReporteServicio[]>([]);
   ingresosTerapeutas = signal<ReporteTerapeuta[]>([]);
   cargando = signal(true);
+  ultimaActualizacion = signal('');
 
   private chartServicios: Chart | null = null;
   private chartTerapeutas: Chart | null = null;
+  private pollingTimer: ReturnType<typeof setInterval> | null = null;
 
   totalIngresos = computed(() =>
     this.ingresosTerapeutas().reduce((s, t) => s + t.ingresos_generados, 0)
@@ -43,19 +45,53 @@ export class ReportesComponent implements OnInit, AfterViewInit, OnDestroy {
     return t ? `${t.nombre} ${t.apellido}` : '—';
   });
 
+  private getDateRange(): { inicio: string; fin: string } {
+    const hoy = new Date();
+    const fin = hoy.toISOString().split('T')[0];
+    let inicio: Date;
+    switch (this.periodo()) {
+      case 'semana':
+        inicio = new Date(hoy);
+        inicio.setDate(hoy.getDate() - hoy.getDay());
+        break;
+      case 'mes':
+        inicio = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        break;
+      case 'ano':
+        inicio = new Date(hoy.getFullYear(), 0, 1);
+        break;
+    }
+    return { inicio: inicio.toISOString().split('T')[0], fin };
+  }
+
   ngOnInit() {
-    this.citaService.getReporteServicios().subscribe({
-      next: (data) => { this.serviciosPopulares.set(data); this.renderCharts(); },
-      error: () => this.cargando.set(false),
-    });
-    this.citaService.getReporteTerapeutas().subscribe({
-      next: (data) => { this.ingresosTerapeutas.set(data); this.renderCharts(); },
-      error: () => {},
-    });
+    this.cargarReportes();
+    this.pollingTimer = setInterval(() => this.cargarReportes(), 30000);
   }
 
   ngAfterViewInit() {
     setTimeout(() => this.renderCharts(), 100);
+  }
+
+  private cargarReportes() {
+    const { inicio, fin } = this.getDateRange();
+    this.cargando.set(true);
+    this.citaService.getReporteServicios(inicio, fin).subscribe({
+      next: (data) => {
+        this.serviciosPopulares.set(data);
+        this.ultimaActualizacion.set(new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+        this.renderCharts();
+      },
+      error: () => this.cargando.set(false),
+    });
+    this.citaService.getReporteTerapeutas(inicio, fin).subscribe({
+      next: (data) => {
+        this.ingresosTerapeutas.set(data);
+        this.ultimaActualizacion.set(new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+        this.renderCharts();
+      },
+      error: () => {},
+    });
   }
 
   private renderCharts() {
@@ -63,10 +99,7 @@ export class ReportesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.destroyCharts();
 
     const primary = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim() || '#C96A2B';
-    const alpha30 = `${primary}4D`;
-    const alpha60 = `${primary}99`;
 
-    // Servicios populares — horizontal bar
     const sv = this.serviciosPopulares();
     if (this.barChartServicios?.nativeElement && sv.length) {
       this.chartServicios = new Chart(this.barChartServicios.nativeElement, {
@@ -95,7 +128,6 @@ export class ReportesComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
 
-    // Ingresos por terapeuta — vertical bar
     const tp = this.ingresosTerapeutas();
     if (this.barChartTerapeutas?.nativeElement && tp.length) {
       this.chartTerapeutas = new Chart(this.barChartTerapeutas.nativeElement, {
@@ -131,7 +163,7 @@ export class ReportesComponent implements OnInit, AfterViewInit, OnDestroy {
   cambiarPeriodo(p: 'semana' | 'mes' | 'ano') {
     this.periodo.set(p);
     this.cargando.set(true);
-    setTimeout(() => { this.cargando.set(false); this.renderCharts(); }, 200);
+    this.cargarReportes();
   }
 
   private destroyCharts() {
@@ -143,5 +175,9 @@ export class ReportesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyCharts();
+    if (this.pollingTimer) {
+      clearInterval(this.pollingTimer);
+      this.pollingTimer = null;
+    }
   }
 }
