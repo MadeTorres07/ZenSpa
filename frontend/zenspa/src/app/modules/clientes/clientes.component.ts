@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DatePipe, CurrencyPipe } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ClienteService, ClienteResumen } from '../../core/services/cliente.service';
 import { CitaService } from '../../core/services/cita.service';
@@ -10,11 +10,12 @@ import type { Cliente, Cita } from '../../core/models';
 @Component({
   selector: 'app-clientes',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule],
   templateUrl: './clientes.component.html',
   styleUrl: './clientes.component.scss',
 })
 export class ClientesComponent implements OnInit {
+  private fb = inject(FormBuilder);
   private clienteService = inject(ClienteService);
   private citaService = inject(CitaService);
   private authService = inject(AuthService);
@@ -31,7 +32,18 @@ export class ClientesComponent implements OnInit {
   paginaActual = signal(1);
   porPagina = signal(8);
   modalEliminar = signal<Cliente | null>(null);
+  modalEditar = signal<Cliente | null>(null);
   cargandoHistorial = signal(false);
+  editando = signal(false);
+  mensaje = signal('');
+
+  formEditar = this.fb.nonNullable.group({
+    nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
+    apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
+    email: ['', [Validators.required, Validators.email]],
+    telefono: [''],
+    preferencias: [''],
+  });
 
   get rol(): string {
     return this.authService.getSession()?.rol ?? '';
@@ -53,7 +65,6 @@ export class ClientesComponent implements OnInit {
     return this.filteredClientes().slice(start, start + this.porPagina());
   });
 
-  // KPIs
   totalClientes = computed(() => this.clientes().length);
   nuevosEsteMes = computed(() => {
     const now = new Date();
@@ -100,6 +111,51 @@ export class ClientesComponent implements OnInit {
     this.cargarHistorial(c.id);
   }
 
+  editarCliente(c: Cliente) {
+    this.formEditar.setValue({
+      nombre: c.nombre,
+      apellido: c.apellido,
+      email: c.email,
+      telefono: c.telefono || '',
+      preferencias: c.preferencias || '',
+    });
+    this.modalEditar.set(c);
+    this.editando.set(false);
+    this.mensaje.set('');
+  }
+
+  cerrarModalEditar() {
+    this.modalEditar.set(null);
+  }
+
+  guardarEdicion() {
+    if (this.formEditar.invalid) return;
+    const c = this.modalEditar();
+    if (!c) return;
+    this.editando.set(true);
+    this.mensaje.set('');
+    const data = {
+      nombre: this.formEditar.value.nombre?.trim(),
+      apellido: this.formEditar.value.apellido?.trim(),
+      email: this.formEditar.value.email?.trim(),
+      telefono: this.formEditar.value.telefono?.trim() || null,
+      preferencias: this.formEditar.value.preferencias?.trim() || null,
+    };
+    this.clienteService.update(c.id, data).subscribe({
+      next: (res: any) => {
+        this.clientes.update(list => list.map(x => x.id === c.id ? { ...x, ...res } : x));
+        this.clienteSeleccionado.update(v => v?.id === c.id ? { ...v, ...res } : v);
+        this.mensaje.set('Cliente actualizado correctamente');
+        this.editando.set(false);
+        setTimeout(() => this.cerrarModalEditar(), 1000);
+      },
+      error: () => {
+        this.mensaje.set('Error al actualizar el cliente');
+        this.editando.set(false);
+      },
+    });
+  }
+
   cerrarPanel() {
     this.clienteSeleccionado.set(null);
   }
@@ -126,6 +182,7 @@ export class ClientesComponent implements OnInit {
 
   cerrarModal() {
     this.modalEliminar.set(null);
+    this.mensaje.set('');
   }
 
   eliminarCliente() {
@@ -133,11 +190,19 @@ export class ClientesComponent implements OnInit {
     if (!c) return;
     this.clienteService.delete(c.id).subscribe({
       next: () => {
-        this.clientes.update(list => list.filter(x => x.id !== c.id));
-        if (this.clienteSeleccionado()?.id === c.id) this.cerrarPanel();
+        this.clientes.update(list => list.map(x => x.id === c.id ? { ...x, activo: false } : x));
+        if (this.clienteSeleccionado()?.id === c.id) {
+          this.clienteSeleccionado.set({ ...this.clienteSeleccionado()!, activo: false });
+        }
+        this.mensaje.set('Cliente desactivado correctamente');
         this.cerrarModal();
+        setTimeout(() => this.mensaje.set(''), 3000);
       },
-      error: () => this.cerrarModal(),
+      error: () => {
+        this.cerrarModal();
+        this.mensaje.set('Error al desactivar el cliente');
+        setTimeout(() => this.mensaje.set(''), 3000);
+      },
     });
   }
 

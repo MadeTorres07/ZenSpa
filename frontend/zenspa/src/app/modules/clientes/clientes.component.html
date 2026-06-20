@@ -1,3 +1,9 @@
+@if (mensaje()) {
+  <div class="toast" [class.toast-success]="!mensaje().includes('Error')" [class.toast-error]="mensaje().includes('Error')">
+    <span>{{ mensaje() }}</span>
+  </div>
+}
+
 <div class="clientes-page">
   <div class="page-header">
     <div>
@@ -67,14 +73,14 @@
                 <td>{{ (resumenes()[c.id]) ? formatearFecha(resumenes()[c.id]!.ultima_visita) : '—' }}</td>
                 <td class="cell-gasto">{{ resumenes()[c.id] ? currency.format(resumenes()[c.id]!.gasto_total) : '—' }}</td>
                 <td>
-                  <span class="estado-badge" [class.estado-activo]="true" [class.estado-inactivo]="false">{{ estadoBadge(true) }}</span>
+                  <span class="estado-badge" [class.estado-activo]="c.activo !== false" [class.estado-inactivo]="c.activo === false">{{ estadoBadge(c.activo !== false) }}</span>
                 </td>
                 <td>
                   <div class="acciones">
                     <button class="btn-icon" title="Ver detalle" (click)="$event.stopPropagation(); seleccionarCliente(c)">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
-                    <button class="btn-icon" title="Editar">
+                    <button class="btn-icon" title="Editar" (click)="$event.stopPropagation(); editarCliente(c)">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     </button>
                     <button class="btn-icon btn-icon-danger" title="Desactivar" (click)="$event.stopPropagation(); confirmarEliminar(c)">
@@ -122,7 +128,7 @@
           <span class="panel-avatar">{{ getInitiales(c.nombre + ' ' + c.apellido) }}</span>
           <div>
             <span class="panel-nombre">{{ c.nombre }} {{ c.apellido }}</span>
-            <span class="panel-estado">Activo</span>
+            <span class="panel-estado" [class.estado-activo]="c.activo !== false" [class.estado-inactivo]="c.activo === false">{{ c.activo !== false ? 'Activo' : 'Inactivo' }}</span>
           </div>
         </div>
 
@@ -194,13 +200,57 @@
         </div>
 
         <div class="panel-actions">
-          <button class="btn-outline">Editar cliente</button>
+          <button class="btn-outline" (click)="editarCliente(c)">Editar cliente</button>
           <button class="btn-danger" (click)="confirmarEliminar(c)">Eliminar cliente</button>
         </div>
       </aside>
     }
   </div>
 </div>
+
+@if (modalEditar(); as c) {
+  <div class="modal-overlay" (click)="cerrarModalEditar()">
+    <div class="modal-card modal-card-lg" (click)="$event.stopPropagation()">
+      <h3>Editar cliente</h3>
+      <p>{{ c.nombre }} {{ c.apellido }}</p>
+
+      @if (mensaje() && modalEditar()) {
+        <div class="toast" [class.toast-success]="!mensaje().includes('Error')" [class.toast-error]="mensaje().includes('Error')">{{ mensaje() }}</div>
+      }
+
+      <form [formGroup]="formEditar" (ngSubmit)="guardarEdicion()" class="edit-form">
+        <div class="edit-grid">
+          <div class="field">
+            <label>Nombre</label>
+            <input type="text" formControlName="nombre" />
+          </div>
+          <div class="field">
+            <label>Apellido</label>
+            <input type="text" formControlName="apellido" />
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input type="email" formControlName="email" />
+          </div>
+          <div class="field">
+            <label>Teléfono</label>
+            <input type="text" formControlName="telefono" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Preferencias</label>
+          <textarea formControlName="preferencias" rows="3"></textarea>
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" (click)="cerrarModalEditar()">Cancelar</button>
+          <button type="submit" class="btn-primary-sm" [disabled]="formEditar.invalid || editando()">
+            {{ editando() ? 'Guardando…' : 'Guardar cambios' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
 
 @if (modalEliminar(); as c) {
   <div class="modal-overlay" (click)="cerrarModal()">

@@ -526,6 +526,61 @@
 
 /* ─── Modal ─── */
 
+/* ─── Toast ─── */
+
+.toast {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 2000;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  animation: slideIn 0.3s ease;
+}
+
+.toast-success { background: #EDF7EE; color: #2E7D32; border: 1px solid #2E7D32; }
+.toast-error { background: #FDECEC; color: #C62828; border: 1px solid #C62828; }
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* ─── Edit form ─── */
+
+.modal-card-lg { max-width: 560px !important; }
+
+.edit-form { display: flex; flex-direction: column; gap: 16px; }
+
+.edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.edit-form .field { display: flex; flex-direction: column; gap: 6px; }
+.edit-form label { font-size: 13px; font-weight: 600; color: var(--color-text); }
+.edit-form input, .edit-form textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--color-text);
+  outline: none;
+  background: var(--color-surface);
+}
+.edit-form input:focus, .edit-form textarea:focus { border-color: var(--color-primary); }
+
+.btn-primary-sm {
+  padding: 10px 24px; border: none; border-radius: var(--radius-md);
+  background: var(--color-primary); color: #fff; font-weight: 600; cursor: pointer; font-family: inherit;
+}
+.btn-primary-sm:disabled { opacity: 0.5; cursor: not-allowed; }
+
 .modal-overlay {
   position: fixed;
   inset: 0;

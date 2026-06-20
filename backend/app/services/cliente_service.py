@@ -40,6 +40,7 @@ def _cliente_to_dict(cliente: Cliente, include_historial: bool = True) -> dict:
         "fecha_nacimiento": cliente.fecha_nacimiento,
         "historial_salud": historial,
         "preferencias": cliente.preferencias,
+        "activo": cliente.usuario.activo,
         "created_at": cliente.created_at,
     }
 

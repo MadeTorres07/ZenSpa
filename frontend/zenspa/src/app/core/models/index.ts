@@ -18,6 +18,7 @@ export interface Cliente {
   fecha_nacimiento: string;
   historial_salud: string | null;
   preferencias: string;
+  activo?: boolean;
   created_at?: string;
 }
 
