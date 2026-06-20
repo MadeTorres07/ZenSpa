@@ -1,0 +1,185 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Inventario</h2>
+      <p class="page-subtitle">Control de stock y productos del spa.</p>
+    </div>
+    <a routerLink="/inventario" class="btn-primary">+ Nuevo producto</a>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">Total productos</span>
+      <span class="kpi-valor">{{ total() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Stock total</span>
+      <span class="kpi-valor">{{ stockTotal() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Bajo stock</span>
+      <span class="kpi-valor" [class.kpi-warning]="bajoStock() > 0">{{ bajoStock() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Valor del inventario</span>
+      <span class="kpi-valor">{{ currency.format(valorInventario()) }}</span>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="tabla-section">
+      <div class="tabla-toolbar filter-bar">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" class="search-input" placeholder="Buscar producto..." [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+        </div>
+        <select class="filter-select" [ngModel]="filtroEstado()" (ngModelChange)="filtroEstado.set($event)">
+          <option value="todos">Todos</option>
+          <option value="ok">OK</option>
+          <option value="bajo">Bajo stock</option>
+          <option value="critico">Crítico</option>
+        </select>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr><th>PRODUCTO</th><th>STOCK</th><th>STOCK MÍNIMO</th><th>COSTO UNITARIO</th><th>VALOR TOTAL</th><th>ESTADO</th><th>ACCIONES</th></tr>
+          </thead>
+          <tbody>
+            @for (p of filtered(); track p.id) {
+              <tr (click)="seleccionar(p)" [class.tr-selected]="productoSeleccionado()?.id === p.id">
+                <td>
+                  <div class="cell-producto">
+                    <div class="thumb-grad" [style.background]="'linear-gradient(135deg, #E8F0E6, #8EA693)'"></div>
+                    <span class="cell-nombre">{{ p.nombre }}</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="stock-num" [class.stock-bajo]="p.stock > 0 && p.stock <= p.stock_minimo" [class.stock-cero]="p.stock === 0">{{ p.stock }}</span>
+                </td>
+                <td>{{ p.stock_minimo }}</td>
+                <td>{{ currency.format(p.costo_unitario) }}</td>
+                <td class="cell-precio">{{ currency.format(p.stock * p.costo_unitario) }}</td>
+                <td>
+                  <span class="estado-badge"
+                    [class.estado-ok]="estadoProducto(p) === 'ok'"
+                    [class.estado-bajo]="estadoProducto(p) === 'bajo'"
+                    [class.estado-critico]="estadoProducto(p) === 'critico'">
+                    {{ estadoProducto(p) === 'ok' ? 'OK' : estadoProducto(p) === 'bajo' ? 'Bajo stock' : 'Crítico' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="acciones">
+                    <button class="btn-icon" title="Ver" (click)="$event.stopPropagation(); seleccionar(p)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                    <button class="btn-icon" title="Editar">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                    <button class="btn-icon btn-icon-danger" title="Eliminar" (click)="$event.stopPropagation(); confirmarEliminar(p)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td colspan="7" class="td-empty">No se encontraron productos</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    @if (productoSeleccionado(); as p) {
+      <aside class="panel-detalle">
+        <div class="panel-header">
+          <h3 class="panel-title">Detalle del producto</h3>
+          <button class="panel-close" (click)="cerrarPanel()">✕</button>
+        </div>
+        <div class="panel-img" style="background: linear-gradient(135deg, #E8F0E6, #8EA693);"></div>
+        <div class="panel-body">
+          <span class="panel-nombre">{{ p.nombre }}</span>
+          <span class="panel-meta">Código: AE-{{ p.nombre.substring(0,3).toUpperCase() }}-{{ p.id }}</span>
+        </div>
+
+        <div class="panel-tabs">
+          <button class="tab-btn" [class.tab-active]="tabActivo() === 'info'" (click)="tabActivo.set('info')">Información</button>
+          <button class="tab-btn" [class.tab-active]="tabActivo() === 'stock'" (click)="tabActivo.set('stock')">Stock y movimientos</button>
+          <button class="tab-btn" [class.tab-active]="tabActivo() === 'proveedores'" (click)="tabActivo.set('proveedores')">Proveedores</button>
+        </div>
+
+        <div class="panel-tab-content">
+          @if (tabActivo() === 'info') {
+            <div class="info-block"><label>Descripción</label><p>Producto profesional para tratamientos de spa.</p></div>
+            <div class="info-block"><label>Presentación</label><p>Presentación estándar</p></div>
+            <div class="info-block"><label>Uso recomendado</label><p>Uso exclusivo por terapeutas certificados.</p></div>
+            <div class="info-block"><label>Fecha de vencimiento</label><p>Por definir</p></div>
+            <div class="info-block"><label>Proveedor</label><p>Proveedor habitual</p></div>
+          } @else if (tabActivo() === 'stock') {
+            <div class="info-block"><label>Stock actual</label><p class="stock-num" [class.stock-bajo]="p.stock > 0 && p.stock <= p.stock_minimo" [class.stock-cero]="p.stock === 0">{{ p.stock }} unidades</p></div>
+            <div class="info-block"><label>Stock mínimo</label><p>{{ p.stock_minimo }} unidades</p></div>
+            <div class="info-block"><label>Costo unitario</label><p>{{ currency.format(p.costo_unitario) }}</p></div>
+            <div class="info-block"><label>Valor total</label><p>{{ currency.format(p.stock * p.costo_unitario) }}</p></div>
+          } @else {
+            <p class="tab-empty">Información de proveedores próxima a implementar.</p>
+          }
+        </div>
+
+        <div class="panel-stats">
+          <div class="stat-item"><span class="stat-valor">{{ p.stock }}</span><span class="stat-label">Stock actual</span></div>
+          <div class="stat-item"><span class="stat-valor">{{ p.stock_minimo }}</span><span class="stat-label">Stock mínimo</span></div>
+          <div class="stat-item"><span class="stat-valor">{{ currency.format(p.costo_unitario) }}</span><span class="stat-label">Costo unit.</span></div>
+          <div class="stat-item"><span class="stat-valor">{{ currency.format(p.stock * p.costo_unitario) }}</span><span class="stat-label">Valor total</span></div>
+        </div>
+
+        <div class="panel-actions">
+          <button class="btn-outline">Editar producto</button>
+          <button class="btn-ajuste" (click)="abrirAjuste(p)">Ajustar stock</button>
+          <button class="btn-danger" (click)="confirmarEliminar(p)">Eliminar producto</button>
+        </div>
+      </aside>
+    }
+  </div>
+</div>
+
+@if (modalEliminar(); as p) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Eliminar producto</h3>
+      <p>¿Estás seguro de que deseas eliminar <strong>{{ p.nombre }}</strong>?</p>
+      <div class="modal-buttons">
+        <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+        <button class="btn-danger" (click)="eliminar()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (modalAjuste(); as p) {
+  <div class="modal-overlay" (click)="cerrarAjuste()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Ajustar stock</h3>
+      <p><strong>{{ p.nombre }}</strong> · Stock actual: <strong>{{ p.stock }}</strong></p>
+      <div class="ajuste-tipo">
+        <label class="ajuste-radio">
+          <input type="radio" name="ajusteTipo" [value]="'entrada'" [ngModel]="ajusteTipo()" (ngModelChange)="ajusteTipo.set($event)" />
+          <span>Entrada</span>
+        </label>
+        <label class="ajuste-radio">
+          <input type="radio" name="ajusteTipo" [value]="'salida'" [ngModel]="ajusteTipo()" (ngModelChange)="ajusteTipo.set($event)" />
+          <span>Salida</span>
+        </label>
+      </div>
+      <input type="number" class="ajuste-input" min="1" [ngModel]="ajusteCantidad()" (ngModelChange)="ajusteCantidad.set($event)" placeholder="Cantidad" />
+      <div class="modal-buttons">
+        <button class="btn-cancel" (click)="cerrarAjuste()">Cancelar</button>
+        <button class="btn-primary-sm" [disabled]="ajusteCantidad() <= 0 || ajusteCargando()" (click)="ajustarStock()">
+          {{ ajusteCargando() ? 'Ajustando…' : 'Confirmar ajuste' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

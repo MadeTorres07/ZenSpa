@@ -1,0 +1,140 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Servicios</h2>
+      <p class="page-subtitle">Catálogo de servicios ofrecidos en el spa.</p>
+    </div>
+    <a routerLink="/servicios" class="btn-primary">+ Nuevo servicio</a>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">Total servicios</span>
+      <span class="kpi-valor">{{ total() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Duración promedio</span>
+      <span class="kpi-valor">{{ duracionPromedio() }} <span class="kpi-unit">min</span></span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Precio promedio</span>
+      <span class="kpi-valor">{{ currency.format(precioPromedio()) }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Servicio más reservado</span>
+      <span class="kpi-valor kpi-sm">{{ masReservado() }}</span>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="tabla-section">
+      <div class="tabla-toolbar">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" class="search-input" placeholder="Buscar servicio..." [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr><th>SERVICIO</th><th>TIPO DE TERAPIA</th><th>DURACIÓN</th><th>PRECIO</th><th>ESTADO</th><th>ACCIONES</th></tr>
+          </thead>
+          <tbody>
+            @for (s of filtered(); track s.id) {
+              <tr (click)="seleccionar(s)" [class.tr-selected]="servicioSeleccionado()?.id === s.id">
+                <td>
+                  <div class="cell-servicio">
+                    <div class="thumb-grad" [style.background]="gradiente(s.tipo_terapia)"></div>
+                    <div>
+                      <span class="cell-nombre">{{ s.nombre }}</span>
+                      <span class="cell-desc">{{ s.tipo_terapia }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="badge-tipo">{{ s.tipo_terapia }}</span></td>
+                <td>{{ s.duracion_minutos }} min</td>
+                <td class="cell-precio">{{ currency.format(s.precio) }}</td>
+                <td><span class="estado-badge estado-activo">Activo</span></td>
+                <td>
+                  <div class="acciones">
+                    <button class="btn-icon" title="Ver" (click)="$event.stopPropagation(); seleccionar(s)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                    <button class="btn-icon" title="Editar">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                    <button class="btn-icon btn-icon-danger" title="Eliminar" (click)="$event.stopPropagation(); confirmarEliminar(s)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td colspan="6" class="td-empty">No se encontraron servicios</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    @if (servicioSeleccionado(); as s) {
+      <aside class="panel-detalle">
+        <div class="panel-header">
+          <h3 class="panel-title">Detalle del servicio</h3>
+          <button class="panel-close" (click)="cerrarPanel()">✕</button>
+        </div>
+        <div class="panel-img" [style.background]="gradiente(s.tipo_terapia)"></div>
+        <div class="panel-body">
+          <span class="panel-nombre">{{ s.nombre }}</span>
+          <span class="panel-meta">{{ s.tipo_terapia }} · {{ s.duracion_minutos }} min · {{ currency.format(s.precio) }}</span>
+        </div>
+
+        <div class="panel-tabs">
+          <button class="tab-btn" [class.tab-active]="tabActivo() === 'info'" (click)="tabActivo.set('info')">Información</button>
+          <button class="tab-btn" [class.tab-active]="tabActivo() === 'disponibilidad'" (click)="tabActivo.set('disponibilidad')">Disponibilidad</button>
+        </div>
+
+        <div class="panel-tab-content">
+          @if (tabActivo() === 'info') {
+            <div class="info-block"><label>Descripción</label><p>Experiencia de {{ s.nombre.toLowerCase() }} diseñada para tu bienestar.</p></div>
+            <div class="info-block"><label>Beneficios</label><p>Relajación profunda, alivio de tensiones, mejora del bienestar general.</p></div>
+            <div class="info-block"><label>Incluye</label><p>Consulta inicial, tratamiento completo, recomendaciones post-sesión.</p></div>
+            <div class="info-block"><label>Recomendaciones</label><p>Llegar 10 minutos antes, ropa cómoda, evitar comidas pesadas.</p></div>
+            <div class="info-block"><label>Contraindicaciones</label><p>Consultar con el terapeuta si hay condiciones médicas preexistentes.</p></div>
+          } @else {
+            <div class="info-block"><label>Cabinas compatibles</label></div>
+            @for (c of cabinasCompatibles(s); track c.id) {
+              <div class="cabina-chip">
+                <span>{{ c.nombre }}</span>
+                <span class="chip-tipo">{{ c.tipo_tratamiento }}</span>
+              </div>
+            } @empty {
+              <p class="tab-empty">Sin cabinas compatibles registradas</p>
+            }
+          }
+        </div>
+
+        <div class="panel-actions">
+          <button class="btn-outline">Editar servicio</button>
+          <button class="btn-danger" (click)="confirmarEliminar(s)">Eliminar servicio</button>
+        </div>
+      </aside>
+    }
+  </div>
+</div>
+
+@if (modalEliminar(); as s) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Eliminar servicio</h3>
+      <p>¿Estás seguro de que deseas eliminar <strong>{{ s.nombre }}</strong>?</p>
+      <div class="modal-buttons">
+        <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+        <button class="btn-danger" (click)="eliminar()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+}

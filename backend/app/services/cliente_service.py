@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.core.security import hash_password
-from app.models.models import Cliente, Usuario
+from app.models.models import Cliente, Usuario, Cita
 from app.schemas.schemas import ClienteCreate, ClienteUpdate
 
 
@@ -110,3 +110,16 @@ def delete(db: Session, cliente_id: int) -> dict | None:
     db.commit()
     db.refresh(cliente)
     return _cliente_to_dict(cliente)
+
+
+def get_resumen(db: Session, cliente_id: int) -> dict:
+    citas = db.query(Cita).filter(Cita.cliente_id == cliente_id).all()
+    completadas = [c for c in citas if c.estado == "completada"]
+    total_visitas = len(citas)
+    gasto_total = sum(float(c.total) for c in completadas)
+    ultima_visita = max((c.fecha for c in completadas), default=None)
+    return {
+        "total_visitas": total_visitas,
+        "gasto_total": gasto_total,
+        "ultima_visita": ultima_visita,
+    }

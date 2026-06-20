@@ -1,0 +1,197 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Terapeutas</h2>
+      <p class="page-subtitle">Gestiona el equipo de terapeutas y su disponibilidad.</p>
+    </div>
+    <a routerLink="/usuarios/nuevo" class="btn-primary">+ Nuevo terapeuta</a>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">Total terapeutas</span>
+      <span class="kpi-valor">{{ totalTerapeutas() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Terapeutas activos</span>
+      <span class="kpi-valor">{{ activos() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Citas asignadas hoy</span>
+      <span class="kpi-valor">{{ citasHoy() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Calificación promedio</span>
+      <span class="kpi-valor">4.8 <span class="kpi-unit">/5</span></span>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="tabla-section">
+      <div class="tabla-toolbar">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" class="search-input" placeholder="Buscar terapeuta..." [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>TERAPEUTA</th>
+              <th>ESPECIALIDAD</th>
+              <th>CITAS ESTA SEMANA</th>
+              <th>ESTADO</th>
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (t of filteredTerapeutas(); track t.id) {
+              <tr (click)="seleccionarTerapeuta(t)" [class.tr-selected]="terapeutaSeleccionado()?.id === t.id">
+                <td>
+                  <div class="cell-cliente">
+                    <span class="cell-avatar">{{ getInitiales(t.nombre + ' ' + t.apellido) }}</span>
+                    <div>
+                      <span class="cell-nombre">{{ t.nombre }} {{ t.apellido }}</span>
+                      <span class="cell-email">{{ t.email }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge-especialidad">{{ t.especialidad }}</span>
+                </td>
+                <td>
+                  <span class="citas-num">{{ citasPorTerapeuta(t.id) }}</span>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill" [style.width]="progresoBarra(citasPorTerapeuta(t.id))"></div>
+                  </div>
+                </td>
+                <td>
+                  <span class="estado-badge" [class.estado-activo]="t.activo" [class.estado-inactivo]="!t.activo">
+                    {{ t.activo ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="acciones">
+                    <button class="btn-icon" title="Ver detalle" (click)="$event.stopPropagation(); seleccionarTerapeuta(t)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                    <button class="btn-icon" title="Editar">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                    <button class="btn-icon btn-icon-danger" title="Desactivar" (click)="$event.stopPropagation(); confirmarDesactivar(t)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td colspan="5" class="td-empty">No se encontraron terapeutas</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    @if (terapeutaSeleccionado(); as t) {
+      <aside class="panel-detalle">
+        <div class="panel-header">
+          <h3 class="panel-title">Detalle del terapeuta</h3>
+          <button class="panel-close" (click)="cerrarPanel()">✕</button>
+        </div>
+
+        <div class="panel-avatar-section">
+          <span class="panel-avatar">{{ getInitiales(t.nombre + ' ' + t.apellido) }}</span>
+          <div>
+            <span class="panel-nombre">{{ t.nombre }} {{ t.apellido }}</span>
+            <span class="panel-estado" [class.estado-activo]="t.activo" [class.estado-inactivo]="!t.activo">
+              {{ t.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="panel-contacto">
+          <span>{{ t.email }}</span>
+          <span class="badge-especialidad">{{ t.especialidad }}</span>
+        </div>
+
+        <div class="panel-tabs">
+          <button class="tab-btn" [class.tab-active]="tabActivo() === 'info'" (click)="tabActivo.set('info')">Información</button>
+          <button class="tab-btn" [class.tab-active]="tabActivo() === 'disponibilidad'" (click)="tabActivo.set('disponibilidad')">Disponibilidad</button>
+          <button class="tab-btn" [class.tab-active]="tabActivo() === 'rendimiento'" (click)="tabActivo.set('rendimiento')">Rendimiento</button>
+          <button class="tab-btn" [class.tab-active]="tabActivo() === 'documentos'" (click)="tabActivo.set('documentos')">Documentos</button>
+        </div>
+
+        <div class="panel-tab-content">
+          @if (tabActivo() === 'info') {
+            <div class="info-block">
+              <label>Certificaciones</label>
+              @for (cert of certificacionesLista(t.certificaciones); track $index) {
+                <p class="cert-item">{{ cert }}</p>
+              } @empty {
+                <p>Sin certificaciones registradas</p>
+              }
+            </div>
+            <div class="info-block">
+              <label>Sobre mí</label>
+              <p>Terapeuta especializado en {{ t.especialidad }} con amplia experiencia en el bienestar integral.</p>
+            </div>
+          } @else if (tabActivo() === 'disponibilidad') {
+            <p class="tab-placeholder">Sección de disponibilidad próxima a implementar.</p>
+          } @else if (tabActivo() === 'rendimiento') {
+            <div class="info-block">
+              <label>Citas esta semana</label>
+              <p>{{ citasPorTerapeuta(t.id) }}</p>
+            </div>
+            <div class="info-block">
+              <label>Calificación promedio</label>
+              <p>4.8 / 5</p>
+            </div>
+            <div class="info-block">
+              <label>Clientes atendidos</label>
+              <p>{{ clientesAtendidos(t.id) }}</p>
+            </div>
+          } @else {
+            <p class="tab-placeholder">Sección de documentos próxima a implementar.</p>
+          }
+        </div>
+
+        <div class="panel-stats">
+          <div class="stat-item">
+            <span class="stat-valor">{{ citasPorTerapeuta(t.id) }}</span>
+            <span class="stat-label">Citas esta semana</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-valor">4.8</span>
+            <span class="stat-label">Calificación</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-valor">{{ clientesAtendidos(t.id) }}</span>
+            <span class="stat-label">Clientes</span>
+          </div>
+        </div>
+
+        <div class="panel-actions">
+          <button class="btn-outline">Editar terapeuta</button>
+          <button class="btn-danger" (click)="confirmarDesactivar(t)">Desactivar terapeuta</button>
+        </div>
+      </aside>
+    }
+  </div>
+</div>
+
+@if (modalDesactivar(); as t) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Desactivar terapeuta</h3>
+      <p>¿Estás seguro de que deseas desactivar a <strong>{{ t.nombre }} {{ t.apellido }}</strong>?</p>
+      <div class="modal-buttons">
+        <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+        <button class="btn-danger" (click)="desactivarTerapeuta()">Desactivar</button>
+      </div>
+    </div>
+  </div>
+}

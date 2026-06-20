@@ -18,6 +18,7 @@ export interface Cliente {
   fecha_nacimiento: string;
   historial_salud: string | null;
   preferencias: string;
+  created_at?: string;
 }
 
 export interface Terapeuta {
@@ -25,6 +26,7 @@ export interface Terapeuta {
   usuario_id: number;
   nombre: string;
   apellido: string;
+  email: string;
   especialidad: string;
   certificaciones: string;
   activo: boolean;

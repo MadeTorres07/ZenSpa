@@ -1,0 +1,216 @@
+<div class="clientes-page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Clientes</h2>
+      <p class="page-subtitle">Gestiona la información y el historial de tus clientes.</p>
+    </div>
+    <a routerLink="/registro" class="btn-primary">+ Nuevo cliente</a>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">Total clientes</span>
+      <span class="kpi-valor">{{ totalClientes() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Clientes nuevos (mes)</span>
+      <span class="kpi-valor">{{ nuevosEsteMes() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Clientes frecuentes</span>
+      <span class="kpi-valor">{{ clientesFrecuentes() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Valor promedio por cliente</span>
+      <span class="kpi-valor">{{ currency.format(valorPromedio()) }}</span>
+    </div>
+  </div>
+
+  <div class="clientes-grid">
+    <div class="tabla-section">
+      <div class="tabla-toolbar">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" class="search-input" placeholder="Buscar cliente..." [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event); paginaActual.set(1)" />
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="clientes-table">
+          <thead>
+            <tr>
+              <th>CLIENTE</th>
+              <th>TELÉFONO</th>
+              <th>FECHA NAC.</th>
+              <th>ÚLTIMA VISITA</th>
+              <th>GASTO TOTAL</th>
+              <th>ESTADO</th>
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of paginatedClientes(); track c.id) {
+              <tr (click)="seleccionarCliente(c)" [class.tr-selected]="clienteSeleccionado()?.id === c.id">
+                <td>
+                  <div class="cell-cliente">
+                    <span class="cell-avatar">{{ getInitiales(c.nombre + ' ' + c.apellido) }}</span>
+                    <div>
+                      <span class="cell-nombre">{{ c.nombre }} {{ c.apellido }}</span>
+                      <span class="cell-email">{{ c.email }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="cell-tel">{{ c.telefono || '—' }}</td>
+                <td>{{ formatearFecha(c.fecha_nacimiento) }}</td>
+                <td>{{ (resumenes()[c.id]) ? formatearFecha(resumenes()[c.id]!.ultima_visita) : '—' }}</td>
+                <td class="cell-gasto">{{ resumenes()[c.id] ? currency.format(resumenes()[c.id]!.gasto_total) : '—' }}</td>
+                <td>
+                  <span class="estado-badge" [class.estado-activo]="true" [class.estado-inactivo]="false">{{ estadoBadge(true) }}</span>
+                </td>
+                <td>
+                  <div class="acciones">
+                    <button class="btn-icon" title="Ver detalle" (click)="$event.stopPropagation(); seleccionarCliente(c)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                    <button class="btn-icon" title="Editar">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                    <button class="btn-icon btn-icon-danger" title="Desactivar" (click)="$event.stopPropagation(); confirmarEliminar(c)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td colspan="7" class="td-empty">No se encontraron clientes</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination">
+        <span class="pagination-info">
+          Mostrando {{ desde() }} a {{ hasta() }} de {{ filteredClientes().length }} clientes
+        </span>
+        <div class="pagination-controls">
+          <button class="page-btn" (click)="cambiarPagina(1)" [disabled]="paginaActual() === 1">«</button>
+          <button class="page-btn" (click)="cambiarPagina(paginaActual() - 1)" [disabled]="paginaActual() === 1">‹</button>
+          @for (p of rangoPaginacion(); track p) {
+            <button class="page-btn" [class.page-active]="paginaActual() === p" (click)="cambiarPagina(p)">{{ p }}</button>
+          }
+          <button class="page-btn" (click)="cambiarPagina(paginaActual() + 1)" [disabled]="paginaActual() === totalPages()">›</button>
+          <button class="page-btn" (click)="cambiarPagina(totalPages())" [disabled]="paginaActual() === totalPages()">»</button>
+        </div>
+        <select class="page-size" [ngModel]="porPagina()" (ngModelChange)="porPagina.set($event); paginaActual.set(1)">
+          <option [value]="8">8 por página</option>
+          <option [value]="16">16 por página</option>
+          <option [value]="32">32 por página</option>
+        </select>
+      </div>
+    </div>
+
+    @if (clienteSeleccionado(); as c) {
+      <aside class="panel-detalle">
+        <div class="panel-header">
+          <h3 class="panel-title">Detalle del cliente</h3>
+          <button class="panel-close" (click)="cerrarPanel()">✕</button>
+        </div>
+
+        <div class="panel-avatar-section">
+          <span class="panel-avatar">{{ getInitiales(c.nombre + ' ' + c.apellido) }}</span>
+          <div>
+            <span class="panel-nombre">{{ c.nombre }} {{ c.apellido }}</span>
+            <span class="panel-estado">Activo</span>
+          </div>
+        </div>
+
+        <div class="panel-contacto">
+          <span>{{ c.email }}</span>
+          @if (c.telefono) { <span>{{ c.telefono }}</span> }
+          @if (c.fecha_nacimiento) { <span>{{ formatearFecha(c.fecha_nacimiento) }}</span> }
+        </div>
+
+        <div class="panel-tabs">
+          <button class="tab-btn" [class.tab-active]="tabActivo() === 'info'" (click)="tabActivo.set('info')">Información</button>
+          <button class="tab-btn" [class.tab-active]="tabActivo() === 'historial'" (click)="tabActivo.set('historial')">Historial</button>
+          <button class="tab-btn" [class.tab-active]="tabActivo() === 'preferencias'" (click)="tabActivo.set('preferencias')">Preferencias</button>
+          <button class="tab-btn" [class.tab-active]="tabActivo() === 'notas'" (click)="tabActivo.set('notas')">Notas</button>
+        </div>
+
+        <div class="panel-tab-content">
+          @if (tabActivo() === 'info') {
+            @if (c.historial_salud && rol !== 'recepcionista') {
+              <div class="info-block">
+                <label>Historial de salud</label>
+                <p>{{ c.historial_salud }}</p>
+              </div>
+            }
+            @if (c.preferencias) {
+              <div class="info-block">
+                <label>Preferencias</label>
+                <p>{{ c.preferencias }}</p>
+              </div>
+            }
+          } @else if (tabActivo() === 'historial') {
+            @if (cargandoHistorial()) {
+              <p class="tab-loading">Cargando historial...</p>
+            } @else if (historialCitas().length === 0) {
+              <p class="tab-empty">Sin citas registradas</p>
+            } @else {
+              @for (cita of historialCitas(); track cita.id) {
+                <div class="historial-item">
+                  <div class="historial-fecha">{{ formatearFecha(cita.fecha) }}</div>
+                  <div class="historial-info">
+                    <span>{{ cita.nombre_terapeuta }}</span>
+                    <span>{{ cita.estado }}</span>
+                  </div>
+                </div>
+              }
+            }
+          } @else if (tabActivo() === 'preferencias') {
+            <p>{{ c.preferencias || 'Sin preferencias registradas' }}</p>
+          } @else if (tabActivo() === 'notas') {
+            <p class="tab-empty">Sección de notas próxima a implementar.</p>
+          }
+        </div>
+
+        <div class="panel-stats">
+          @if (resumenes()[c.id]; as r) {
+            <div class="stat-item">
+              <span class="stat-valor">{{ r.total_visitas }}</span>
+              <span class="stat-label">Total de visitas</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-valor">{{ currency.format(r.gasto_total) }}</span>
+              <span class="stat-label">Gasto total</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-valor">{{ formatearFecha(c.created_at ?? null) }}</span>
+              <span class="stat-label">Cliente desde</span>
+            </div>
+          }
+        </div>
+
+        <div class="panel-actions">
+          <button class="btn-outline">Editar cliente</button>
+          <button class="btn-danger" (click)="confirmarEliminar(c)">Eliminar cliente</button>
+        </div>
+      </aside>
+    }
+  </div>
+</div>
+
+@if (modalEliminar(); as c) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Desactivar cliente</h3>
+      <p>¿Estás seguro de que deseas desactivar a <strong>{{ c.nombre }} {{ c.apellido }}</strong>?</p>
+      <div class="modal-buttons">
+        <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+        <button class="btn-danger" (click)="eliminarCliente()">Desactivar</button>
+      </div>
+    </div>
+  </div>
+}

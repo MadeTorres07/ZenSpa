@@ -204,6 +204,12 @@ class ProductoUso(BaseModel):
         return v
 
 
+class ClienteResumen(BaseModel):
+    total_visitas: int
+    gasto_total: float
+    ultima_visita: date | None = None
+
+
 class CitaCreate(BaseModel):
     cliente_id: int
     terapeuta_id: int

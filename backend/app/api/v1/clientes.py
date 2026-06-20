@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.security import get_current_user, require_roles
 from app.models.models import Usuario
-from app.schemas.schemas import ClienteCreate, ClienteUpdate
+from app.schemas.schemas import ClienteCreate, ClienteResumen, ClienteUpdate
 from app.services import cliente_service
 
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
@@ -25,6 +25,15 @@ def listar_clientes(
     if current_user.rol not in ("admin", "recepcionista", "terapeuta"):
         raise HTTPException(status_code=403, detail="No tienes permiso para esta accion")
     return cliente_service.get_all(db, include_historial=include_historial)
+
+
+@router.get("/{cliente_id}/resumen", response_model=ClienteResumen)
+def resumen_cliente(
+    cliente_id: int,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user),
+):
+    return cliente_service.get_resumen(db, cliente_id)
 
 
 @router.get("/{cliente_id}")

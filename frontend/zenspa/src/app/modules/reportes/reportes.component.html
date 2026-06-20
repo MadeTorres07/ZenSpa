@@ -1,0 +1,75 @@
+<div class="reportes-page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Reportes</h2>
+      <p class="page-subtitle">Indicadores y estadísticas del negocio.</p>
+    </div>
+    <div class="period-selector">
+      <button class="period-btn" [class.period-active]="periodo() === 'semana'" (click)="cambiarPeriodo('semana')">Esta semana</button>
+      <button class="period-btn" [class.period-active]="periodo() === 'mes'" (click)="cambiarPeriodo('mes')">Este mes</button>
+      <button class="period-btn" [class.period-active]="periodo() === 'ano'" (click)="cambiarPeriodo('ano')">Este año</button>
+    </div>
+  </div>
+
+  @if (cargando()) {
+    <div class="loading-state">Cargando reportes…</div>
+  }
+
+  <div class="reportes-grid">
+    <div class="card card-span-2">
+      <h3 class="card-title">Servicios más reservados</h3>
+      <div class="card-body dual">
+        <div class="chart-wrapper">
+          <canvas #barChartServicios></canvas>
+        </div>
+        <div class="table-resumen">
+          <table>
+            <thead>
+              <tr><th>Servicio</th><th>Reservas</th><th>Ingresos</th></tr>
+            </thead>
+            <tbody>
+              @for (s of serviciosPopulares(); track s.servicio_id) {
+                <tr>
+                  <td>{{ s.nombre }}</td>
+                  <td class="td-center">{{ s.total_reservas }}</td>
+                  <td class="td-right">{{ currency.format(s.ingresos_generados) }}</td>
+                </tr>
+              } @empty {
+                <tr><td colspan="3" class="td-empty">Sin datos</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">Ingresos por terapeuta</h3>
+      <div class="chart-wrapper chart-v">
+        <canvas #barChartTerapeutas></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">Resumen de ingresos</h3>
+      <div class="resumen-stats">
+        <div class="resumen-item">
+          <span class="resumen-label">Total ingresos</span>
+          <span class="resumen-valor">{{ currency.format(totalIngresos()) }}</span>
+        </div>
+        <div class="resumen-item">
+          <span class="resumen-label">Cita más popular</span>
+          <span class="resumen-valor resumen-sm">{{ citaPopular() }}</span>
+        </div>
+        <div class="resumen-item">
+          <span class="resumen-label">Terapeuta top</span>
+          <span class="resumen-valor resumen-sm">{{ terapeutaTopNombre() }}</span>
+        </div>
+        <div class="resumen-item">
+          <span class="resumen-label">Producto más usado</span>
+          <span class="resumen-valor resumen-sm">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
