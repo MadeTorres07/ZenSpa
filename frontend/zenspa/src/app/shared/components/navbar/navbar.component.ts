@@ -30,6 +30,7 @@ export class NavbarComponent {
     { label: 'Terapeutas', route: '/terapeutas', roles: ['admin'] },
     { label: 'Servicios', route: '/servicios', roles: ['admin'] },
     { label: 'Inventario', route: '/inventario', roles: ['admin'] },
+    { label: 'Usuarios', route: '/usuarios/nuevo', roles: ['admin'] },
     { label: 'Reportes', route: '/reportes', roles: ['admin'] },
   ];
 
