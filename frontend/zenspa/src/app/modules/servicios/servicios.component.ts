@@ -112,8 +112,14 @@ export class ServiciosComponent implements OnInit {
       },
       error: (err: any) => {
         this.cerrarModal();
-        const detalle = err.error?.detail;
-        this.mensaje.set(typeof detalle === 'string' ? detalle : 'Error al eliminar el servicio');
+        let msg = '';
+        const body = err.error;
+        if (typeof body === 'string') msg = body;
+        else if (body?.detail && typeof body.detail === 'string') msg = body.detail;
+        else if (body?.detail && Array.isArray(body.detail)) msg = body.detail.map((e: any) => e.msg?.replace('Value error, ', '') || e).join('. ');
+        else if (err.message) msg = err.message;
+        else msg = 'Error al eliminar el servicio';
+        this.mensaje.set(msg);
         setTimeout(() => this.mensaje.set(''), 3000);
       },
     });

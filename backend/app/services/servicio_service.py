@@ -118,10 +118,29 @@ def delete(db: Session, servicio_id: int) -> dict | None:
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="El servicio tiene historial de citas, no se puede eliminar",
         )
-    data = _servicio_to_dict(servicio)
+
+    cabinas_ids = [
+        row[0] for row in db.query(CabinaServicio.cabina_id)
+        .filter(CabinaServicio.servicio_id == servicio_id)
+        .all()
+    ]
+    data = {
+        "id": servicio.id,
+        "nombre": servicio.nombre,
+        "duracion_minutos": servicio.duracion_minutos,
+        "precio": float(servicio.precio),
+        "tipo_terapia": servicio.tipo_terapia,
+        "descripcion": servicio.descripcion,
+        "beneficios": servicio.beneficios,
+        "incluye": servicio.incluye,
+        "recomendaciones": servicio.recomendaciones,
+        "contraindicaciones": servicio.contraindicaciones,
+        "cabinas_ids": cabinas_ids,
+    }
+
     db.query(CabinaServicio).filter(
         CabinaServicio.servicio_id == servicio_id
-    ).delete(synchronize_session='fetch')
+    ).delete(synchronize_session=False)
     db.delete(servicio)
     db.commit()
     return data
