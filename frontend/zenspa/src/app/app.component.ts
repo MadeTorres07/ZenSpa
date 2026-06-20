@@ -18,7 +18,7 @@ export class AppComponent {
     this.router.events
       .pipe(filter((e) => e instanceof NavigationEnd))
       .subscribe((e: any) => {
-        this.showNavbar.set(!['/login', '/', '/registro'].includes(e.url));
+        this.showNavbar.set(e.url !== '/' && !['/login', '/registro'].some(p => e.url.startsWith(p)));
       });
   }
 }

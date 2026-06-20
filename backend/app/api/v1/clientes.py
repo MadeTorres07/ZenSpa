@@ -60,9 +60,12 @@ def crear_cliente(
     db: Session = Depends(get_db),
     current_user: Usuario = Depends(require_roles("admin", "recepcionista")),
 ):
-    existe = db.query(Usuario).filter(Usuario.email == data.email).first()
-    if existe:
+    if db.query(Usuario).filter(Usuario.email == data.email).first():
         raise HTTPException(status_code=400, detail="El email ya esta registrado")
+    if data.telefono:
+        tel_limpio = data.telefono.strip()
+        if db.query(Cliente).filter(Cliente.telefono == tel_limpio).first():
+            raise HTTPException(status_code=400, detail="Este número de teléfono ya está registrado")
     return cliente_service.create(db, data)
 
 

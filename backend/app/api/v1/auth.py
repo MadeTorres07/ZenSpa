@@ -8,7 +8,7 @@ from app.core.security import (
     get_current_user,
     verify_password,
 )
-from app.models.models import Usuario
+from app.models.models import Cliente, Usuario
 from app.schemas.schemas import ClienteCreate, UsuarioResponse
 from app.services import cliente_service
 
@@ -53,9 +53,12 @@ def registrar_cliente(
     data: ClienteCreate,
     db: Session = Depends(get_db),
 ):
-    existe = db.query(Usuario).filter(Usuario.email == data.email).first()
-    if existe:
+    if db.query(Usuario).filter(Usuario.email == data.email).first():
         raise HTTPException(status_code=400, detail="El email ya esta registrado")
+    if data.telefono:
+        tel_limpio = data.telefono.strip()
+        if db.query(Cliente).filter(Cliente.telefono == tel_limpio).first():
+            raise HTTPException(status_code=400, detail="Este número de teléfono ya está registrado")
     return cliente_service.create(db, data)
 
 
