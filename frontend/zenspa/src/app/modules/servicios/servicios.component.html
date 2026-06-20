@@ -160,12 +160,12 @@
           </div>
           <div class="field">
             <label>Duración (min) *</label>
-            <input type="number" formControlName="duracion_minutos" min="5" max="480" [class.input-error]="formServicio.get('duracion_minutos')?.touched && formServicio.get('duracion_minutos')?.invalid" />
+            <input type="number" formControlName="duracion_minutos" min="30" max="120" [class.input-error]="formServicio.get('duracion_minutos')?.touched && formServicio.get('duracion_minutos')?.invalid" />
             @if (campoError('duracion_minutos')) { <span class="field-error">{{ campoError('duracion_minutos') }}</span> }
           </div>
           <div class="field">
             <label>Precio ($) *</label>
-            <input type="number" formControlName="precio" min="1" [class.input-error]="formServicio.get('precio')?.touched && formServicio.get('precio')?.invalid" />
+            <input type="number" formControlName="precio" min="10000" [class.input-error]="formServicio.get('precio')?.touched && formServicio.get('precio')?.invalid" />
             @if (campoError('precio')) { <span class="field-error">{{ campoError('precio') }}</span> }
           </div>
         </div>

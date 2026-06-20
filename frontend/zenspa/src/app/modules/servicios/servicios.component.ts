@@ -44,8 +44,8 @@ export class ServiciosComponent implements OnInit {
   formServicio = this.fb.nonNullable.group({
     nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
     tipo_terapia: ['', Validators.required],
-    duracion_minutos: [60, [Validators.required, Validators.min(5), Validators.max(480)]],
-    precio: [0, [Validators.required, Validators.min(1)]],
+    duracion_minutos: [60, [Validators.required, Validators.min(30), Validators.max(120)]],
+    precio: [10000, [Validators.required, Validators.min(10000)]],
     descripcion: [''],
     beneficios: [''],
     incluye: [''],
@@ -223,10 +223,10 @@ export class ServiciosComponent implements OnInit {
     if (!control || !control.touched || control.valid) return '';
     if (control.errors?.['required']) return 'Este campo es obligatorio';
     if (control.errors?.['min']) {
-      if (campo === 'duracion_minutos') return 'Mínimo 5 minutos';
-      if (campo === 'precio') return 'Debe ser mayor a 0';
+      if (campo === 'duracion_minutos') return 'Mínimo 30 minutos';
+      if (campo === 'precio') return 'Mínimo $10.000';
     }
-    if (control.errors?.['max']) return 'Máximo 480 minutos';
+    if (control.errors?.['max']) return 'Máximo 120 minutos';
     if (control.errors?.['minlength']) return 'Mínimo 2 caracteres';
     if (control.errors?.['maxlength']) return 'Máximo 100 caracteres';
     return '';

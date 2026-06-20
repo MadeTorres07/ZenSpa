@@ -259,15 +259,15 @@ class ServicioCreate(ServicioBase):
     @field_validator("duracion_minutos")
     @classmethod
     def validar_duracion(cls, v: int) -> int:
-        if v < 5 or v > 480:
-            raise ValueError("La duración debe estar entre 5 y 480 minutos")
+        if v < 30 or v > 120:
+            raise ValueError("La duración debe estar entre 30 y 120 minutos")
         return v
 
     @field_validator("precio")
     @classmethod
     def validar_precio(cls, v: Decimal) -> Decimal:
-        if v <= 0:
-            raise ValueError("El precio debe ser mayor a 0")
+        if v < 10000:
+            raise ValueError("El precio mínimo es $10.000")
         return v
 
 
@@ -300,8 +300,8 @@ class ServicioUpdate(BaseModel):
     def validar_duracion(cls, v: int | None) -> int | None:
         if v is None:
             return None
-        if v < 5 or v > 480:
-            raise ValueError("La duración debe estar entre 5 y 480 minutos")
+        if v < 30 or v > 120:
+            raise ValueError("La duración debe estar entre 30 y 120 minutos")
         return v
 
     @field_validator("precio")
@@ -309,8 +309,8 @@ class ServicioUpdate(BaseModel):
     def validar_precio(cls, v: Decimal | None) -> Decimal | None:
         if v is None:
             return None
-        if v <= 0:
-            raise ValueError("El precio debe ser mayor a 0")
+        if v < 10000:
+            raise ValueError("El precio mínimo es $10.000")
         return v
 
 

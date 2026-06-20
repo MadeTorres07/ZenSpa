@@ -35,8 +35,20 @@ def get_by_id(db: Session, servicio_id: int) -> dict | None:
     return _servicio_to_dict(servicio)
 
 
+def _nombre_existe(db: Session, nombre: str, exclude_id: int | None = None) -> bool:
+    query = db.query(Servicio).filter(Servicio.nombre == nombre.strip())
+    if exclude_id is not None:
+        query = query.filter(Servicio.id != exclude_id)
+    return query.first() is not None
+
+
 def create(db: Session, data: ServicioCreate) -> dict:
     try:
+        if _nombre_existe(db, data.nombre):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Ya existe un servicio con ese nombre",
+            )
         servicio = Servicio(
             nombre=data.nombre,
             duracion_minutos=data.duracion_minutos,
@@ -57,6 +69,9 @@ def create(db: Session, data: ServicioCreate) -> dict:
         db.commit()
         db.refresh(servicio)
         return _servicio_to_dict(servicio)
+    except HTTPException:
+        db.rollback()
+        raise
     except Exception:
         db.rollback()
         raise
@@ -67,6 +82,12 @@ def update(db: Session, servicio_id: int, data: ServicioUpdate) -> dict | None:
     if not servicio:
         return None
 
+    if data.nombre is not None and _nombre_existe(db, data.nombre, exclude_id=servicio_id):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Ya existe un servicio con ese nombre",
+        )
+
     update_data = data.model_dump(exclude_unset=True, exclude={"cabinas_ids"})
     for field, value in update_data.items():
         setattr(servicio, field, value)
@@ -74,7 +95,7 @@ def update(db: Session, servicio_id: int, data: ServicioUpdate) -> dict | None:
     if "cabinas_ids" in data.model_dump(exclude_unset=True):
         db.query(CabinaServicio).filter(
             CabinaServicio.servicio_id == servicio_id
-        ).delete()
+        ).delete(synchronize_session='fetch')
         for cabina_id in data.cabinas_ids or []:
             db.add(CabinaServicio(cabina_id=cabina_id, servicio_id=servicio_id))
 
@@ -100,7 +121,7 @@ def delete(db: Session, servicio_id: int) -> dict | None:
     data = _servicio_to_dict(servicio)
     db.query(CabinaServicio).filter(
         CabinaServicio.servicio_id == servicio_id
-    ).delete()
+    ).delete(synchronize_session='fetch')
     db.delete(servicio)
     db.commit()
     return data
