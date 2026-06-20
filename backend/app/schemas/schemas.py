@@ -236,10 +236,39 @@ class ServicioBase(BaseModel):
     duracion_minutos: int
     precio: Decimal
     tipo_terapia: str
+    descripcion: str | None = None
+    beneficios: str | None = None
+    incluye: str | None = None
+    recomendaciones: str | None = None
+    contraindicaciones: str | None = None
 
 
 class ServicioCreate(ServicioBase):
-    pass
+    cabinas_ids: list[int] = []
+
+    @field_validator("nombre")
+    @classmethod
+    def validar_nombre(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("El nombre no puede estar vacío")
+        if len(v) < 2 or len(v) > 100:
+            raise ValueError("El nombre debe tener entre 2 y 100 caracteres")
+        return v
+
+    @field_validator("duracion_minutos")
+    @classmethod
+    def validar_duracion(cls, v: int) -> int:
+        if v < 5 or v > 480:
+            raise ValueError("La duración debe estar entre 5 y 480 minutos")
+        return v
+
+    @field_validator("precio")
+    @classmethod
+    def validar_precio(cls, v: Decimal) -> Decimal:
+        if v <= 0:
+            raise ValueError("El precio debe ser mayor a 0")
+        return v
 
 
 class ServicioUpdate(BaseModel):
@@ -247,10 +276,47 @@ class ServicioUpdate(BaseModel):
     duracion_minutos: int | None = None
     precio: Decimal | None = None
     tipo_terapia: str | None = None
+    descripcion: str | None = None
+    beneficios: str | None = None
+    incluye: str | None = None
+    recomendaciones: str | None = None
+    contraindicaciones: str | None = None
+    cabinas_ids: list[int] | None = None
+
+    @field_validator("nombre")
+    @classmethod
+    def validar_nombre(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
+        v = v.strip()
+        if not v:
+            raise ValueError("El nombre no puede estar vacío")
+        if len(v) < 2 or len(v) > 100:
+            raise ValueError("El nombre debe tener entre 2 y 100 caracteres")
+        return v
+
+    @field_validator("duracion_minutos")
+    @classmethod
+    def validar_duracion(cls, v: int | None) -> int | None:
+        if v is None:
+            return None
+        if v < 5 or v > 480:
+            raise ValueError("La duración debe estar entre 5 y 480 minutos")
+        return v
+
+    @field_validator("precio")
+    @classmethod
+    def validar_precio(cls, v: Decimal | None) -> Decimal | None:
+        if v is None:
+            return None
+        if v <= 0:
+            raise ValueError("El precio debe ser mayor a 0")
+        return v
 
 
 class ServicioResponse(ServicioBase):
     id: int
+    cabinas_ids: list[int] = []
 
     model_config = ConfigDict(from_attributes=True)
 

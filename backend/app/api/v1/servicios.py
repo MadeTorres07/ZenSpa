@@ -10,7 +10,7 @@ from app.services import servicio_service
 router = APIRouter(prefix="/servicios", tags=["Servicios"])
 
 
-@router.get("/", response_model=list[ServicioResponse])
+@router.get("/")
 def listar_servicios(
     tipo_terapia: str | None = Query(None),
     db: Session = Depends(get_db),
@@ -19,7 +19,7 @@ def listar_servicios(
     return servicio_service.get_all(db, tipo_terapia=tipo_terapia)
 
 
-@router.get("/{servicio_id}", response_model=ServicioResponse)
+@router.get("/{servicio_id}")
 def obtener_servicio(
     servicio_id: int,
     db: Session = Depends(get_db),
@@ -31,7 +31,7 @@ def obtener_servicio(
     return servicio
 
 
-@router.post("/", response_model=ServicioResponse, status_code=201)
+@router.post("/", status_code=201)
 def crear_servicio(
     data: ServicioCreate,
     db: Session = Depends(get_db),
@@ -40,7 +40,7 @@ def crear_servicio(
     return servicio_service.create(db, data)
 
 
-@router.put("/{servicio_id}", response_model=ServicioResponse)
+@router.put("/{servicio_id}")
 def actualizar_servicio(
     servicio_id: int,
     data: ServicioUpdate,
@@ -53,7 +53,7 @@ def actualizar_servicio(
     return resultado
 
 
-@router.delete("/{servicio_id}", response_model=ServicioResponse)
+@router.delete("/{servicio_id}")
 def eliminar_servicio(
     servicio_id: int,
     db: Session = Depends(get_db),

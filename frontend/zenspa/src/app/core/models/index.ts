@@ -47,6 +47,12 @@ export interface Servicio {
   duracion_minutos: number;
   precio: number;
   tipo_terapia: string;
+  descripcion?: string;
+  beneficios?: string;
+  incluye?: string;
+  recomendaciones?: string;
+  contraindicaciones?: string;
+  cabinas_ids?: number[];
 }
 
 export interface Producto {

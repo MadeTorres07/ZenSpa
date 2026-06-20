@@ -100,6 +100,11 @@ class Servicio(Base):
         Enum("masajes", "facial", "hidroterapia", "aromaterapia", "multiple"),
         nullable=False,
     )
+    descripcion = Column(Text, nullable=True)
+    beneficios = Column(Text, nullable=True)
+    incluye = Column(Text, nullable=True)
+    recomendaciones = Column(Text, nullable=True)
+    contraindicaciones = Column(Text, nullable=True)
 
     cabina_servicios = relationship("CabinaServicio", back_populates="servicio")
     cita_servicios = relationship("CitaServicio", back_populates="servicio")

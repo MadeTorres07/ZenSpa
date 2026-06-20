@@ -5,13 +5,28 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import router as v1_router
 from app.core.config import settings
-from app.core.database import check_db_connection
+from sqlalchemy import inspect, text
+
+from app.core.database import check_db_connection, engine
 from app.core.seed_passwords import seed_passwords
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Servidor ZenSpa Bienestar corriendo")
+    try:
+        inspector = inspect(engine)
+        columns = [c["name"] for c in inspector.get_columns("servicios")]
+        nuevos = [("descripcion", "TEXT"), ("beneficios", "TEXT"), ("incluye", "TEXT"),
+                  ("recomendaciones", "TEXT"), ("contraindicaciones", "TEXT")]
+        for nombre, tipo in nuevos:
+            if nombre not in columns:
+                with engine.connect() as conn:
+                    conn.execute(text(f"ALTER TABLE servicios ADD COLUMN {nombre} {tipo} NULL"))
+                    conn.commit()
+                print(f"Columna '{nombre}' agregada a tabla servicios")
+    except Exception as e:
+        print(f"Migración automática de servicios: {e}")
     seed_passwords()
     yield
 

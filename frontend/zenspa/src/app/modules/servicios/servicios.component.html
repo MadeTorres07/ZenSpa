@@ -1,10 +1,16 @@
+@if (mensaje()) {
+  <div class="toast" [class.toast-success]="!mensaje().includes('Error')" [class.toast-error]="mensaje().includes('Error')">
+    <span>{{ mensaje() }}</span>
+  </div>
+}
+
 <div class="page">
   <div class="page-header">
     <div>
       <h2 class="page-title">Servicios</h2>
       <p class="page-subtitle">Catálogo de servicios ofrecidos en el spa.</p>
     </div>
-    <a routerLink="/servicios" class="btn-primary">+ Nuevo servicio</a>
+    <button class="btn-primary" (click)="abrirCrear()">+ Nuevo servicio</button>
   </div>
 
   <div class="kpi-grid">
@@ -40,7 +46,7 @@
       <div class="table-wrapper">
         <table class="table">
           <thead>
-            <tr><th>SERVICIO</th><th>TIPO DE TERAPIA</th><th>DURACIÓN</th><th>PRECIO</th><th>ESTADO</th><th>ACCIONES</th></tr>
+            <tr><th>SERVICIO</th><th>TIPO DE TERAPIA</th><th>DURACIÓN</th><th>PRECIO</th><th>ACCIONES</th></tr>
           </thead>
           <tbody>
             @for (s of filtered(); track s.id) {
@@ -57,13 +63,12 @@
                 <td><span class="badge-tipo">{{ s.tipo_terapia }}</span></td>
                 <td>{{ s.duracion_minutos }} min</td>
                 <td class="cell-precio">{{ currency.format(s.precio) }}</td>
-                <td><span class="estado-badge estado-activo">Activo</span></td>
                 <td>
                   <div class="acciones">
                     <button class="btn-icon" title="Ver" (click)="$event.stopPropagation(); seleccionar(s)">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
-                    <button class="btn-icon" title="Editar">
+                    <button class="btn-icon" title="Editar" (click)="$event.stopPropagation(); abrirEditar(s)">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     </button>
                     <button class="btn-icon btn-icon-danger" title="Eliminar" (click)="$event.stopPropagation(); confirmarEliminar(s)">
@@ -73,7 +78,7 @@
                 </td>
               </tr>
             } @empty {
-              <tr><td colspan="6" class="td-empty">No se encontraron servicios</td></tr>
+              <tr><td colspan="5" class="td-empty">No se encontraron servicios</td></tr>
             }
           </tbody>
         </table>
@@ -99,11 +104,14 @@
 
         <div class="panel-tab-content">
           @if (tabActivo() === 'info') {
-            <div class="info-block"><label>Descripción</label><p>Experiencia de {{ s.nombre.toLowerCase() }} diseñada para tu bienestar.</p></div>
-            <div class="info-block"><label>Beneficios</label><p>Relajación profunda, alivio de tensiones, mejora del bienestar general.</p></div>
-            <div class="info-block"><label>Incluye</label><p>Consulta inicial, tratamiento completo, recomendaciones post-sesión.</p></div>
-            <div class="info-block"><label>Recomendaciones</label><p>Llegar 10 minutos antes, ropa cómoda, evitar comidas pesadas.</p></div>
-            <div class="info-block"><label>Contraindicaciones</label><p>Consultar con el terapeuta si hay condiciones médicas preexistentes.</p></div>
+            @if (s.descripcion) { <div class="info-block"><label>Descripción</label><p>{{ s.descripcion }}</p></div> }
+            @if (s.beneficios) { <div class="info-block"><label>Beneficios</label><p>{{ s.beneficios }}</p></div> }
+            @if (s.incluye) { <div class="info-block"><label>Incluye</label><p>{{ s.incluye }}</p></div> }
+            @if (s.recomendaciones) { <div class="info-block"><label>Recomendaciones</label><p>{{ s.recomendaciones }}</p></div> }
+            @if (s.contraindicaciones) { <div class="info-block"><label>Contraindicaciones</label><p>{{ s.contraindicaciones }}</p></div> }
+            @if (!s.descripcion && !s.beneficios && !s.incluye && !s.recomendaciones && !s.contraindicaciones) {
+              <p class="tab-empty">Sin información adicional registrada</p>
+            }
           } @else {
             <div class="info-block"><label>Cabinas compatibles</label></div>
             @for (c of cabinasCompatibles(s); track c.id) {
@@ -118,19 +126,102 @@
         </div>
 
         <div class="panel-actions">
-          <button class="btn-outline">Editar servicio</button>
-          <button class="btn-danger" (click)="confirmarEliminar(s)">Eliminar servicio</button>
+          <button class="btn-outline" (click)="abrirEditar(s)">Editar servicio</button>
+          <button class="btn-danger" (click)="confirmarEliminar(s)">Eliminar</button>
         </div>
       </aside>
     }
   </div>
 </div>
 
+@if (modalFormulario().abierto) {
+  <div class="modal-overlay" (click)="cerrarModalFormulario()">
+    <div class="modal-card modal-card-lg" (click)="$event.stopPropagation()">
+      <h3>{{ modalFormulario().editando ? 'Editar servicio' : 'Nuevo servicio' }}</h3>
+
+      @if (mensaje()) {
+        <div class="toast-inline" [class.toast-success]="!mensaje().includes('Error')" [class.toast-error]="mensaje().includes('Error')">{{ mensaje() }}</div>
+      }
+
+      <form [formGroup]="formServicio" (ngSubmit)="guardarServicio()" class="form-servicio">
+        <div class="form-grid">
+          <div class="field">
+            <label>Nombre *</label>
+            <input type="text" formControlName="nombre" [class.input-error]="formServicio.get('nombre')?.touched && formServicio.get('nombre')?.invalid" />
+            @if (campoError('nombre')) { <span class="field-error">{{ campoError('nombre') }}</span> }
+          </div>
+          <div class="field">
+            <label>Tipo de terapia *</label>
+            <select formControlName="tipo_terapia" [class.input-error]="formServicio.get('tipo_terapia')?.touched && formServicio.get('tipo_terapia')?.invalid">
+              <option value="">Seleccionar...</option>
+              @for (t of tiposTerapia; track t) { <option [value]="t">{{ t }}</option> }
+            </select>
+            @if (campoError('tipo_terapia')) { <span class="field-error">{{ campoError('tipo_terapia') }}</span> }
+          </div>
+          <div class="field">
+            <label>Duración (min) *</label>
+            <input type="number" formControlName="duracion_minutos" min="5" max="480" [class.input-error]="formServicio.get('duracion_minutos')?.touched && formServicio.get('duracion_minutos')?.invalid" />
+            @if (campoError('duracion_minutos')) { <span class="field-error">{{ campoError('duracion_minutos') }}</span> }
+          </div>
+          <div class="field">
+            <label>Precio ($) *</label>
+            <input type="number" formControlName="precio" min="1" [class.input-error]="formServicio.get('precio')?.touched && formServicio.get('precio')?.invalid" />
+            @if (campoError('precio')) { <span class="field-error">{{ campoError('precio') }}</span> }
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Descripción</label>
+          <textarea formControlName="descripcion" rows="2" placeholder="Experiencia de masaje relajante diseñada para tu bienestar."></textarea>
+        </div>
+        <div class="field">
+          <label>Beneficios</label>
+          <textarea formControlName="beneficios" rows="2" placeholder="Relajación profunda, alivio de tensiones, mejora del bienestar general."></textarea>
+        </div>
+        <div class="field">
+          <label>Incluye</label>
+          <textarea formControlName="incluye" rows="2" placeholder="Consulta inicial, tratamiento completo, recomendaciones post-sesión."></textarea>
+        </div>
+        <div class="field">
+          <label>Recomendaciones</label>
+          <textarea formControlName="recomendaciones" rows="2" placeholder="Llegar 10 minutos antes, ropa cómoda, evitar comidas pesadas."></textarea>
+        </div>
+        <div class="field">
+          <label>Contraindicaciones</label>
+          <textarea formControlName="contraindicaciones" rows="2" placeholder="Consultar con el terapeuta si hay condiciones médicas preexistentes."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Cabinas compatibles</label>
+          <div class="cabinas-check-grid">
+            @for (c of cabinas(); track c.id) {
+              <label class="cabina-check-item">
+                <input type="checkbox" [checked]="(formServicio.get('cabinas_ids')?.value || []).includes(c.id)" (change)="toggleCabina(c.id)" />
+                <span>{{ c.nombre }}</span>
+                <span class="chip-tipo">{{ c.tipo_tratamiento }}</span>
+              </label>
+            } @empty {
+              <p class="tab-empty">No hay cabinas registradas</p>
+            }
+          </div>
+        </div>
+
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" (click)="cerrarModalFormulario()">Cancelar</button>
+          <button type="submit" class="btn-primary-sm" [disabled]="formServicio.invalid || editando()">
+            {{ editando() ? 'Guardando…' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
 @if (modalEliminar(); as s) {
   <div class="modal-overlay" (click)="cerrarModal()">
     <div class="modal-card" (click)="$event.stopPropagation()">
       <h3>Eliminar servicio</h3>
-      <p>¿Estás seguro de que deseas eliminar <strong>{{ s.nombre }}</strong>?</p>
+      <p>¿Estás seguro de que deseas eliminar <strong>{{ s.nombre }}</strong>? Esta acción no se puede deshacer.</p>
       <div class="modal-buttons">
         <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
         <button class="btn-danger" (click)="eliminar()">Eliminar</button>
