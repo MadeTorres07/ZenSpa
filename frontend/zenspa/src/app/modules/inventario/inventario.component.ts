@@ -58,23 +58,25 @@ export class InventarioComponent implements OnInit {
   campoError(campo: string): string | null {
     const fd = this.formData();
     const val = (fd as any)[campo];
-    if (campo === 'nombre' && val !== undefined && val !== null) {
+    if (campo === 'nombre') {
+      if (!val || String(val).trim() === '') return 'El nombre del producto es obligatorio';
       const v = String(val).trim();
-      if (!v) return 'El nombre no puede estar vacío';
-      if (v.length < 2) return 'Debe tener al menos 2 caracteres';
-      if (v.length > 100) return 'Debe tener máximo 100 caracteres';
+      if (v.length < 2) return 'El nombre debe tener al menos 2 caracteres';
+      if (v.length > 100) return 'El nombre debe tener máximo 100 caracteres';
+    }
+    if (campo === 'costo_unitario') {
+      if (val === undefined || val === null || val === '') return 'El costo unitario es obligatorio';
+      const n = Number(val);
+      if (isNaN(n)) return 'Ingresa un número válido para el costo unitario';
+      if (n < 5000) return 'El costo unitario mínimo es $5.000';
     }
     if (campo === 'stock' && val !== undefined && val !== null && val !== '') {
       const n = Number(val);
-      if (isNaN(n) || n < 0) return 'No puede ser negativo';
+      if (isNaN(n) || n < 0) return 'El stock no puede ser negativo';
     }
     if (campo === 'stock_minimo' && val !== undefined && val !== null && val !== '') {
       const n = Number(val);
-      if (isNaN(n) || n < 0) return 'No puede ser negativo';
-    }
-    if (campo === 'costo_unitario' && val !== undefined && val !== null && val !== '') {
-      const n = Number(val);
-      if (isNaN(n) || n <= 0) return 'Debe ser mayor a 0';
+      if (isNaN(n) || n < 0) return 'El stock mínimo no puede ser negativo';
     }
     return null;
   }
@@ -114,19 +116,45 @@ export class InventarioComponent implements OnInit {
     this.mensaje.set('');
   }
 
+  _extraerMensajeError(err: any): string {
+    const detalle = err.error?.detail;
+    if (typeof detalle === 'string') {
+      if (detalle.includes('Decimal input')) return 'El costo unitario no es válido';
+      return detalle;
+    }
+    if (Array.isArray(detalle)) {
+      return detalle.map((e: any) => {
+        let msg = e.msg?.replace('Value error, ', '') || e;
+        if (typeof msg === 'string' && msg.includes('Decimal input')) return 'El costo unitario no es válido';
+        return msg;
+      }).join('. ');
+    }
+    return 'Error al guardar el producto. Verifica los campos.';
+  }
+
   guardarProducto() {
     const fd = this.formData();
-    const error = this.campoError('nombre') || this.campoError('costo_unitario');
-    if (error) {
-      this.mensaje.set(error);
-      setTimeout(() => this.mensaje.set(''), 3000);
+    const errorNombre = this.campoError('nombre');
+    const errorCosto = this.campoError('costo_unitario');
+    if (errorNombre || errorCosto) {
+      this.mensaje.set(errorNombre || errorCosto || 'Completa los campos requeridos');
+      setTimeout(() => this.mensaje.set(''), 4000);
       return;
     }
     this.guardando.set(true);
     this.mensaje.set('');
     const m = this.modalFormulario();
-    const payload: any = { ...fd };
-    if (payload.fecha_vencimiento === '') payload.fecha_vencimiento = null;
+    const payload: any = {
+      nombre: String(fd.nombre ?? '').trim(),
+      costo_unitario: Number(fd.costo_unitario) || 0,
+      stock: Number(fd.stock) || 0,
+      stock_minimo: Number(fd.stock_minimo) || 5,
+      descripcion: fd.descripcion || null,
+      presentacion: fd.presentacion || null,
+      uso_recomendado: fd.uso_recomendado || null,
+      fecha_vencimiento: fd.fecha_vencimiento || null,
+      proveedor: fd.proveedor || null,
+    };
 
     if (m.editando && m.producto) {
       this.productoService.update(m.producto.id, payload).subscribe({
@@ -140,11 +168,8 @@ export class InventarioComponent implements OnInit {
         },
         error: (err) => {
           this.guardando.set(false);
-          const detalle = err.error?.detail;
-          if (typeof detalle === 'string') this.mensaje.set(detalle);
-          else if (Array.isArray(detalle)) this.mensaje.set(detalle.map((e: any) => e.msg?.replace('Value error, ', '') || e).join('. '));
-          else this.mensaje.set('Error al actualizar el producto');
-          setTimeout(() => this.mensaje.set(''), 3000);
+          this.mensaje.set(this._extraerMensajeError(err));
+          setTimeout(() => this.mensaje.set(''), 4000);
         },
       });
     } else {
@@ -158,11 +183,8 @@ export class InventarioComponent implements OnInit {
         },
         error: (err) => {
           this.guardando.set(false);
-          const detalle = err.error?.detail;
-          if (typeof detalle === 'string') this.mensaje.set(detalle);
-          else if (Array.isArray(detalle)) this.mensaje.set(detalle.map((e: any) => e.msg?.replace('Value error, ', '') || e).join('. '));
-          else this.mensaje.set('Error al crear el producto');
-          setTimeout(() => this.mensaje.set(''), 3000);
+          this.mensaje.set(this._extraerMensajeError(err));
+          setTimeout(() => this.mensaje.set(''), 4000);
         },
       });
     }

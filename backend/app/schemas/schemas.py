@@ -369,8 +369,8 @@ class ProductoCreate(ProductoBase):
     @field_validator("costo_unitario")
     @classmethod
     def validar_costo(cls, v: Decimal) -> Decimal:
-        if v <= 0:
-            raise ValueError("El costo unitario debe ser mayor a 0")
+        if v < 5000:
+            raise ValueError("El costo unitario mínimo es $5.000")
         return v
 
     @field_validator("stock_minimo")
@@ -418,8 +418,8 @@ class ProductoUpdate(BaseModel):
     def validar_costo(cls, v: Decimal | None) -> Decimal | None:
         if v is None:
             return None
-        if v <= 0:
-            raise ValueError("El costo unitario debe ser mayor a 0")
+        if v < 5000:
+            raise ValueError("El costo unitario mínimo es $5.000")
         return v
 
     @field_validator("stock_minimo")

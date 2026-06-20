@@ -470,13 +470,283 @@ El seed solo se aplica al arrancar, pisando TODAS las contraseñas con `ZenSpa20
 
 ---
 
+---
+
+## Pruebas del sistema
+
+### Prueba de caja negra
+
+El tester **no** tiene acceso al código interno. Cada función se especifica con su firma, comportamiento esperado y reglas de validación.
+
+> **Formato:** `funcion(parametros)` → `tipo_retorno`  
+> *Descripción breve*  
+> **Reglas:** condiciones que debe cumplir la función
+
+---
+
+#### 1. `validar_login(email, password)` → `bool`
+
+Verifica que las credenciales correspondan a un usuario registrado y activo.
+
+**Reglas:**
+- `email` no puede estar vacío
+- `password` debe tener al menos 6 caracteres
+- Solo los usuarios existentes en la tabla `usuarios` con `activo = true` pueden autenticarse
+- Retorna `true` solo si email existe y password coincide con el hash almacenado
+- En cualquier otro caso retorna `false`
+
+---
+
+#### 2. `crear_cliente(nombre, apellido, email, password, telefono)` → `bool`
+
+Registra un nuevo cliente en el sistema, creando el usuario y su perfil de cliente.
+
+**Reglas:**
+- Todos los campos obligatorios deben estar presentes (nombre, apellido, email, password)
+- `nombre` y `apellido`: solo letras y espacios, mínimo 2 caracteres, máximo 100
+- `email` debe tener formato válido (`usuario@dominio.com`)
+- `email` no puede repetirse con otro usuario existente
+- `password` debe tener mínimo 8 caracteres, al menos una mayúscula, un número y un carácter especial
+- `telefono` (opcional): si se envía, debe tener entre 7 y 20 dígitos (puede incluir `+`, `-`, espacios, paréntesis)
+- Retorna `true` si el cliente se crea exitosamente
+- Retorna `false` si alguna validación falla o el email ya existe
+
+---
+
+#### 3. `agendar_cita(cliente_id, terapeuta_id, cabina_id, fecha, hora_inicio, hora_fin, servicios)` → `int | None`
+
+Crea una nueva cita con validación completa de recursos y disponibilidad.
+
+**Reglas:**
+- Todos los IDs deben corresponder a registros existentes
+- `fecha` debe ser una fecha válida (formato `YYYY-MM-DD`)
+- `hora_inicio` debe ser anterior a `hora_fin`
+- La cita debe estar dentro del horario de atención (08:00 – 18:00)
+- El terapeuta no puede tener otra cita en el mismo horario (mismo día, horario solapado)
+- La cabina no puede tener otra cita en el mismo horario
+- La cabina debe ser compatible con al menos uno de los servicios seleccionados (coincidencia de `tipo_tratamiento`)
+- `servicios` debe contener al menos un ID de servicio válido
+- Retorna el `id` de la cita creada si es exitoso
+- Retorna `None` si alguna validación falla
+
+---
+
+#### 4. `validar_stock_disponible(producto_id, cantidad)` → `bool`
+
+Verifica que un producto tenga stock suficiente para una operación.
+
+**Reglas:**
+- `producto_id` debe existir en la tabla `productos`
+- `cantidad` debe ser un entero positivo mayor a 0
+- El stock actual del producto debe ser mayor o igual a `cantidad`
+- Retorna `true` si hay stock suficiente
+- Retorna `false` si el producto no existe, cantidad es inválida, o stock insuficiente
+
+---
+
+#### 5. `eliminar_servicio(servicio_id)` → `bool`
+
+Elimina un servicio del sistema si no tiene citas asociadas.
+
+**Reglas:**
+- `servicio_id` debe existir en la tabla `servicios`
+- El servicio no debe tener registros en `cita_servicios` (historial de citas)
+- Si tiene historial, retorna `false` con mensaje "El servicio tiene historial de citas, no se puede eliminar"
+- Si no tiene historial, elimina el servicio y sus asociaciones en `cabina_servicios`
+- Retorna `true` si la eliminación es exitosa
+- Retorna `false` si el servicio no existe o tiene historial
+
+---
+
+#### 6. `calcular_total_cita(servicios_ids, productos_consumo)` → `float`
+
+Calcula el costo total de una cita sumando servicios y productos.
+
+**Reglas:**
+- `servicios_ids`: lista de IDs de servicios; cada servicio debe existir
+- `productos_consumo`: lista de objetos `{producto_id, cantidad}`; cada producto debe existir
+- El total es la suma de: `(precio de cada servicio) + sumatoria(costo_unitario * cantidad de cada producto)`
+- Retorna el total como número flotante
+- Retorna `0.0` si ambas listas están vacías
+
+---
+
+#### 7. `validar_disponibilidad_terapeuta(terapeuta_id, fecha, hora_inicio, hora_fin)` → `bool`
+
+Verifica si un terapeuta está disponible en una franja horaria específica.
+
+**Reglas:**
+- `terapeuta_id` debe existir en la tabla `terapeutas` y estar activo
+- `fecha` debe ser una fecha válida
+- La franja debe estar dentro del horario laboral (08:00 – 18:00)
+- No debe existir otra cita con el mismo terapeuta en la misma fecha con horario solapado
+- Se considera solapamiento si: `nueva_hora_inicio < cita_existente_hora_fin` Y `nueva_hora_fin > cita_existente_hora_inicio`
+- Retorna `true` si está disponible
+- Retorna `false` en cualquier otro caso
+
+---
+
+#### 8. `validar_disponibilidad_cabina(cabina_id, fecha, hora_inicio, hora_fin)` → `bool`
+
+Verifica si una cabina está disponible en una franja horaria específica.
+
+**Reglas:**
+- `cabina_id` debe existir en la tabla `cabinas` y su estado debe ser "disponible"
+- `fecha` debe ser una fecha válida
+- No debe existir otra cita con la misma cabina en la misma fecha con horario solapado
+- Retorna `true` si está disponible
+- Retorna `false` en cualquier otro caso
+
+---
+
+#### 9. `ajustar_stock(producto_id, cantidad, tipo_operacion)` → `int | None`
+
+Ajusta el stock de un producto (entrada o salida).
+
+**Reglas:**
+- `producto_id` debe existir en la tabla `productos`
+- `cantidad` debe ser un entero positivo mayor a 0
+- `tipo_operacion` debe ser `"entrada"` o `"salida"`
+- Si es `"entrada"`: nuevo stock = stock actual + cantidad
+- Si es `"salida"`: nuevo stock = stock actual - cantidad; el resultado no puede ser negativo
+- Retorna el nuevo stock si la operación es exitosa
+- Retorna `None` si el producto no existe, cantidad inválida, o la salida deja stock negativo
+
+---
+
+#### 10. `registrar_uso_producto(cita_id, producto_id, cantidad)` → `bool`
+
+Registra el consumo de un producto en una cita completada.
+
+**Reglas:**
+- `cita_id` debe existir en la tabla `citas` y estar en estado "completada"
+- `producto_id` debe existir en la tabla `productos`
+- `cantidad` debe ser un entero positivo
+- Debe haber stock suficiente del producto (ver `validar_stock_disponible`)
+- Registra el consumo en `uso_productos` con el `costo_aplicado` = costo_unitario actual del producto
+- Descuenta la cantidad del stock del producto
+- Retorna `true` si el registro es exitoso
+- Retorna `false` si alguna validación falla
+
+---
+
+#### 11. `generar_reporte_servicios_populares(fecha_inicio, fecha_fin)` → `list`
+
+Genera un ranking de servicios más reservados en un período.
+
+**Reglas:**
+- `fecha_inicio` y `fecha_fin` deben ser fechas válidas (formato `YYYY-MM-DD`)
+- `fecha_inicio` debe ser anterior o igual a `fecha_fin`
+- El período no puede exceder 365 días
+- Retorna una lista ordenada de objetos `{servicio_id, nombre, total_reservas}`, de mayor a menor por `total_reservas`
+- Solo considera citas en estado "completada"
+- Retorna lista vacía si no hay servicios en el período
+
+---
+
+#### 12. `filtrar_usuarios_por_rol(rol)` → `list`
+
+Obtiene todos los usuarios de un rol específico.
+
+**Reglas:**
+- `rol` debe ser uno de: `"admin"`, `"recepcionista"`, `"terapeuta"`, `"cliente"`
+- Retorna una lista de objetos con `{id, nombre, apellido, email, rol, activo}`
+- Solo retorna usuarios con `activo = true`
+- Si el rol no es válido, retorna lista vacía
+
+---
+
+### Prueba de caja blanca
+
+El tester **sí** tiene acceso al código interno. Se verifican caminos lógicos, condiciones, ciclos y flujos de datos.
+
+| # | Función / Archivo | Camino probado | Entrada | Salida esperada | Cobertura |
+|---|---|---|---|---|---|
+| 1 | `producto_service.validar_nombre` | Nombre duplicado en create | `data.nombre="Aceite"` (ya existe) | HTTP 400 "Ya existe un producto con ese nombre" | Líneas 42–47 |
+| 2 | `producto_service.validar_nombre` | Nombre único en create | `data.nombre="Nuevo Producto"` | Producto creado (dict con id > 0) | Líneas 48–61 |
+| 3 | `producto_service.update` | Nombre duplicado en update (otro producto) | `data.nombre="Aceite"`, id distinto | HTTP 400 "Ya existe un producto con ese nombre" | Líneas 70–80 |
+| 4 | `producto_service.delete` | Producto sin historial de uso | producto_id sin UsoProducto | dict del producto eliminado | Líneas 101–104 |
+| 5 | `producto_service.delete` | Producto con historial de uso | producto_id con UsoProducto | HTTP 400 "tiene historial de uso" | Líneas 97–100 |
+| 6 | `main.py lifespan` | Migración automática: columna faltante | tabla sin columna `descripcion` | ALTER TABLE ejecutado | Líneas 18–27 |
+| 7 | `main.py lifespan` | Migración automática: columna ya existe | tabla con columna `descripcion` | No ejecuta ALTER | Línea 23 |
+| 8 | `schemas.ProductoCreate.validar_costo` | costo_unitario < 5000 | `costo_unitario = 1000` | ValueError "mínimo es \$5.000" | Línea (validator) |
+| 9 | `schemas.ProductoCreate.validar_costo` | costo_unitario >= 5000 | `costo_unitario = 5000` | Valor aceptado | Línea (validator) |
+| 10 | `producto_service._producto_to_dict` | Serialización correcta | Producto con datos completos | dict con 10 campos, costo como float | Líneas 8–20 |
+
+---
+
+### Pruebas unitarias
+
+Verifican funciones individuales de forma aislada.
+
+| # | Unidad | Prueba | Entrada | Resultado esperado |
+|---|---|---|---|---|
+| 1 | `_validar_nombre_apellido` | Nombre vacío | `""` | ValueError "no puede estar vacío" |
+| 2 | `_validar_nombre_apellido` | Nombre con números | `"Juan123"` | ValueError "Solo se permiten letras" |
+| 3 | `_validar_nombre_apellido` | Nombre válido | `"  maría  "` | `"María"` (trim + title) |
+| 4 | `_validar_password` | Password corta | `"Ab1!"` | ValueError "al menos 8 caracteres" |
+| 5 | `_validar_password` | Password sin mayúscula | `"abcdef1!"` | ValueError "al menos una mayúscula" |
+| 6 | `_validar_password` | Password sin especial | `"Abcdefgh1"` | ValueError "al menos un carácter especial" |
+| 7 | `_validar_password` | Password válida | `"Abcdef1!"` | `"Abcdef1!"` |
+| 8 | `producto_service._producto_to_dict` | Producto con campos nulos | Producto con `descripcion=None` | `descripcion: null` en dict |
+| 9 | `producto_service._producto_to_dict` | Producto con fecha_vencimiento | Producto con fecha `2025-12-31` | `fecha_vencimiento: "2025-12-31"` |
+| 10 | `producto_service._producto_to_dict` | costo_unitario Decimal a float | Decimal("15000.50") | `15000.5` (float) |
+
+---
+
+### Pruebas de integración
+
+Verifican que los módulos interactúen correctamente entre sí.
+
+| # | Escenario | Pasos | Resultado esperado |
+|---|---|---|---|
+| 1 | Crear cliente → login → obtener perfil | 1. `POST /auth/registro` con datos válidos<br>2. `POST /auth/login` con mismas credenciales<br>3. `GET /auth/me` con token recibido | 1. 201 Created<br>2. 200 OK + JWT<br>3. 200 OK + email coincide |
+| 2 | Crear cita descontando stock | 1. Ver stock producto X = 10<br>2. Crear cita con producto X, cantidad 3<br>3. Ver stock producto X | Stock final = 7 |
+| 3 | Cancelar cita devuelve stock | 1. Crear cita con producto X, cantidad 2 (stock = 8)<br>2. Cancelar cita<br>3. Ver stock producto X | Stock vuelve a 10 |
+| 4 | Asociar servicio a cabina incompatible | 1. Crear cabina tipo "facial"<br>2. Crear servicio tipo "masajes"<br>3. `POST /cabinas/{id}/servicios/{s_id}` | 400 Bad Request (incompatible) |
+| 5 | Eliminar producto con historial | 1. Crear cita con uso de producto X<br>2. `DELETE /productos/{id}` | 400 Bad Request |
+| 6 | Auto-creación de perfil al crear usuario | 1. `POST /usuarios/` con rol="terapeuta"<br>2. `GET /terapeutas/?usuario_id={nuevo_id}` | 200 OK + terapeuta existe |
+
+---
+
+### Pruebas de sistema
+
+Verifican flujos completos de principio a fin (end-to-end).
+
+| # | Caso de uso | Pasos | Criterio de aceptación |
+|---|---|---|---|
+| 1 | Registro de nuevo cliente | 1. Acceder a `/login` → "Registrarse"<br>2. Completar formulario con datos válidos<br>3. Enviar | Redirige a `/dashboard`, navbar muestra nombre del cliente |
+| 2 | Agendar cita completa | 1. Login como recepcionista<br>2. Ir a agenda → "Nueva cita"<br>3. Seleccionar cliente, terapeuta, cabina, fecha, hora, servicios<br>4. Confirmar | Cita aparece en agenda, stock de productos descontado |
+| 3 | Reporte de servicios populares | 1. Login como admin<br>2. Ir a reportes<br>3. Seleccionar filtro de fechas<br>4. Generar | Gráfico de barras con servicios ordenados por popularidad |
+| 4 | Gestión de inventario | 1. Login como admin<br>2. Ir a inventario<br>3. Crear nuevo producto con costo \$10.000 y stock 50<br>4. Verificar KPI de valor de inventario | Producto visible en tabla, KPI refleja \$500.000 |
+| 5 | Login con credenciales inválidas | 1. Ir a `/login`<br>2. Ingresar email inexistente y contraseña<br>3. Enviar | Mensaje genérico: "Email o contraseña incorrectos", sin revelar cuál falló |
+
+---
+
+### Pruebas de aceptación
+
+Validan que el sistema cumple los requisitos del negocio.
+
+| # | Criterio | Descripción | Estado |
+|---|---|---|---|
+| 1 | Seguridad de contraseñas | Todas las contraseñas se almacenan hasheadas con bcrypt; nunca en texto plano | ✅ |
+| 2 | Control de acceso por rol | Un recepcionista no puede crear/editar/eliminar usuarios admin; un cliente solo ve sus propias citas | ✅ |
+| 3 | Protección de datos sensibles | `historial_salud` solo accesible para admin y terapeuta; recepcionista y cliente reciben `null` | ✅ |
+| 4 | Integridad del stock | El stock nunca puede quedar negativo; al cancelar citas se devuelve el stock automáticamente | ✅ |
+| 5 | Prevención de doble agendamiento | No se puede agendar un terapeuta o cabina en dos citas simultáneas | ✅ |
+| 6 | Compatibilidad cabina-servicio | Solo se pueden asociar servicios a cabinas con el mismo `tipo_tratamiento` | ✅ |
+| 7 | Historial de precios | El precio de un servicio al momento de la cita queda congelado en `cita_servicios.precio_aplicado` | ✅ |
+| 8 | UX: mensajes claros | Los errores de formulario muestran mensajes intuitivos (ej: "El costo unitario mínimo es \$5.000", no errores técnicos) | ✅ |
+| 9 | Migración automática | Nuevas columnas se agregan automáticamente al iniciar la API sin intervención manual | ✅ |
+| 10 | Portabilidad | El proyecto funciona con `docker compose up --build` sin configuración manual; contraseñas de prueba regeneradas automáticamente | ✅ |
+
+---
+
 ## Próximos pasos
 
 - [ ] Conectar dashboard a datos reales del backend (endpoints de KPIs)
 - [ ] Tabla de próximas citas, terapeutas activos, acciones rápidas
 - [ ] Módulo de agenda (calendario de citas)
-- [ ] CRUD visual: Clientes, Terapeutas, Cabinas, Servicios, Productos
-- [ ] Creación y edición de citas desde el frontend
-- [ ] Reportes con gráficos (Chart.js)
+- [ ] CRUD visual completo (pendientes pulir)
 - [ ] Pruebas automatizadas (pytest backend + Jasmine/Karma frontend)
 - [ ] Módulo de experiencia / fidelización
