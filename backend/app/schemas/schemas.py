@@ -1,7 +1,31 @@
+import re
 from datetime import date, datetime, time
 from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
+
+
+def _validar_nombre_apellido(v: str) -> str:
+    v = v.strip()
+    if not v:
+        raise ValueError("Este campo no puede estar vacío")
+    if len(v) < 2 or len(v) > 100:
+        raise ValueError("Debe tener entre 2 y 100 caracteres")
+    if not re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$', v):
+        raise ValueError("Solo se permiten letras y espacios")
+    return v.title()
+
+
+def _validar_password(v: str) -> str:
+    if len(v) < 8:
+        raise ValueError("Debe tener al menos 8 caracteres")
+    if not re.search(r'[A-Z]', v):
+        raise ValueError("Debe contener al menos una mayúscula")
+    if not re.search(r'\d', v):
+        raise ValueError("Debe contener al menos un número")
+    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', v):
+        raise ValueError("Debe contener al menos un carácter especial")
+    return v
 
 
 # ──────────────────────────── Usuario ────────────────────────────
@@ -15,6 +39,21 @@ class UsuarioBase(BaseModel):
 
 class UsuarioCreate(UsuarioBase):
     password: str
+
+    @field_validator("nombre")
+    @classmethod
+    def validar_nombre(cls, v: str) -> str:
+        return _validar_nombre_apellido(v)
+
+    @field_validator("apellido")
+    @classmethod
+    def validar_apellido(cls, v: str) -> str:
+        return _validar_nombre_apellido(v)
+
+    @field_validator("password")
+    @classmethod
+    def validar_password(cls, v: str) -> str:
+        return _validar_password(v)
 
 
 class UsuarioResponse(UsuarioBase):
@@ -42,6 +81,31 @@ class ClienteCreate(BaseModel):
     fecha_nacimiento: date | None = None
     historial_salud: str | None = None
     preferencias: str | None = None
+
+    @field_validator("nombre")
+    @classmethod
+    def validar_nombre(cls, v: str) -> str:
+        return _validar_nombre_apellido(v)
+
+    @field_validator("apellido")
+    @classmethod
+    def validar_apellido(cls, v: str) -> str:
+        return _validar_nombre_apellido(v)
+
+    @field_validator("password")
+    @classmethod
+    def validar_password(cls, v: str) -> str:
+        return _validar_password(v)
+
+    @field_validator("telefono")
+    @classmethod
+    def validar_telefono(cls, v: str | None) -> str | None:
+        if v is None or v.strip() == "":
+            return None
+        limpio = v.strip()
+        if not re.match(r'^[\d\s\+\-\(\)]{7,20}$', limpio):
+            raise ValueError("Formato de teléfono inválido")
+        return limpio
 
 
 class ClienteUpdate(BaseModel):
@@ -78,6 +142,21 @@ class TerapeutaCreate(BaseModel):
     password: str
     especialidad: str
     certificaciones: str | None = None
+
+    @field_validator("nombre")
+    @classmethod
+    def validar_nombre(cls, v: str) -> str:
+        return _validar_nombre_apellido(v)
+
+    @field_validator("apellido")
+    @classmethod
+    def validar_apellido(cls, v: str) -> str:
+        return _validar_nombre_apellido(v)
+
+    @field_validator("password")
+    @classmethod
+    def validar_password(cls, v: str) -> str:
+        return _validar_password(v)
 
 
 class TerapeutaUpdate(BaseModel):

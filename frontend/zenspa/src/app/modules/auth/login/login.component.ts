@@ -1,5 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, signal, OnInit } from '@angular/core';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -11,9 +11,10 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private route = inject(ActivatedRoute);
 
   form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -21,7 +22,16 @@ export class LoginComponent {
   });
   loading = false;
   error = '';
+  registroExitoso = signal(false);
   mostrarPassword = signal(false);
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['registro'] === 'exitoso') {
+        this.registroExitoso.set(true);
+      }
+    });
+  }
 
   togglePassword(): void {
     this.mostrarPassword.update((v) => !v);

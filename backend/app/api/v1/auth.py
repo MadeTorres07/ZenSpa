@@ -9,7 +9,8 @@ from app.core.security import (
     verify_password,
 )
 from app.models.models import Usuario
-from app.schemas.schemas import UsuarioResponse
+from app.schemas.schemas import ClienteCreate, UsuarioResponse
+from app.services import cliente_service
 
 router = APIRouter(prefix="/auth", tags=["Autenticación"])
 
@@ -45,6 +46,17 @@ def login(
         "rol": usuario.rol,
         "nombre": usuario.nombre,
     }
+
+
+@router.post("/registro", status_code=201)
+def registrar_cliente(
+    data: ClienteCreate,
+    db: Session = Depends(get_db),
+):
+    existe = db.query(Usuario).filter(Usuario.email == data.email).first()
+    if existe:
+        raise HTTPException(status_code=400, detail="El email ya esta registrado")
+    return cliente_service.create(db, data)
 
 
 @router.get("/me", response_model=UsuarioResponse)

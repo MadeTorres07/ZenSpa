@@ -38,6 +38,10 @@ export class AuthService {
     this.router.navigate([routes[rol] || '/dashboard']);
   }
 
+  registro(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/registro`, data);
+  }
+
   logout(): void {
     localStorage.removeItem('zenspa_token');
     localStorage.removeItem('zenspa_session');
