@@ -1,7 +1,8 @@
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.security import hash_password
-from app.models.models import Terapeuta, Usuario, UsoProducto, Cita
+from app.models.models import Terapeuta, Usuario, Cita
 from app.schemas.schemas import TerapeutaCreate, TerapeutaUpdate
 
 
@@ -94,10 +95,13 @@ def delete(db: Session, terapeuta_id: int) -> dict | None:
     terapeuta = db.query(Terapeuta).filter(Terapeuta.id == terapeuta_id).first()
     if not terapeuta:
         return None
+    tiene_citas = db.query(Cita).filter(Cita.terapeuta_id == terapeuta_id).first()
+    if tiene_citas:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="El terapeuta tiene historial de citas, no se puede eliminar.",
+        )
     data = _terapeuta_to_dict(terapeuta)
-    for cita in terapeuta.citas:
-        db.query(UsoProducto).filter(UsoProducto.cita_id == cita.id).delete()
-        db.delete(cita)
     db.delete(terapeuta)
     db.delete(terapeuta.usuario)
     db.commit()

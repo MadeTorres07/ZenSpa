@@ -51,18 +51,11 @@ def delete(db: Session, cabina_id: int) -> Cabina | None:
     cabina = get_by_id(db, cabina_id)
     if not cabina:
         return None
-    citas_activas = (
-        db.query(Cita)
-        .filter(
-            Cita.cabina_id == cabina_id,
-            Cita.estado.in_(["pendiente", "confirmada"]),
-        )
-        .first()
-    )
-    if citas_activas:
+    tiene_citas = db.query(Cita).filter(Cita.cabina_id == cabina_id).first()
+    if tiene_citas:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="La cabina tiene citas activas, no se puede eliminar",
+            detail="La cabina tiene historial de citas, no se puede eliminar.",
         )
     db.delete(cabina)
     db.commit()

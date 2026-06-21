@@ -1,7 +1,8 @@
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.security import hash_password
-from app.models.models import Cliente, Usuario, Cita, UsoProducto
+from app.models.models import Cliente, Usuario, Cita
 from app.schemas.schemas import ClienteCreate, ClienteUpdate
 
 
@@ -106,10 +107,13 @@ def delete(db: Session, cliente_id: int) -> dict | None:
     cliente = db.query(Cliente).filter(Cliente.id == cliente_id).first()
     if not cliente:
         return None
+    tiene_citas = db.query(Cita).filter(Cita.cliente_id == cliente_id).first()
+    if tiene_citas:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="El cliente tiene historial de citas, no se puede eliminar.",
+        )
     data = _cliente_to_dict(cliente)
-    for cita in cliente.citas:
-        db.query(UsoProducto).filter(UsoProducto.cita_id == cita.id).delete()
-        db.delete(cita)
     db.delete(cliente)
     db.delete(cliente.usuario)
     db.commit()

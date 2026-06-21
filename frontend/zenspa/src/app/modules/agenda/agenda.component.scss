@@ -884,3 +884,62 @@
   .cabinas-grid { grid-template-columns: repeat(2, 1fr); }
   .terapeutas-row { flex-wrap: wrap; }
 }
+
+/* ─── New styles for agenda view, edit modal, disabled elements ─── */
+
+.info-msg { font-size: 11px; color: var(--color-primary); font-style: italic; margin: 8px 0 12px; }
+
+.servicio-disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+.cabina-disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+.warning-box {
+  background: #FFF4E6; color: #C67B28; font-size: 13px; padding: 12px 16px;
+  border-radius: var(--radius-md); margin-bottom: 16px; font-weight: 600;
+}
+
+.agenda-lista { display: flex; flex-direction: column; gap: 8px; }
+.agenda-item {
+  display: flex; align-items: center; gap: 16px; padding: 12px 16px;
+  border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  cursor: pointer; transition: background 0.2s, border-color 0.2s;
+}
+.agenda-item:hover { background: var(--color-bg); border-color: var(--color-primary); }
+.agenda-cancelada { opacity: 0.5; }
+.agenda-cancelada:hover { opacity: 0.7; }
+
+.agenda-item-hora { display: flex; flex-direction: column; align-items: center; min-width: 48px; }
+.agenda-hora-inicio { font-size: 15px; font-weight: 700; color: var(--color-text); }
+.agenda-hora-fin { font-size: 10px; color: var(--color-text-aux); }
+
+.agenda-item-body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.agenda-item-cliente { font-size: 14px; font-weight: 600; color: var(--color-text); }
+.agenda-item-terapeuta { font-size: 11px; color: var(--color-text-aux); }
+
+.agenda-item-estado {
+  font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+.badge-pendiente { background: #FFF4E6; color: #C67B28; }
+.badge-confirmada { background: #E3F2FD; color: #1565C0; }
+.badge-completada { background: #EDF7EE; color: #2E7D32; }
+.badge-cancelada { background: #FDECEC; color: #C62828; }
+
+.sin-citas { text-align: center; padding: 32px; color: var(--color-text-aux); font-size: 14px; }
+
+.resumen-valor-text { font-size: 14px; font-weight: 600; color: var(--color-text); }
+
+.resumen-cliente { display: flex; align-items: center; gap: 12px; }
+
+.edit-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 24px; }
+.btn-danger-full {
+  width: 100%; padding: 12px; border: none; border-radius: var(--radius-md);
+  background: #FDECEC; color: #C62828; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit; transition: background 0.2s;
+}
+.btn-danger-full:hover { background: #FCE4E4; }
+.btn-cancel-full {
+  width: 100%; padding: 12px; border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); background: transparent; color: var(--color-text);
+  font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+}
+.btn-cancel-full:hover { background: var(--color-bg); }
