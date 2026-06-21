@@ -90,6 +90,6 @@ def actualizar_cita(
     cita_id: int,
     data: CitaUpdate,
     db: Session = Depends(get_db),
-    current_user: Usuario = Depends(require_roles("admin", "recepcionista")),
+    current_user: Usuario = Depends(require_roles("admin", "recepcionista", "terapeuta")),
 ):
     return cita_service.update_estado(db, cita_id, data, current_user)

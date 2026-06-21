@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.security import get_current_user, require_roles
-from app.models.models import Usuario
+from app.models.models import Usuario, Cliente
 from app.schemas.schemas import UsuarioCreate, UsuarioResponse, UsuarioUpdate
 from app.services.usuario_service import (
     create_usuario,
@@ -59,6 +59,13 @@ def crear_usuario(
             status_code=400,
             detail="El email ya está registrado",
         )
+    if data.telefono:
+        tel_limpio = data.telefono.strip()
+        if db.query(Cliente).filter(Cliente.telefono == tel_limpio).first():
+            raise HTTPException(
+                status_code=400,
+                detail="Este número de teléfono ya está registrado",
+            )
     return create_usuario(db, data)
 
 

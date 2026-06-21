@@ -49,6 +49,7 @@ class UsuarioBase(BaseModel):
 
 class UsuarioCreate(UsuarioBase):
     password: str
+    telefono: str | None = None
 
     @field_validator("nombre")
     @classmethod
@@ -64,6 +65,16 @@ class UsuarioCreate(UsuarioBase):
     @classmethod
     def validar_password(cls, v: str) -> str:
         return _validar_password(v)
+
+    @field_validator("telefono")
+    @classmethod
+    def validar_telefono(cls, v: str | None) -> str | None:
+        if v is None or v.strip() == "":
+            return None
+        limpio = v.strip()
+        if not re.match(r'^[\d\s\+\-\(\)]{7,20}$', limpio):
+            raise ValueError("Formato de teléfono inválido")
+        return limpio
 
 
 class UsuarioResponse(UsuarioBase):

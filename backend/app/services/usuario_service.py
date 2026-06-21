@@ -37,6 +37,7 @@ def create_usuario(db: Session, data: UsuarioCreate) -> Usuario:
     elif data.rol == "cliente":
         cliente = Cliente(
             usuario_id=usuario.id,
+            telefono=data.telefono,
         )
         db.add(cliente)
 

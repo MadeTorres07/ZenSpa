@@ -162,12 +162,21 @@ export class AgendaComponent implements OnInit {
     return this.authService.getSession()?.rol ?? '';
   }
 
+  esTerapeuta = computed(() => this.rol === 'terapeuta');
+
   ngOnInit() {
     this.searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged(),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe(term => this.searchTerm.set(term));
+
+    if (this.esTerapeuta()) {
+      this.modoAgenda.set(true);
+      this.cargarCitasDelDia();
+      this.cargando.set(false);
+      return;
+    }
 
     this.clienteService.getAll().subscribe({
       next: (data) => this.clientes.set(data),

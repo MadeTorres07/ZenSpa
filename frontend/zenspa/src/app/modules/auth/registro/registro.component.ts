@@ -123,8 +123,8 @@ export class RegistroComponent {
       },
       error: (err) => {
         this.loading.set(false);
-        if (err.status === 400 && err.error?.detail?.toLowerCase().includes('email')) {
-          this.error.set('Este correo ya está registrado');
+        if (err.status === 400) {
+          this.error.set(err.error?.detail || 'Error al registrar');
         } else if (err.status === 422 && err.error?.detail) {
           const msg = err.error.detail[0]?.msg?.replace('Value error, ', '') || 'Datos inválidos';
           this.error.set(msg);

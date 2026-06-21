@@ -15,7 +15,7 @@ def listar_terapeutas(
     activo: bool | None = Query(None),
     especialidad: str | None = Query(None),
     db: Session = Depends(get_db),
-    current_user: Usuario = Depends(require_roles("admin")),
+    current_user: Usuario = Depends(require_roles("admin", "recepcionista")),
 ):
     return terapeuta_service.get_all(db, activo=activo, especialidad=especialidad)
 
@@ -24,7 +24,7 @@ def listar_terapeutas(
 def obtener_terapeuta(
     terapeuta_id: int,
     db: Session = Depends(get_db),
-    current_user: Usuario = Depends(require_roles("admin")),
+    current_user: Usuario = Depends(require_roles("admin", "recepcionista")),
 ):
     data = terapeuta_service.get_by_id(db, terapeuta_id)
     if not data:

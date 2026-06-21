@@ -187,6 +187,15 @@ def update_estado(db: Session, cita_id: int, data: CitaUpdate, usuario_actual) -
     if not cita:
         raise HTTPException(status_code=404, detail="Cita no encontrada")
 
+    if usuario_actual and usuario_actual.rol == "terapeuta":
+        terapeuta = db.query(Terapeuta).filter(Terapeuta.usuario_id == usuario_actual.id).first()
+        if not terapeuta or cita.terapeuta_id != terapeuta.id:
+            raise HTTPException(status_code=403, detail="No tienes permiso para modificar esta cita")
+        data.terapeuta_id = None
+        data.cabina_id = None
+        data.hora_inicio = None
+        data.hora_fin = None
+
     if data.estado is not None:
         if data.estado in ("cancelada", "cancelada_penalidad"):
             cita_datetime = datetime.combine(cita.fecha, cita.hora_inicio, tzinfo=timezone.utc)

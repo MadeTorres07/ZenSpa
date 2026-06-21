@@ -97,14 +97,17 @@ export class NuevoUsuarioComponent {
     this.error.set('');
     this.success.set(false);
 
-    const data = {
-      nombre: (this.form.value.nombre ?? '').trim(),
-      apellido: (this.form.value.apellido ?? '').trim(),
-      email: (this.form.value.email ?? '').trim(),
-      password: this.form.value.password,
-      rol: this.form.value.rol,
-      activo: this.form.value.activo,
+    const raw = this.form.value;
+    const data: Record<string, any> = {
+      nombre: (raw.nombre ?? '').trim(),
+      apellido: (raw.apellido ?? '').trim(),
+      email: (raw.email ?? '').trim(),
+      password: raw.password,
+      rol: raw.rol,
+      activo: raw.activo,
     };
+    const tel = raw.telefono?.trim();
+    if (tel) data['telefono'] = tel;
 
     this.usuarioService.create(data).subscribe({
       next: () => {
@@ -115,8 +118,7 @@ export class NuevoUsuarioComponent {
       error: (err) => {
         this.loading.set(false);
         if (err.status === 400) {
-          const msg = err.error?.detail || 'Error al crear el usuario';
-          this.error.set(msg.toLowerCase().includes('email') ? 'Este correo ya está registrado' : msg);
+          this.error.set(err.error?.detail || 'Error al crear el usuario');
         } else if (err.status === 422 && err.error?.detail) {
           const msg = err.error.detail[0]?.msg?.replace('Value error, ', '') || 'Datos inválidos';
           this.error.set(msg);
