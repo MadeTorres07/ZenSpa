@@ -13,6 +13,11 @@
         <p class="agenda-subtitle">
           Revisa y gestiona tus citas programadas para hoy.
         </p>
+      } @else if (esCliente()) {
+        <h2 class="agenda-title">Mis citas</h2>
+        <p class="agenda-subtitle">
+          Consulta y gestiona tus citas programadas.
+        </p>
       } @else {
         <h2 class="agenda-title">Agendamiento de citas</h2>
         <p class="agenda-subtitle">
@@ -20,7 +25,7 @@
         </p>
       }
     </div>
-    @if (!esTerapeuta()) {
+    @if (!esTerapeuta() && !esCliente()) {
       <div class="agenda-header-actions">
         <button class="btn-outline" (click)="toggleAgenda()">
           <svg
@@ -45,7 +50,7 @@
   </div>
 
   <div class="agenda-grid">
-    @if (!esTerapeuta()) {
+    @if (!esTerapeuta() && !esCliente()) {
       <aside class="col-left">
         <!-- 1. Seleccionar cliente -->
         <section class="card">
@@ -241,7 +246,7 @@
         </div>
       }
 
-      @if (!esTerapeuta()) {
+      @if (!esTerapeuta() && !esCliente()) {
         <div class="card">
           <h3 class="card-title">
             {{ modalEditarCita() ? "Editar cita" : "2. Configurar cita" }}
@@ -498,6 +503,76 @@
               </button>
             </div>
           </div>
+        } @else if (esCliente()) {
+          <div class="resumen-card">
+            <h3 class="card-title">Detalle de cita · #{{ cita.id }}</h3>
+
+            @if (error()) {
+              <div class="error-box">{{ error() }}</div>
+            }
+
+            <div class="resumen-section">
+              <label>Cliente</label>
+              <span class="resumen-valor-text">{{ cita.nombre_cliente }}</span>
+            </div>
+            <div class="resumen-section">
+              <label>Terapeuta</label>
+              <span class="resumen-valor-text">{{ cita.nombre_terapeuta }}</span>
+            </div>
+            <div class="resumen-section">
+              <label>Servicios</label>
+              <div style="font-size:13px;color:var(--color-text);margin:0">
+                @for (s of cita.servicios; track s.id) {
+                  <div>{{ s.nombre }}</div>
+                }
+              </div>
+            </div>
+            <div class="resumen-section">
+              <label>Fecha y hora</label>
+              <span class="resumen-valor-text"
+                >{{ formatearFecha(cita.fecha) }} ·
+                {{ cita.hora_inicio.slice(0, 5) }} -
+                {{ cita.hora_fin.slice(0, 5) }}</span
+              >
+            </div>
+            <div class="resumen-section">
+              <label>Cabina</label>
+              <span class="resumen-valor-text">{{ cita.nombre_cabina }}</span>
+            </div>
+            <div class="resumen-section">
+              <label>Estado</label>
+              <span
+                class="agenda-item-estado {{ estadoBadgeClass(cita.estado) }}"
+                >{{ estadoLabel(cita.estado) }}</span
+              >
+            </div>
+            @if (cita.notas) {
+              <div class="resumen-section">
+                <label>Observaciones</label>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin:0">{{ cita.notas }}</p>
+              </div>
+            }
+
+            @if (cita.estado === 'pendiente') {
+              <div class="edit-actions">
+                <button class="btn-confirmar" (click)="confirmarCitaCliente(cita)">
+                  Confirmar cita
+                </button>
+                <button class="btn-danger-full" (click)="cancelarCitaCliente(cita)">
+                  Cancelar cita
+                </button>
+                <button class="btn-cancel-full" (click)="cerrarEditarCita()">
+                  Cerrar
+                </button>
+              </div>
+            } @else {
+              <div class="edit-actions">
+                <button class="btn-cancel-full" (click)="cerrarEditarCita()">
+                  Cerrar
+                </button>
+              </div>
+            }
+          </div>
         } @else {
           <div class="resumen-card">
             <h3 class="card-title">Editar cita · #{{ cita.id }}</h3>
@@ -579,7 +654,7 @@
             </div>
           </div>
         }
-      } @else if (!esTerapeuta()) {
+      } @else if (!esTerapeuta() && !esCliente()) {
         <div class="resumen-card">
           <h3 class="card-title">3. Resumen de la cita</h3>
 

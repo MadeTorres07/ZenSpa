@@ -816,6 +816,29 @@
   border-color: var(--color-primary);
 }
 
+.newsletter-input.input-error {
+  border-color: #DC2626;
+}
+
+.newsletter-input.input-error:focus {
+  border-color: #DC2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+.newsletter-success {
+  font-size: 13px;
+  color: #16A34A;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+.newsletter-error {
+  font-size: 13px;
+  color: #DC2626;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
 .footer-social-label {
   font-size: 10px;
   text-transform: uppercase;

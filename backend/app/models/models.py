@@ -201,6 +201,15 @@ class CitaServicio(Base):
     servicio = relationship("Servicio", back_populates="cita_servicios")
 
 
+class NewsletterSuscripcion(Base):
+    __tablename__ = "newsletter_suscripciones"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    email = Column(String(150), unique=True, nullable=False)
+    fecha_suscripcion = Column(DateTime, default=datetime.utcnow)
+    activo = Column(Boolean, default=True)
+
+
 class UsoProducto(Base):
     __tablename__ = "uso_productos"
 

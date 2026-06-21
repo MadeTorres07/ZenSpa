@@ -51,6 +51,15 @@ async def lifespan(app: FastAPI):
             print("Columna 'notas' agregada a tabla citas")
     except Exception as e:
         print(f"Migración automática de citas: {e}")
+    try:
+        inspector = inspect(engine)
+        tables = inspector.get_table_names()
+        if "newsletter_suscripciones" not in tables:
+            from app.models.models import NewsletterSuscripcion
+            NewsletterSuscripcion.__table__.create(engine)
+            print("Tabla 'newsletter_suscripciones' creada")
+    except Exception as e:
+        print(f"Migración automática de newsletter: {e}")
     seed_passwords()
     yield
 

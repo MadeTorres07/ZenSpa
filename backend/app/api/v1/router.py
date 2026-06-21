@@ -8,6 +8,7 @@ from app.api.v1.cabinas import router as cabinas_router
 from app.api.v1.servicios import router as servicios_router
 from app.api.v1.productos import router as productos_router
 from app.api.v1.citas import router as citas_router
+from app.api.v1.newsletter import router as newsletter_router
 
 router = APIRouter(prefix="/api/v1")
 
@@ -19,3 +20,4 @@ router.include_router(cabinas_router)
 router.include_router(servicios_router)
 router.include_router(productos_router)
 router.include_router(citas_router)
+router.include_router(newsletter_router)

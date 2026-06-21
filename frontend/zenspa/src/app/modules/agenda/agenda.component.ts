@@ -163,6 +163,7 @@ export class AgendaComponent implements OnInit {
   }
 
   esTerapeuta = computed(() => this.rol === 'terapeuta');
+  esCliente = computed(() => this.rol === 'cliente');
 
   ngOnInit() {
     this.searchSubject.pipe(
@@ -171,7 +172,7 @@ export class AgendaComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef),
     ).subscribe(term => this.searchTerm.set(term));
 
-    if (this.esTerapeuta()) {
+    if (this.esTerapeuta() || this.esCliente()) {
       this.modoAgenda.set(true);
       this.cargarCitasDelDia();
       this.cargando.set(false);
@@ -350,6 +351,38 @@ export class AgendaComponent implements OnInit {
       },
       error: (err) => {
         this.error.set(err.error?.detail || 'Error al actualizar la cita');
+      },
+    });
+  }
+
+  confirmarCitaCliente(cita: Cita) {
+    if (!confirm(`¿Confirmar la cita con ${cita.nombre_terapeuta} el ${cita.fecha} a las ${cita.hora_inicio.slice(0, 5)}?`)) return;
+    this.citaService.update(cita.id, { estado: 'confirmada' }).subscribe({
+      next: () => {
+        this.citasDelDia.update(list => list.map(x => x.id === cita.id ? { ...x, estado: 'confirmada' } : x));
+        this.cerrarEditarCita();
+        this.mensajeExito.set('Cita confirmada exitosamente');
+        this.success.set(true);
+        setTimeout(() => this.success.set(false), 3000);
+      },
+      error: (err) => {
+        this.error.set(err.error?.detail || 'Error al confirmar la cita');
+      },
+    });
+  }
+
+  cancelarCitaCliente(cita: Cita) {
+    if (!confirm(`¿Cancelar la cita con ${cita.nombre_terapeuta} el ${cita.fecha}?`)) return;
+    this.citaService.update(cita.id, { estado: 'cancelada' }).subscribe({
+      next: () => {
+        this.citasDelDia.update(list => list.map(x => x.id === cita.id ? { ...x, estado: 'cancelada' } : x));
+        this.cerrarEditarCita();
+        this.mensajeExito.set('Cita cancelada exitosamente');
+        this.success.set(true);
+        setTimeout(() => this.success.set(false), 3000);
+      },
+      error: (err) => {
+        this.error.set(err.error?.detail || 'Error al cancelar la cita');
       },
     });
   }

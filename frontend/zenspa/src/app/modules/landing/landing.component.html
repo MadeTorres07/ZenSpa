@@ -21,8 +21,20 @@
     <div class="header-actions">
       <a routerLink="/login" class="btn-primary">
         Reservar ahora
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
         </svg>
       </a>
       <button class="hamburger" (click)="toggleMenu()" aria-label="Menú">
@@ -49,39 +61,66 @@
   <div class="hero-inner">
     <div class="hero-content">
       <h1 class="hero-title">
-        Bienestar que<br>
+        Bienestar que<br />
         <span class="hero-title-accent">transforma tu día.</span>
       </h1>
       <p class="hero-desc">
-        En ZenSpa Bienestar creamos experiencias únicas de relajación, cuidado y equilibrio para tu cuerpo, mente y espíritu.
+        En ZenSpa Bienestar creamos experiencias únicas de relajación, cuidado y
+        equilibrio para tu cuerpo, mente y espíritu.
       </p>
       <div class="hero-buttons">
         <a routerLink="/login" class="btn-primary btn-lg">
           Reservar una sesión
           <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-            <path clip-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" fill-rule="evenodd"/>
+            <path
+              clip-rule="evenodd"
+              d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+              fill-rule="evenodd"
+            />
           </svg>
         </a>
         <a (click)="scrollTo('servicios')" class="btn-secondary">
           Conoce nuestros servicios
           <span class="btn-arrow-circle">
             <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor">
-              <path clip-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" fill-rule="evenodd"/>
+              <path
+                clip-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                fill-rule="evenodd"
+              />
             </svg>
           </span>
         </a>
       </div>
       <div class="hero-social-proof">
         <div class="proof-avatars">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1VAU7RchoyJDmAla8JcMnKKS5CoY3asZw30kxxlNqtz0tJZTeS_J5xuuzHLT8a1R5KTvdQPcERNk9jgxPny911or4pAEnOzbEftFRyVv7NpUJhNDbZfMh4UkBNje4BvEcpt6V5-s3klofiPk1QnU3Rmxtvezfsx0IRkDQ1Pa9cLTaG3HhThQ4lrZ177WtwxSopU4Hxsc_8NGsX0FKJ0g-XWU8PGGmpGIzNQGPJ3xAz2qq9qcGssWqm-GrM_W5bAlbJjvVd9DMKFJs" alt="" class="avatar">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCA9Dc2NYyI4X2g5wziiKV_2q50376IUFurFPmauU5c1DozBZhw6Knx4f38zMD5SHQlOavBtQsW4r1Biz3CxYdmBEElOztLCE0pxvYknnkpDkD7t6ObmU7Jy-DHQMndGfvroEYvNs6JR350LHTKvKQ0q0TyilLBYHgH9EyJ0yfm1TqvPaUZ4rZUDIvOyhhzPrPUydQiWADt6yN2mfjugL4xcchnrSBX7EoANDgCloIJVECwEr-RqXCK0z0NuId_dT1J9cLMz4V0xmvj" alt="" class="avatar">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8i396tDAQbAsvg8Trw8k7cqUZ3yK23hOoD7cNTTiqDkazJ0jsnjdwihUjI6gBWiGD_5H1pClz4bDrExCXZ1bM8Zd-NcWHqkMX-P-lv94EheBQwOaRSdKck8W-B4f087SHiUc0O6BRoG_WZpPBuoDxz3Cbj9gRWtWwIfkeQ60RdUMFREN6AkBiedTvREpGzdihg28_E2RBxCnJdYqQkkoSQHAvX8JJDzk0pk412BE4yzJOyTyVaa-JNmkMwWy6exnBBgXFbrGv8aig" alt="" class="avatar">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuARecAiXndBqYzPtfxqtoaf4ijRyKhai4hEgzz-IH83Zz109T7AamsMnN30HfUDgm20CkVVAqTfumjHgrMfEDtqB6keVOi6rIsMPkxkEQ0qoKQcJTo5O6_-whDAhiF5na17t1TrKRLXh_3Z8i2OfTFRY3q6aeJwFFJrC4_2tNf4rukB0eidUaSeCUF95KOEK5nBoQXcom6zrIKNU0tLxqtXvG3ep1LXGCT2_zqeyHwTvThCwi5P8B1kAmDp37qHzZrIE3dbrf-bHCdL" alt="" class="avatar">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1VAU7RchoyJDmAla8JcMnKKS5CoY3asZw30kxxlNqtz0tJZTeS_J5xuuzHLT8a1R5KTvdQPcERNk9jgxPny911or4pAEnOzbEftFRyVv7NpUJhNDbZfMh4UkBNje4BvEcpt6V5-s3klofiPk1QnU3Rmxtvezfsx0IRkDQ1Pa9cLTaG3HhThQ4lrZ177WtwxSopU4Hxsc_8NGsX0FKJ0g-XWU8PGGmpGIzNQGPJ3xAz2qq9qcGssWqm-GrM_W5bAlbJjvVd9DMKFJs"
+            alt=""
+            class="avatar"
+          />
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCA9Dc2NYyI4X2g5wziiKV_2q50376IUFurFPmauU5c1DozBZhw6Knx4f38zMD5SHQlOavBtQsW4r1Biz3CxYdmBEElOztLCE0pxvYknnkpDkD7t6ObmU7Jy-DHQMndGfvroEYvNs6JR350LHTKvKQ0q0TyilLBYHgH9EyJ0yfm1TqvPaUZ4rZUDIvOyhhzPrPUydQiWADt6yN2mfjugL4xcchnrSBX7EoANDgCloIJVECwEr-RqXCK0z0NuId_dT1J9cLMz4V0xmvj"
+            alt=""
+            class="avatar"
+          />
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8i396tDAQbAsvg8Trw8k7cqUZ3yK23hOoD7cNTTiqDkazJ0jsnjdwihUjI6gBWiGD_5H1pClz4bDrExCXZ1bM8Zd-NcWHqkMX-P-lv94EheBQwOaRSdKck8W-B4f087SHiUc0O6BRoG_WZpPBuoDxz3Cbj9gRWtWwIfkeQ60RdUMFREN6AkBiedTvREpGzdihg28_E2RBxCnJdYqQkkoSQHAvX8JJDzk0pk412BE4yzJOyTyVaa-JNmkMwWy6exnBBgXFbrGv8aig"
+            alt=""
+            class="avatar"
+          />
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuARecAiXndBqYzPtfxqtoaf4ijRyKhai4hEgzz-IH83Zz109T7AamsMnN30HfUDgm20CkVVAqTfumjHgrMfEDtqB6keVOi6rIsMPkxkEQ0qoKQcJTo5O6_-whDAhiF5na17t1TrKRLXh_3Z8i2OfTFRY3q6aeJwFFJrC4_2tNf4rukB0eidUaSeCUF95KOEK5nBoQXcom6zrIKNU0tLxqtXvG3ep1LXGCT2_zqeyHwTvThCwi5P8B1kAmDp37qHzZrIE3dbrf-bHCdL"
+            alt=""
+            class="avatar"
+          />
         </div>
         <div class="proof-text">
           <p class="proof-bold">+2.500 clientes satisfechos</p>
           <div class="proof-stars">
-            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+            <span class="star">★</span><span class="star">★</span
+            ><span class="star">★</span><span class="star">★</span
+            ><span class="star">★</span>
             <span class="proof-rating">4.9/5</span>
           </div>
         </div>
@@ -89,7 +128,11 @@
     </div>
     <div class="hero-image">
       <div class="hero-image-frame">
-        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbj6HzPymXjYItnHb4WsIA4rhGoZ3ZmskQiw-2jHnJOpq1jS7-CnsnS-v-IwFVRdt2vX8otPdRzCqiD6PsWvJfOMV9SQiSDM4ct5kXNOqRiCdpILOQn1Wg0VLl6TEBnA82gs1IU1A5Z4NXSZXzqrMS1LSeMTZoi44ztpYzXVq_jdPPYEB-u1rLBlt1sFAf-ReRhHaIXYC9U0bt9y2CzvYXadzRXBeNB1SIK-5dnVCINWKxArsYMYQzQbHLioj1bJ2M7K8SA8Q_7nhT" alt="Zen garden" class="hero-img">
+        <img
+          src="/images/landind_page.png"
+          alt="Zen garden"
+          class="hero-img"
+        />
       </div>
     </div>
   </div>
@@ -105,70 +148,120 @@
     <div class="services-grid">
       <div class="service-card">
         <div class="service-card-img">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD75-mi8fcIlGaZ9mHIUgJv3Z9ZmnOfXaKi3tHpxDDTWt3ko-VtzaYfrP6qeHrlpgl3aPgQybSp6BdWZaJfGzwSCYKH48ruKQBxBUi_IPPMyzPgYkz6DCJ7OZkMo3mnFQAhW6ytV2H15p683RUjAHhtspa655abjj6yfojAYl7GRihNSBKiba1TDwkoEneJAwiSDh2m8G5u18cLJos4xN5I2dVBF7g1wOQVMjwJ4I4cA_Jmp1IlcZwVruzj54mRTVzTbMfLTp96JNc3" alt="Masajes" class="service-img">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD75-mi8fcIlGaZ9mHIUgJv3Z9ZmnOfXaKi3tHpxDDTWt3ko-VtzaYfrP6qeHrlpgl3aPgQybSp6BdWZaJfGzwSCYKH48ruKQBxBUi_IPPMyzPgYkz6DCJ7OZkMo3mnFQAhW6ytV2H15p683RUjAHhtspa655abjj6yfojAYl7GRihNSBKiba1TDwkoEneJAwiSDh2m8G5u18cLJos4xN5I2dVBF7g1wOQVMjwJ4I4cA_Jmp1IlcZwVruzj54mRTVzTbMfLTp96JNc3"
+            alt="Masajes"
+            class="service-img"
+          />
         </div>
         <div class="service-card-body">
           <div class="service-icon-bg">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_Zdk1rUODAFFwkI7KaL7Ffa_kxhjYhHMTV59qMzyfiGrkEGPxv2iVFKPFGIpVT9NT_7UP7XlSKi8r62ioxpg03eHCKnWyKRgc5ZOqvbJBUPpURW1S-K-bc9Z9uIz05A7061cSOx1872MlMonHFD_ijisa7oFEkqNuGOUz-WwEtUde9viPl-v4UvxrPR63Hrso8UmDEjukjQo6d0KeRQLLLKFCXWTAlgjBe73p_N2ePudk6jUK5-AXbTueqxl4CI8-Tn0H_jcfZYPm" alt="" class="service-icon-img">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_Zdk1rUODAFFwkI7KaL7Ffa_kxhjYhHMTV59qMzyfiGrkEGPxv2iVFKPFGIpVT9NT_7UP7XlSKi8r62ioxpg03eHCKnWyKRgc5ZOqvbJBUPpURW1S-K-bc9Z9uIz05A7061cSOx1872MlMonHFD_ijisa7oFEkqNuGOUz-WwEtUde9viPl-v4UvxrPR63Hrso8UmDEjukjQo6d0KeRQLLLKFCXWTAlgjBe73p_N2ePudk6jUK5-AXbTueqxl4CI8-Tn0H_jcfZYPm"
+              alt=""
+              class="service-icon-img"
+            />
           </div>
           <h3 class="service-card-title">Masajes Terapéuticos</h3>
-          <p class="service-card-desc">Relaja tu cuerpo, alivia tensiones y recupera tu energía.</p>
+          <p class="service-card-desc">
+            Relaja tu cuerpo, alivia tensiones y recupera tu energía.
+          </p>
           <a class="service-card-link">Ver más →</a>
         </div>
       </div>
 
       <div class="service-card">
         <div class="service-card-img">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2ucuc2oMWOajzW4r1gBFw7Wq-BGkN0cNJ-u8WwssJsdBSALCQurKimlh02VTWH4_MPEavunGwPW9R7-H3-vvmGPblEQFB53VeCEtWiQq7N81D4GvlvgAktizPS8_Vx2ZSwGM7QvLxCpj0slF6iXRskBY94-VA8ycf5fZhjbOTOifah8GJgG3Sd1ZCezKAjUkh4YregZsTMzcpq2RxT7zuxhEkn3UWsKWQkbQQooTml3r-7JrK4K_FMYNRXihacHT-62kGuATFyEXF" alt="Facial" class="service-img">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2ucuc2oMWOajzW4r1gBFw7Wq-BGkN0cNJ-u8WwssJsdBSALCQurKimlh02VTWH4_MPEavunGwPW9R7-H3-vvmGPblEQFB53VeCEtWiQq7N81D4GvlvgAktizPS8_Vx2ZSwGM7QvLxCpj0slF6iXRskBY94-VA8ycf5fZhjbOTOifah8GJgG3Sd1ZCezKAjUkh4YregZsTMzcpq2RxT7zuxhEkn3UWsKWQkbQQooTml3r-7JrK4K_FMYNRXihacHT-62kGuATFyEXF"
+            alt="Facial"
+            class="service-img"
+          />
         </div>
         <div class="service-card-body">
           <div class="service-icon-bg">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeWnOeHHN2h6BrYsbguC63pBt3Vw_IqYRuqkJLClE1PsSArlgoVtwvmkCzxvwgRnboeANWmI0c-napvwyYTvdHSukZJ4OiVnTKmlWS5HvzLveU01hZAARBI_eaXqcxoKTNEEYyuM9z--DRLSJEzHjKgwOSxQtRV2uLfB0hQ6AMhxh5U_aYDNyI8_-XOA0gs9La-YRxYiP7SMRXOX8OfKhtbRgSGIEznDG7QgW_YCwWuJkdE0m8cDkxHd5aq0fqQDt6bEH263Ij_LjP" alt="" class="service-icon-img">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeWnOeHHN2h6BrYsbguC63pBt3Vw_IqYRuqkJLClE1PsSArlgoVtwvmkCzxvwgRnboeANWmI0c-napvwyYTvdHSukZJ4OiVnTKmlWS5HvzLveU01hZAARBI_eaXqcxoKTNEEYyuM9z--DRLSJEzHjKgwOSxQtRV2uLfB0hQ6AMhxh5U_aYDNyI8_-XOA0gs9La-YRxYiP7SMRXOX8OfKhtbRgSGIEznDG7QgW_YCwWuJkdE0m8cDkxHd5aq0fqQDt6bEH263Ij_LjP"
+              alt=""
+              class="service-icon-img"
+            />
           </div>
           <h3 class="service-card-title">Tratamientos Faciales</h3>
-          <p class="service-card-desc">Limpieza profunda, nutrición e hidratación para tu piel.</p>
+          <p class="service-card-desc">
+            Limpieza profunda, nutrición e hidratación para tu piel.
+          </p>
           <a class="service-card-link">Ver más →</a>
         </div>
       </div>
 
       <div class="service-card">
         <div class="service-card-img">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuARnnKZaj3eX62Xn9gn1Hri9A25OP6QMpT9XilKLpJmGaITsr8VHJ2WYdvnN4AG87uSkMpE09ywvnyuGHZBolIjI_vNXns81fcD4kNRZwwJPHZldxUILIROVhgtabJNhqPMZCcSY9XN_BBuvcUi4Z_qgXP6xCpnln8m6RQ9WyRbeode_Iza5RQjeBUlC2JIz9-w68O-BLR_FdLx_gVlK57-YzZd87NzjddQvfZ5YDYc_0t03WqYuDjZQrHsj13Wsr7VSsl_taXYncP_" alt="Hidroterapia" class="service-img">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuARnnKZaj3eX62Xn9gn1Hri9A25OP6QMpT9XilKLpJmGaITsr8VHJ2WYdvnN4AG87uSkMpE09ywvnyuGHZBolIjI_vNXns81fcD4kNRZwwJPHZldxUILIROVhgtabJNhqPMZCcSY9XN_BBuvcUi4Z_qgXP6xCpnln8m6RQ9WyRbeode_Iza5RQjeBUlC2JIz9-w68O-BLR_FdLx_gVlK57-YzZd87NzjddQvfZ5YDYc_0t03WqYuDjZQrHsj13Wsr7VSsl_taXYncP_"
+            alt="Hidroterapia"
+            class="service-img"
+          />
         </div>
         <div class="service-card-body">
           <div class="service-icon-bg">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzesOephF847XZ7BmNDDCDTSilbh4CisulsSp4Dxf3QOha_VeHduRBkkZQB6cBMOvxYrgAOtfjcAahHf7w0df_Z784ZTe3JvvYQwxw2CSrvwTe2D-8uYiBZDsSQXaIP4Jfkqi2-URIxIkWwCqWIxcHo_cLRxoBB0wnfh8TsmdUUW8NxAypKFb9b1PPjcuFds-QxzLQPaTUyCpZWqF752vzNeOohR1_IPhubKkp_-tMqxPwDv1nx2tpBMszVopKean2SQ1mxs-mzoTH" alt="" class="service-icon-img">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzesOephF847XZ7BmNDDCDTSilbh4CisulsSp4Dxf3QOha_VeHduRBkkZQB6cBMOvxYrgAOtfjcAahHf7w0df_Z784ZTe3JvvYQwxw2CSrvwTe2D-8uYiBZDsSQXaIP4Jfkqi2-URIxIkWwCqWIxcHo_cLRxoBB0wnfh8TsmdUUW8NxAypKFb9b1PPjcuFds-QxzLQPaTUyCpZWqF752vzNeOohR1_IPhubKkp_-tMqxPwDv1nx2tpBMszVopKean2SQ1mxs-mzoTH"
+              alt=""
+              class="service-icon-img"
+            />
           </div>
           <h3 class="service-card-title">Hidroterapia</h3>
-          <p class="service-card-desc">Equilibra tu cuerpo con el poder vitalizante del agua.</p>
+          <p class="service-card-desc">
+            Equilibra tu cuerpo con el poder vitalizante del agua.
+          </p>
           <a class="service-card-link">Ver más →</a>
         </div>
       </div>
 
       <div class="service-card">
         <div class="service-card-img">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrPLEBg9qe4vY-wQ8cYTYvFDhq1MyhFmNxwcm6JEvxCl_uxBmEMzElzYGgOr4usvn7DmOgSGt-saVgqOpioB_oNLuIaFaIjutFjrA44lNge1vHiRc6554bpUjEOYo4hDPiGd7De3sStzhWJrmlXT2t46F5X2tkTud5zE7LpWzzVwNnziOsAgRJM-nOWx0ex5bNisFv1L84YD50K74QHIXM8vqmpXuMJnsD903Pre4QbgbPtkUyVxt4xx8-DvM__quAp192yCMso-yD" alt="Aromaterapia" class="service-img">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrPLEBg9qe4vY-wQ8cYTYvFDhq1MyhFmNxwcm6JEvxCl_uxBmEMzElzYGgOr4usvn7DmOgSGt-saVgqOpioB_oNLuIaFaIjutFjrA44lNge1vHiRc6554bpUjEOYo4hDPiGd7De3sStzhWJrmlXT2t46F5X2tkTud5zE7LpWzzVwNnziOsAgRJM-nOWx0ex5bNisFv1L84YD50K74QHIXM8vqmpXuMJnsD903Pre4QbgbPtkUyVxt4xx8-DvM__quAp192yCMso-yD"
+            alt="Aromaterapia"
+            class="service-img"
+          />
         </div>
         <div class="service-card-body">
           <div class="service-icon-bg">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBffxBVKfcE1HU-USLXzIqvuiJKuyO5KqNhS5Dw25B0GqJIns-DtJ4f-35lRCgSeKv_Ar7p3bouv_4WXdGM0OC0GLOXb9kGii7NMMAZRAQ0wP1KvU_MRBt2HArb5595rbfToWnKgmK9bw-PL7faOqhFYxyiWbCoBCVj_he1Z-igZF3xhtMOYamgI30fcZ2aBiLX_LWtD5nOltHRFTgeE8U41FK_3uxrYzB1gsbK5CVKfbA_Dg4AcbU-kKyFTG12Qfoix2q_0uB2lbBp" alt="" class="service-icon-img">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBffxBVKfcE1HU-USLXzIqvuiJKuyO5KqNhS5Dw25B0GqJIns-DtJ4f-35lRCgSeKv_Ar7p3bouv_4WXdGM0OC0GLOXb9kGii7NMMAZRAQ0wP1KvU_MRBt2HArb5595rbfToWnKgmK9bw-PL7faOqhFYxyiWbCoBCVj_he1Z-igZF3xhtMOYamgI30fcZ2aBiLX_LWtD5nOltHRFTgeE8U41FK_3uxrYzB1gsbK5CVKfbA_Dg4AcbU-kKyFTG12Qfoix2q_0uB2lbBp"
+              alt=""
+              class="service-icon-img"
+            />
           </div>
           <h3 class="service-card-title">Aromaterapia</h3>
-          <p class="service-card-desc">Aromas que armonizan tu mente y todas tus emociones.</p>
+          <p class="service-card-desc">
+            Aromas que armonizan tu mente y todas tus emociones.
+          </p>
           <a class="service-card-link">Ver más →</a>
         </div>
       </div>
 
       <div class="service-card">
         <div class="service-card-img">
-          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ-DPKVJ3h4TGeDXAqhNcpzjwo8D9oz9EruBRo4sOEmMpmspWW_euIG8AMcxU9nWiU9JV1lvE1xn6OWviqbcJ2dIwhg4U49OcHwwa39aGq3svA6hzF-vzGY61rabZ_jpA2SwwkcniVZaBr0X8okJzBuKDFHzzGQiuovKZUwmE-OZMSvrtNfzYUdk574nTF_eizajbTBy47iChLCT0Kd4wTBqN7cH9CEaIQvLEylC-XWLPBzlJ_Yh1V4qTgRQCJf0AEKMWCCbIm6e75" alt="Experiencias" class="service-img">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ-DPKVJ3h4TGeDXAqhNcpzjwo8D9oz9EruBRo4sOEmMpmspWW_euIG8AMcxU9nWiU9JV1lvE1xn6OWviqbcJ2dIwhg4U49OcHwwa39aGq3svA6hzF-vzGY61rabZ_jpA2SwwkcniVZaBr0X8okJzBuKDFHzzGQiuovKZUwmE-OZMSvrtNfzYUdk574nTF_eizajbTBy47iChLCT0Kd4wTBqN7cH9CEaIQvLEylC-XWLPBzlJ_Yh1V4qTgRQCJf0AEKMWCCbIm6e75"
+            alt="Experiencias"
+            class="service-img"
+          />
         </div>
         <div class="service-card-body">
           <div class="service-icon-bg">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0i-Tozxl7lPqu8c1hr83n6_ZUon0sdD6oj6qPYrSOXwaZ0-9vk-fLk7sgu-_VFlfrvUMIrzpTBDYPpDd4vL6QSZpEycmPydt125W7HCEVUja2icx0NielOObNyT4iC1WxGGiPX5em8vKawlMShgsEKH-8nSZfyUq5eRhoSf_5AfrZS9_BOXsBk6v1SQ6VuxEdGZC6JQrFvy5ZUrDdrTKcTtg9FSvM51BqHa_8t92L8RKW2t9yU1Kg1GXSDSiZ95m68XKaqKz6fjrF" alt="" class="service-icon-img">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0i-Tozxl7lPqu8c1hr83n6_ZUon0sdD6oj6qPYrSOXwaZ0-9vk-fLk7sgu-_VFlfrvUMIrzpTBDYPpDd4vL6QSZpEycmPydt125W7HCEVUja2icx0NielOObNyT4iC1WxGGiPX5em8vKawlMShgsEKH-8nSZfyUq5eRhoSf_5AfrZS9_BOXsBk6v1SQ6VuxEdGZC6JQrFvy5ZUrDdrTKcTtg9FSvM51BqHa_8t92L8RKW2t9yU1Kg1GXSDSiZ95m68XKaqKz6fjrF"
+              alt=""
+              class="service-icon-img"
+            />
           </div>
           <h3 class="service-card-title">Experiencias Especiales</h3>
-          <p class="service-card-desc">Paquetes personalizados para esos momentos únicos.</p>
+          <p class="service-card-desc">
+            Paquetes personalizados para esos momentos únicos.
+          </p>
           <a class="service-card-link">Ver más →</a>
         </div>
       </div>
@@ -180,31 +273,59 @@
   <div class="container">
     <div class="value-grid">
       <div class="value-item">
-        <div class="value-icon"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiChVxH558CZ4saKoFwUPDyCCcmyoxwi3CAdQKd43n-e7VwrtLRbGukmjLhUkfFZYDbxWI9AIdQr1hQ9zl9g-3Kl3XKXVeCvWucXtJaBiyPg8Vv1Z8yFhvkjG9-PZZwop7AXXCaFFp0vU9DGG1OismcX-4se2slCohr2o-oO0Sn7A9cMltSKkD5aweUr_r2GSacR4BogNUuN4GCotGGcY7EaacuhzHevBa-MZJthZkMPQjT31Xz72M-UQbGjFXPSJuxDQ1rEjT_cBa" alt=""></div>
+        <div class="value-icon">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiChVxH558CZ4saKoFwUPDyCCcmyoxwi3CAdQKd43n-e7VwrtLRbGukmjLhUkfFZYDbxWI9AIdQr1hQ9zl9g-3Kl3XKXVeCvWucXtJaBiyPg8Vv1Z8yFhvkjG9-PZZwop7AXXCaFFp0vU9DGG1OismcX-4se2slCohr2o-oO0Sn7A9cMltSKkD5aweUr_r2GSacR4BogNUuN4GCotGGcY7EaacuhzHevBa-MZJthZkMPQjT31Xz72M-UQbGjFXPSJuxDQ1rEjT_cBa"
+            alt=""
+          />
+        </div>
         <div>
           <h4 class="value-title">Terapeutas Expertos</h4>
-          <p class="value-desc">Profesionales certificados y en constante formación.</p>
+          <p class="value-desc">
+            Profesionales certificados y en constante formación.
+          </p>
         </div>
       </div>
       <div class="value-item">
-        <div class="value-icon"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUNx-iBtGHiF_uS8QSQca0WjLi5vTdBlwG4HHpj9IkGUNRMi9Fc8LGXUVl8hY3QV-9a75d2bQVRhj-d4gNnPt13kAvfVh5-6KzYhJ9A4hE2_kEqbiR24xxj2rNTG2ndSljfBwqgUkcaFivDdOuzyfYx_2FCRshO29nCB_YHV5B0VIzjEreFomh4xnS2dTn-n2dwVgGH0aSohJAKgQIqAn4rObkY_Z2jV1V1JxpZVbkZ7wHOJ1MhczktxHd2lyGspW57jbcz54xUEus" alt=""></div>
+        <div class="value-icon">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUNx-iBtGHiF_uS8QSQca0WjLi5vTdBlwG4HHpj9IkGUNRMi9Fc8LGXUVl8hY3QV-9a75d2bQVRhj-d4gNnPt13kAvfVh5-6KzYhJ9A4hE2_kEqbiR24xxj2rNTG2ndSljfBwqgUkcaFivDdOuzyfYx_2FCRshO29nCB_YHV5B0VIzjEreFomh4xnS2dTn-n2dwVgGH0aSohJAKgQIqAn4rObkY_Z2jV1V1JxpZVbkZ7wHOJ1MhczktxHd2lyGspW57jbcz54xUEus"
+            alt=""
+          />
+        </div>
         <div>
           <h4 class="value-title">Productos Premium</h4>
-          <p class="value-desc">Usamos productos de alta calidad y origen natural.</p>
+          <p class="value-desc">
+            Usamos productos de alta calidad y origen natural.
+          </p>
         </div>
       </div>
       <div class="value-item">
-        <div class="value-icon"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnPgV1xQ2xMkLb1-LHosLPkDdjtF_737SIvVkYNeaLTHbBIHObfc_JstP0Dmo0Ri5-LoZ0RAqi8Px9lxM_wruW5wA7HCSfFznijclw3NzCuAErf31X6vr11QqmzN4syO9QrnHBiR3_2y8FIydEVlMQ0aaRLyZYcBFRdOIZNazNkWd8iWaarof7eHHgWMHx676MjVBzc64o0W1PMCDSaXlMfqCwb0KCLS0Gj1e3i68Dqai9rsAHZBavTDL9zpd-ALmESm_uxox1QLO3" alt=""></div>
+        <div class="value-icon">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnPgV1xQ2xMkLb1-LHosLPkDdjtF_737SIvVkYNeaLTHbBIHObfc_JstP0Dmo0Ri5-LoZ0RAqi8Px9lxM_wruW5wA7HCSfFznijclw3NzCuAErf31X6vr11QqmzN4syO9QrnHBiR3_2y8FIydEVlMQ0aaRLyZYcBFRdOIZNazNkWd8iWaarof7eHHgWMHx676MjVBzc64o0W1PMCDSaXlMfqCwb0KCLS0Gj1e3i68Dqai9rsAHZBavTDL9zpd-ALmESm_uxox1QLO3"
+            alt=""
+          />
+        </div>
         <div>
           <h4 class="value-title">Ambiente Relajante</h4>
-          <p class="value-desc">Espacios diseñados para tu confort y bienestar total.</p>
+          <p class="value-desc">
+            Espacios diseñados para tu confort y bienestar total.
+          </p>
         </div>
       </div>
       <div class="value-item">
-        <div class="value-icon"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0F09czM9e3-xvxuP3-avHp4ImRDwSrQO7d7aDJyzaIiv7bSPQBnDJTZZr1w9e0OcV1Z_XIkAbHw1uzouqP1i_WqvLBbgAubAyjHY6ucNHcV3OKT590hwANTKiPDbBkeiINCnHkVeSKPQ-dxW7eX5e2aXpLRk1YCeK5-HGZYiXAdEuX_k-u_I8gDskMvgyK4BI_zqBqV4ECIwEpMCUR8ZKC5vrKB4E7GMM7wuXyJxWuNuV8DPkTacRLBGw_9XqP3lsJI_5V2IYlL90" alt=""></div>
+        <div class="value-icon">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0F09czM9e3-xvxuP3-avHp4ImRDwSrQO7d7aDJyzaIiv7bSPQBnDJTZZr1w9e0OcV1Z_XIkAbHw1uzouqP1i_WqvLBbgAubAyjHY6ucNHcV3OKT590hwANTKiPDbBkeiINCnHkVeSKPQ-dxW7eX5e2aXpLRk1YCeK5-HGZYiXAdEuX_k-u_I8gDskMvgyK4BI_zqBqV4ECIwEpMCUR8ZKC5vrKB4E7GMM7wuXyJxWuNuV8DPkTacRLBGw_9XqP3lsJI_5V2IYlL90"
+            alt=""
+          />
+        </div>
         <div>
           <h4 class="value-title">Atención Personalizada</h4>
-          <p class="value-desc">Cada experiencia es única, enfocada solo en ti.</p>
+          <p class="value-desc">
+            Cada experiencia es única, enfocada solo en ti.
+          </p>
         </div>
       </div>
     </div>
@@ -217,22 +338,42 @@
       <div class="stats-bg"></div>
       <div class="stats-grid">
         <div class="stat-item">
-          <div class="stat-icon"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBreqXY_vuS-TWwT6aso1gEQL_tgoabO6-gYBpnQg5FnBotcyr8dOxpEg28dHoewlnTsd4kfiPW2HwqVDZwKk5aDW5GlKR10G05zkvVau-dPByvTJEyA0HQcFUCuK23vTLAFQNTT2FPmHsvhtNNN5HdJfY_B0MzbgtbVdie8Ee6RDezLF5nuXtxH8BxHeMiOP9xB7v8SfdTsVXO7bOHnURVDrjvnwPy64XlQbsQjq0eSfIOPWO-NnCIQ9HLNiTfWfZoz9kETWeOHOq4" alt=""></div>
+          <div class="stat-icon">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBreqXY_vuS-TWwT6aso1gEQL_tgoabO6-gYBpnQg5FnBotcyr8dOxpEg28dHoewlnTsd4kfiPW2HwqVDZwKk5aDW5GlKR10G05zkvVau-dPByvTJEyA0HQcFUCuK23vTLAFQNTT2FPmHsvhtNNN5HdJfY_B0MzbgtbVdie8Ee6RDezLF5nuXtxH8BxHeMiOP9xB7v8SfdTsVXO7bOHnURVDrjvnwPy64XlQbsQjq0eSfIOPWO-NnCIQ9HLNiTfWfZoz9kETWeOHOq4"
+              alt=""
+            />
+          </div>
           <p class="stat-number">+2.500</p>
           <p class="stat-label">Clientes satisfechos</p>
         </div>
         <div class="stat-item">
-          <div class="stat-icon"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPehqmL1ceyK4euRnKV2lT5BeRFGwV-weWopJo9Jb296RfTtC3J-iHlm2btwMlvwfbYgMGbRoBExA_wJcxVJyZ-J5DQ37I1He4dUWdoe7gvTCRxHEJvjipcW-nlWBbj_FjbS5mqzbKFvJyTmH_9HKeGA-9cEwQyI7ZO7WxkF6tN9kcdagZ1N-tJIU6v4yF24VbkM0Xb1P5xzPjjC0eB08I-4c_AwMDFndky1gytjMeK2C1axe_Gcpdx5kjs61jYFS8TMRdzkBpyAZ6" alt=""></div>
+          <div class="stat-icon">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPehqmL1ceyK4euRnKV2lT5BeRFGwV-weWopJo9Jb296RfTtC3J-iHlm2btwMlvwfbYgMGbRoBExA_wJcxVJyZ-J5DQ37I1He4dUWdoe7gvTCRxHEJvjipcW-nlWBbj_FjbS5mqzbKFvJyTmH_9HKeGA-9cEwQyI7ZO7WxkF6tN9kcdagZ1N-tJIU6v4yF24VbkM0Xb1P5xzPjjC0eB08I-4c_AwMDFndky1gytjMeK2C1axe_Gcpdx5kjs61jYFS8TMRdzkBpyAZ6"
+              alt=""
+            />
+          </div>
           <p class="stat-number">4.9/5</p>
           <p class="stat-label">Calificación promedio</p>
         </div>
         <div class="stat-item">
-          <div class="stat-icon"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXBED0H2Jn9gaY3MQ1zYWocMNuxdprX_uQmcBZPV9Pzz3RsWxNvmHmqeRDJWpf2LsOCjUt1X4KtjV_z11czn8-Z3l6gnHYAL4gN_967tMsvxfW1Bke2tC0-nnIGZ-3HJKGddCfXrizNMuPrQwVATt9Zz3br9_BWAYK2cZgY_CWkt9hPagx0cB5MbSwMMwVkExQkpH8oJJESOoxDxGdTu2lI_Qumw3rNB6VXZMOPwA4nadotwU-fRvtsWEJ1MsbyR_0tCw-VEVWkhbx" alt=""></div>
+          <div class="stat-icon">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXBED0H2Jn9gaY3MQ1zYWocMNuxdprX_uQmcBZPV9Pzz3RsWxNvmHmqeRDJWpf2LsOCjUt1X4KtjV_z11czn8-Z3l6gnHYAL4gN_967tMsvxfW1Bke2tC0-nnIGZ-3HJKGddCfXrizNMuPrQwVATt9Zz3br9_BWAYK2cZgY_CWkt9hPagx0cB5MbSwMMwVkExQkpH8oJJESOoxDxGdTu2lI_Qumw3rNB6VXZMOPwA4nadotwU-fRvtsWEJ1MsbyR_0tCw-VEVWkhbx"
+              alt=""
+            />
+          </div>
           <p class="stat-number">12+</p>
           <p class="stat-label">Años de experiencia</p>
         </div>
         <div class="stat-item">
-          <div class="stat-icon"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6lfyEl5LLywk-kLzt5n5rhJK_zoxWjBjAZYshlkEtoGrWZesDT_BVqN9IfAk6tbB34iAst8sXG7YaflHMB4pNTsQE48dcPXnRf2xS9_7TSz4EnHFO0Uk246j-SPgU_MX-TnuQDun8bKTyppF4ymgi_obncznzynppwXYPHGxlaV3IQWCOdtXWtF0vjW_IJT0AdiK1BtvpoGj_nAXIdX2-Ft94eWwd5dDMlzK8kAXBGAH3F63YmUKA-JYeLRtBpxC5vbVZfEzTwLL9" alt=""></div>
+          <div class="stat-icon">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6lfyEl5LLywk-kLzt5n5rhJK_zoxWjBjAZYshlkEtoGrWZesDT_BVqN9IfAk6tbB34iAst8sXG7YaflHMB4pNTsQE48dcPXnRf2xS9_7TSz4EnHFO0Uk246j-SPgU_MX-TnuQDun8bKTyppF4ymgi_obncznzynppwXYPHGxlaV3IQWCOdtXWtF0vjW_IJT0AdiK1BtvpoGj_nAXIdX2-Ft94eWwd5dDMlzK8kAXBGAH3F63YmUKA-JYeLRtBpxC5vbVZfEzTwLL9"
+              alt=""
+            />
+          </div>
           <p class="stat-number">8</p>
           <p class="stat-label">Cabinas de atención</p>
         </div>
@@ -246,15 +387,25 @@
     <div class="testimonials-inner">
       <div class="testimonials-left">
         <p class="section-label">Lo que dicen nuestros clientes</p>
-        <h2 class="testimonials-title">Historias que<br>nos <span class="hero-title-accent">inspiran.</span></h2>
+        <h2 class="testimonials-title">
+          Historias que<br />nos
+          <span class="hero-title-accent">inspiran.</span>
+        </h2>
         <a class="testimonials-link">Ver más testimonios →</a>
       </div>
       <div class="testimonials-grid">
         <div class="testimonial-card">
           <div class="testimonial-quote">“</div>
-          <p class="testimonial-text">La mejor experiencia que he tenido. El ambiente te transporta a otro nivel de calma.</p>
+          <p class="testimonial-text">
+            La mejor experiencia que he tenido. El ambiente te transporta a otro
+            nivel de calma.
+          </p>
           <div class="testimonial-author">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmUeAP6GtIGf_73Sy7UI7g12p8cP0hepfFsn-v8fFjBO9zmGFDIgpeE19Gn7rAzfI5MYkFUE0fO7TI7PbmuK-xMMTY2IyGTV-GAJcCuBzEl53e1U92oQ0Qh0Wt1Fu50PQzClflVIhC57JYTpVsXgwapXxZRG0kp4LubJjxhEzpVimRQRAV2d3R4RJoxQf7g-Mc_3z7uRvft4Hyj1pHhMAF_fJ0yiK1OL7qDpIOcwxrDYj3S4toq6eLpiR9JGzWh-GlREiiHjp4fflD" alt="" class="testimonial-avatar">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmUeAP6GtIGf_73Sy7UI7g12p8cP0hepfFsn-v8fFjBO9zmGFDIgpeE19Gn7rAzfI5MYkFUE0fO7TI7PbmuK-xMMTY2IyGTV-GAJcCuBzEl53e1U92oQ0Qh0Wt1Fu50PQzClflVIhC57JYTpVsXgwapXxZRG0kp4LubJjxhEzpVimRQRAV2d3R4RJoxQf7g-Mc_3z7uRvft4Hyj1pHhMAF_fJ0yiK1OL7qDpIOcwxrDYj3S4toq6eLpiR9JGzWh-GlREiiHjp4fflD"
+              alt=""
+              class="testimonial-avatar"
+            />
             <div>
               <p class="testimonial-name">María López</p>
               <div class="testimonial-stars">★★★★★</div>
@@ -263,9 +414,16 @@
         </div>
         <div class="testimonial-card">
           <div class="testimonial-quote">“</div>
-          <p class="testimonial-text">Los terapeutas son increíbles, se nota la profesionalidad y el amor por lo que hacen.</p>
+          <p class="testimonial-text">
+            Los terapeutas son increíbles, se nota la profesionalidad y el amor
+            por lo que hacen.
+          </p>
           <div class="testimonial-author">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDas-gYQYnz3_AJ2suKoZJH8OSQrpS5AkpJsx9O_0wtmkQ_bLZcgfxG1_LZW9XUmu_7JhNdKwY3xGGQgkIKaA_Z_ULDrm9UdKwea4LVGYK_6abFDi5dLoy6dq6pVXGCArTaDTvtohsBzjnBqhm_tBdWv9sOapzbNWiqfUr2uKVI5Ta3ePmpPgJZ1YZRjTG2TkcsJEB_pgLVZ2HA15f6pjVc7VU9d3gW37HNJbAOGQNIxW_9JmdLVTLZrx6EuOc7Q8xl5DHiJrLcgClD" alt="" class="testimonial-avatar">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDas-gYQYnz3_AJ2suKoZJH8OSQrpS5AkpJsx9O_0wtmkQ_bLZcgfxG1_LZW9XUmu_7JhNdKwY3xGGQgkIKaA_Z_ULDrm9UdKwea4LVGYK_6abFDi5dLoy6dq6pVXGCArTaDTvtohsBzjnBqhm_tBdWv9sOapzbNWiqfUr2uKVI5Ta3ePmpPgJZ1YZRjTG2TkcsJEB_pgLVZ2HA15f6pjVc7VU9d3gW37HNJbAOGQNIxW_9JmdLVTLZrx6EuOc7Q8xl5DHiJrLcgClD"
+              alt=""
+              class="testimonial-avatar"
+            />
             <div>
               <p class="testimonial-name">Carlos Ramírez</p>
               <div class="testimonial-stars">★★★★★</div>
@@ -274,9 +432,16 @@
         </div>
         <div class="testimonial-card">
           <div class="testimonial-quote">“</div>
-          <p class="testimonial-text">Cada sesión me ayuda a reconectar conmigo misma. 100% recomendado para todos.</p>
+          <p class="testimonial-text">
+            Cada sesión me ayuda a reconectar conmigo misma. 100% recomendado
+            para todos.
+          </p>
           <div class="testimonial-author">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbEHpYBeLemuEk0mygCYg4YHID6zh7Vup8i8OqveShV30hmyqoCgEe9a4KNkfS8LhWhIpMxrnNweFfCD-YfiMBZXgweZYm0zY8RMwB00f95d4C5lf2IFQ_WdPMnP954LaivTPbwSk2yMVxq1bjAaSAnx9UwAjA9k2X6IUKnlgMb2PdHjmBinX9ApYhyEZLdKnTtivqSdn0wgqCdM4MASVbN_oHCIJDv6dMNBUeQXEFgxppN-JqoguQSHCL8zYlXFhdVCW9m4-RwS26" alt="" class="testimonial-avatar">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbEHpYBeLemuEk0mygCYg4YHID6zh7Vup8i8OqveShV30hmyqoCgEe9a4KNkfS8LhWhIpMxrnNweFfCD-YfiMBZXgweZYm0zY8RMwB00f95d4C5lf2IFQ_WdPMnP954LaivTPbwSk2yMVxq1bjAaSAnx9UwAjA9k2X6IUKnlgMb2PdHjmBinX9ApYhyEZLdKnTtivqSdn0wgqCdM4MASVbN_oHCIJDv6dMNBUeQXEFgxppN-JqoguQSHCL8zYlXFhdVCW9m4-RwS26"
+              alt=""
+              class="testimonial-avatar"
+            />
             <div>
               <p class="testimonial-name">Valeria Soto</p>
               <div class="testimonial-stars">★★★★★</div>
@@ -291,14 +456,25 @@
 <section class="bottom-cta">
   <div class="container">
     <div class="cta-card">
-      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtKRzU5RSG02TFP5wee6UxAijy6piXm7JNx2Dxzc3J3lBuvzRgEB5r6e824_7p02-mY72WXA5xB6m0ctnP3zqNDJpPQj-QlGr6rKGBYkAEVrosRJRy3ZcEe1kTf7DKpqw4Qua6mAiuN9wJ4fJsd-iahv1iU8shVBIi1luZuL_EuO9gFFWdZt_mhDGN5CJ3EEHqvYRPLOveVnizKQkl0qDuRYUeC1s04WYG2YrYynbMkYJOZ-S198bwWPO75Be6q-c5qBe3IzI341So" alt="Zen spa background" class="cta-bg-img">
+      <img
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtKRzU5RSG02TFP5wee6UxAijy6piXm7JNx2Dxzc3J3lBuvzRgEB5r6e824_7p02-mY72WXA5xB6m0ctnP3zqNDJpPQj-QlGr6rKGBYkAEVrosRJRy3ZcEe1kTf7DKpqw4Qua6mAiuN9wJ4fJsd-iahv1iU8shVBIi1luZuL_EuO9gFFWdZt_mhDGN5CJ3EEHqvYRPLOveVnizKQkl0qDuRYUeC1s04WYG2YrYynbMkYJOZ-S198bwWPO75Be6q-c5qBe3IzI341So"
+        alt="Zen spa background"
+        class="cta-bg-img"
+      />
       <div class="cta-overlay">
         <h2 class="cta-title">Tu bienestar te espera.</h2>
-        <p class="cta-desc">Reserva tu experiencia y regálate un momento para ti. Estamos listos para cuidarte como mereces.</p>
+        <p class="cta-desc">
+          Reserva tu experiencia y regálate un momento para ti. Estamos listos
+          para cuidarte como mereces.
+        </p>
         <a routerLink="/login" class="btn-primary btn-lg">
           Reservar ahora
           <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-            <path clip-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" fill-rule="evenodd"/>
+            <path
+              clip-rule="evenodd"
+              d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+              fill-rule="evenodd"
+            />
           </svg>
         </a>
       </div>
@@ -322,24 +498,48 @@
         <p class="footer-phrase">"Tu bienestar es nuestra prioridad."</p>
       </div>
       <div class="footer-newsletter">
-        <p class="footer-newsletter-label">Recibe consejos, promociones y novedades exclusivas.</p>
+        <p class="footer-newsletter-label">
+          Recibe consejos, promociones y novedades exclusivas.
+        </p>
         <div class="newsletter-form">
-          <input type="email" class="newsletter-input" placeholder="Tu correo electrónico">
-          <button class="btn-primary">Suscribirme</button>
+          <input
+            type="email"
+            class="newsletter-input"
+            [class.input-error]="suscripcionError()"
+            placeholder="Tu correo electrónico"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event); suscripcionError.set(''); suscripcionExito.set('')"
+            (keydown.enter)="suscribir()"
+          />
+          <button class="btn-primary" (click)="suscribir()" [disabled]="suscribiendo()">
+            @if (suscribiendo()) {
+              Suscribiendo…
+            } @else {
+              Suscribirme
+            }
+          </button>
         </div>
+        @if (suscripcionExito()) {
+          <p class="newsletter-success">{{ suscripcionExito() }}</p>
+        }
+        @if (suscripcionError()) {
+          <p class="newsletter-error">{{ suscripcionError() }}</p>
+        }
       </div>
       <div class="footer-social">
         <p class="footer-social-label">Síguenos</p>
         <div class="social-icons">
-          <a href="#" class="social-icon">IG</a>
-          <a href="#" class="social-icon">FB</a>
-          <a href="#" class="social-icon">WA</a>
-          <a href="#" class="social-icon">TK</a>
+          <a href="https://www.instagram.com/zenspa.bienestar" target="_blank" rel="noopener" class="social-icon" title="Instagram">IG</a>
+          <a href="https://www.facebook.com/zenspabienestar" target="_blank" rel="noopener" class="social-icon" title="Facebook">FB</a>
+          <a href="https://wa.me/573001234567?text=Hola%20ZenSpa%2C%20quiero%20agendar%20una%20cita" target="_blank" rel="noopener" class="social-icon" title="WhatsApp">WA</a>
+          <a href="https://www.tiktok.com/@zenspa.bienestar" target="_blank" rel="noopener" class="social-icon" title="TikTok">TK</a>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
-      <p class="footer-copy">© 2026 ZenSpa Bienestar. Todos los derechos reservados.</p>
+      <p class="footer-copy">
+        © 2026 ZenSpa Bienestar. Todos los derechos reservados.
+      </p>
       <div class="footer-links">
         <a href="#" class="footer-link">Privacidad</a>
         <a href="#" class="footer-link">Términos</a>
