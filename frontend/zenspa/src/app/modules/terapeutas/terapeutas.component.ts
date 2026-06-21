@@ -20,6 +20,8 @@ export class TerapeutasComponent implements OnInit {
   private citaService = inject(CitaService);
   private authService = inject(AuthService);
 
+  readonly TIPOS_TERAPIA = ['masajes', 'facial', 'hidroterapia', 'aromaterapia', 'multiple'] as const;
+
   readonly hoy = new Date();
   readonly hoyStr = this.hoy.toISOString().split('T')[0];
 
@@ -28,7 +30,7 @@ export class TerapeutasComponent implements OnInit {
   cargando = signal(true);
   searchTerm = signal('');
   terapeutaSeleccionado = signal<Terapeuta | null>(null);
-  tabActivo = signal<'info' | 'disponibilidad' | 'rendimiento' | 'documentos'>('info');
+  tabActivo = signal<'info' | 'disponibilidad' | 'rendimiento'>('info');
   modalEliminar = signal<Terapeuta | null>(null);
   modalEditar = signal<Terapeuta | null>(null);
   editando = signal(false);
@@ -38,7 +40,7 @@ export class TerapeutasComponent implements OnInit {
     nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
     apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
     email: ['', [Validators.required, Validators.email]],
-    especialidad: ['', Validators.required],
+    especialidad: ['', [Validators.required, (c: any) => c.value && !this.TIPOS_TERAPIA.includes(c.value) ? { invalida: true } : null]],
     certificaciones: [''],
   });
 
@@ -56,6 +58,10 @@ export class TerapeutasComponent implements OnInit {
   activos = computed(() => this.terapeutas().filter(t => t.activo).length);
   citasHoy = computed(() =>
     this.citasTodas().filter(c => c.fecha === this.hoyStr).length
+  );
+
+  completadasHoy = computed(() =>
+    this.citasTodas().filter(c => c.fecha === this.hoyStr && c.estado === 'completada').length
   );
 
   private inicioSemana = (() => {
@@ -188,6 +194,7 @@ export class TerapeutasComponent implements OnInit {
     if (control.errors?.['required']) return 'Este campo es obligatorio';
     if (control.errors?.['pattern']) return 'Solo se permiten letras y espacios';
     if (control.errors?.['email']) return 'Correo electrónico inválido';
+    if (control.errors?.['invalida']) return 'Selecciona una especialidad válida';
     return '';
   }
 

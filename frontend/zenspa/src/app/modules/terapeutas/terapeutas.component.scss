@@ -397,7 +397,7 @@
 
 .edit-form .field { display: flex; flex-direction: column; gap: 6px; }
 .edit-form label { font-size: 13px; font-weight: 600; color: var(--color-text); }
-.edit-form input, .edit-form textarea {
+.edit-form input, .edit-form textarea, .edit-form select {
   padding: 10px 12px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -407,13 +407,15 @@
   outline: none;
   background: var(--color-surface);
 }
-.edit-form input:focus, .edit-form textarea:focus { border-color: var(--color-primary); }
+.edit-form input:focus, .edit-form textarea:focus, .edit-form select:focus { border-color: var(--color-primary); }
 
 .field-error {
   font-size: 12px;
   color: #C62828;
   margin-top: 2px;
 }
+
+.edit-form select { cursor: pointer; appearance: auto; }
 
 .input-error {
   border-color: #C62828 !important;

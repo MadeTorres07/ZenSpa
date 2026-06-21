@@ -186,6 +186,11 @@ export class DashboardComponent implements OnInit {
     return hora.slice(0, 5);
   }
 
+  formatFecha(fecha: string): string {
+    const d = new Date(fecha + 'T12:00:00');
+    return new Intl.DateTimeFormat('es-CO', { weekday: 'short', day: 'numeric', month: 'short' }).format(d);
+  }
+
   servicioNombre(cita: Cita): string {
     if (!cita.servicios || cita.servicios.length === 0) return '—';
     return cita.servicios.map(s => s.nombre).join(', ');

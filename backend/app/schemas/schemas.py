@@ -28,6 +28,16 @@ def _validar_password(v: str) -> str:
     return v
 
 
+TIPOS_TERAPIA = {"masajes", "facial", "hidroterapia", "aromaterapia", "multiple"}
+
+
+def _validar_especialidad(v: str) -> str:
+    v = v.strip().lower()
+    if v not in TIPOS_TERAPIA:
+        raise ValueError(f"Especialidad inválida. Debe ser una de: {', '.join(sorted(TIPOS_TERAPIA))}")
+    return v
+
+
 # ──────────────────────────── Usuario ────────────────────────────
 class UsuarioBase(BaseModel):
     nombre: str
@@ -168,6 +178,11 @@ class TerapeutaCreate(BaseModel):
     def validar_password(cls, v: str) -> str:
         return _validar_password(v)
 
+    @field_validator("especialidad")
+    @classmethod
+    def validar_especialidad(cls, v: str) -> str:
+        return _validar_especialidad(v)
+
 
 class TerapeutaUpdate(BaseModel):
     nombre: str | None = None
@@ -190,6 +205,13 @@ class TerapeutaUpdate(BaseModel):
         if v is None:
             return None
         return _validar_nombre_apellido(v)
+
+    @field_validator("especialidad")
+    @classmethod
+    def validar_especialidad(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
+        return _validar_especialidad(v)
 
 
 class TerapeutaResponse(BaseModel):

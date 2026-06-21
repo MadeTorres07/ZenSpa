@@ -27,8 +27,8 @@
       <span class="kpi-valor">{{ citasHoy() }}</span>
     </div>
     <div class="kpi-card">
-      <span class="kpi-label">Calificación promedio</span>
-      <span class="kpi-valor">4.8 <span class="kpi-unit">/5</span></span>
+      <span class="kpi-label">Citas completadas hoy</span>
+      <span class="kpi-valor">{{ completadasHoy() }}</span>
     </div>
   </div>
 
@@ -128,7 +128,6 @@
           <button class="tab-btn" [class.tab-active]="tabActivo() === 'info'" (click)="tabActivo.set('info')">Información</button>
           <button class="tab-btn" [class.tab-active]="tabActivo() === 'disponibilidad'" (click)="tabActivo.set('disponibilidad')">Disponibilidad</button>
           <button class="tab-btn" [class.tab-active]="tabActivo() === 'rendimiento'" (click)="tabActivo.set('rendimiento')">Rendimiento</button>
-          <button class="tab-btn" [class.tab-active]="tabActivo() === 'documentos'" (click)="tabActivo.set('documentos')">Documentos</button>
         </div>
 
         <div class="panel-tab-content">
@@ -153,15 +152,9 @@
               <p>{{ citasPorTerapeuta(t.id) }}</p>
             </div>
             <div class="info-block">
-              <label>Calificación promedio</label>
-              <p>4.8 / 5</p>
-            </div>
-            <div class="info-block">
               <label>Clientes atendidos</label>
               <p>{{ clientesAtendidos(t.id) }}</p>
             </div>
-          } @else {
-            <p class="tab-placeholder">Sección de documentos próxima a implementar.</p>
           }
         </div>
 
@@ -171,8 +164,8 @@
             <span class="stat-label">Citas esta semana</span>
           </div>
           <div class="stat-item">
-            <span class="stat-valor">4.8</span>
-            <span class="stat-label">Calificación</span>
+            <span class="stat-valor">{{ completadasHoy() }}</span>
+            <span class="stat-label">Completadas hoy</span>
           </div>
           <div class="stat-item">
             <span class="stat-valor">{{ clientesAtendidos(t.id) }}</span>
@@ -218,7 +211,12 @@
           </div>
           <div class="field">
             <label>Especialidad</label>
-            <input type="text" formControlName="especialidad" [class.input-error]="formEditar.get('especialidad')?.touched && formEditar.get('especialidad')?.invalid" />
+            <select formControlName="especialidad" [class.input-error]="formEditar.get('especialidad')?.touched && formEditar.get('especialidad')?.invalid">
+              <option value="">Seleccionar…</option>
+              @for (t of TIPOS_TERAPIA; track t) {
+                <option [value]="t">{{ t.charAt(0).toUpperCase() + t.slice(1) }}</option>
+              }
+            </select>
             @if (campoError('especialidad')) { <span class="field-error">{{ campoError('especialidad') }}</span> }
           </div>
         </div>

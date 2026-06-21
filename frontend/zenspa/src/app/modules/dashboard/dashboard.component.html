@@ -64,12 +64,6 @@
         <a routerLink="/agenda" class="agenda-link">Ver agenda completa →</a>
       </div>
 
-      <div class="promo-card">
-        <p class="promo-text">Cuida del bienestar de tus clientes, nosotros te ayudamos a gestionarlo.</p>
-        <a href="#" class="promo-link" (click)="$event.preventDefault()">
-          Ver experiencia ZenSpa →
-        </a>
-      </div>
     </aside>
 
     <div class="dashboard-right">
@@ -136,7 +130,7 @@
         <table class="citas-table">
           <thead>
             <tr>
-              <th>HORA</th>
+              <th>FECHA</th>
               <th>CLIENTE</th>
               <th>SERVICIO</th>
               <th>TERAPEUTA</th>
@@ -147,7 +141,7 @@
           <tbody>
             @for (cita of proximasCitas(); track cita.id) {
               <tr>
-                <td class="td-hora">{{ formatHora(cita.hora_inicio) }}</td>
+                <td class="td-hora">{{ formatFecha(cita.fecha) }}</td>
                 <td>
                   <div class="cliente-cell">
                     <span class="cliente-avatar">{{ getInitiales(cita.nombre_cliente) }}</span>
