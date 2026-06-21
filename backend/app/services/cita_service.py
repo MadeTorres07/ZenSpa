@@ -45,6 +45,7 @@ def _cita_to_dict(cita: Cita) -> dict:
         "hora_fin": cita.hora_fin,
         "estado": cita.estado,
         "total": cita.total,
+        "notas": cita.notas,
         "created_at": cita.created_at,
         "nombre_cliente": f"{cita.cliente.usuario.nombre} {cita.cliente.usuario.apellido}",
         "nombre_terapeuta": f"{cita.terapeuta.usuario.nombre} {cita.terapeuta.usuario.apellido}",
@@ -147,6 +148,7 @@ def create(db: Session, data: CitaCreate) -> dict:
             hora_fin=data.hora_fin,
             estado="pendiente",
             total=total,
+            notas=data.notas,
         )
         db.add(cita)
         db.flush()
@@ -190,6 +192,13 @@ def update_estado(db: Session, cita_id: int, data: CitaUpdate, usuario_actual) -
             cita_datetime = datetime.combine(cita.fecha, cita.hora_inicio, tzinfo=timezone.utc)
             if datetime.now(timezone.utc) >= cita_datetime - timedelta(hours=2):
                 data.estado = "cancelada_penalidad"
+        elif data.estado == "completada":
+            cita_fin = datetime.combine(cita.fecha, cita.hora_fin, tzinfo=timezone.utc)
+            if datetime.now(timezone.utc) < cita_fin:
+                raise HTTPException(
+                    status_code=400,
+                    detail="No se puede marcar como completada una cita cuya hora aún no ha pasado",
+                )
 
     nuevo_terapeuta = data.terapeuta_id if data.terapeuta_id is not None else cita.terapeuta_id
     nueva_cabina = data.cabina_id if data.cabina_id is not None else cita.cabina_id
@@ -250,6 +259,8 @@ def update_estado(db: Session, cita_id: int, data: CitaUpdate, usuario_actual) -
             cita.hora_inicio = data.hora_inicio
         if data.hora_fin is not None:
             cita.hora_fin = data.hora_fin
+        if data.notas is not None:
+            cita.notas = data.notas
 
         estados_cancelacion = ("cancelada", "cancelada_penalidad")
         if cita.estado in estados_cancelacion and estado_anterior not in estados_cancelacion:

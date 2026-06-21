@@ -166,6 +166,7 @@ class Cita(Base):
         default="pendiente",
     )
     total = Column(DECIMAL(10, 2), default=0.00)
+    notas = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     __table_args__ = (

@@ -60,6 +60,12 @@ export class AgendaComponent implements OnInit {
   modalEditarCita = signal<Cita | null>(null);
   editEstado = signal<string>('');
 
+  puedeMarcarCompletada = computed(() => {
+    const cita = this.modalEditarCita();
+    if (!cita) return true;
+    return new Date(cita.fecha + 'T' + cita.hora_fin) < new Date();
+  });
+
   filteredClientes = computed(() => {
     const term = this.searchTerm().toLowerCase().trim();
     if (!term) return this.clientes();
@@ -187,14 +193,11 @@ export class AgendaComponent implements OnInit {
   }
 
   private autoCancelarVencidas() {
-    const ahora = new Date();
     const hoy = this.hoyStr;
-    const horaActual = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
     const updates: any[] = [];
     for (const cita of this.citasDelDia()) {
       if (cita.estado !== 'pendiente' && cita.estado !== 'confirmada') continue;
-      const vencida = cita.fecha < hoy || (cita.fecha === hoy && cita.hora_fin.slice(0, 5) < horaActual);
-      if (vencida) updates.push(cita.id);
+      if (cita.fecha < hoy) updates.push(cita.id);
     }
     if (!updates.length) return;
     forkJoin(updates.map(id => this.citaService.update(id, { estado: 'cancelada' }))).subscribe({
@@ -298,6 +301,7 @@ export class AgendaComponent implements OnInit {
     const c = this.cabinas().find(x => x.id === cita.cabina_id);
     this.cabinaSeleccionada.set(c || null);
     this.serviciosSeleccionados.set(cita.servicios || []);
+    this.observaciones.set(cita.notas || '');
   }
 
   cerrarEditarCita() {
@@ -308,6 +312,10 @@ export class AgendaComponent implements OnInit {
   guardarCambiosCita() {
     const cita = this.modalEditarCita();
     if (!cita) return;
+    if (this.editEstado() === 'completada' && !this.puedeMarcarCompletada()) {
+      this.error.set('No se puede marcar como completada una cita que aún no ha ocurrido');
+      return;
+    }
     const terapeuta = this.terapeutaSeleccionado();
     const cabina = this.cabinaSeleccionada();
     const payload: any = { estado: this.editEstado() };
@@ -317,6 +325,7 @@ export class AgendaComponent implements OnInit {
     payload['fecha'] = this.fecha();
     payload['hora_inicio'] = this.horaInicio() + ':00';
     payload['hora_fin'] = this.horaFin() + ':00';
+    payload['notas'] = this.observaciones();
     this.citaService.update(cita.id, payload).subscribe({
       next: () => {
         this.citasDelDia.update(list => list.map(x => x.id === cita.id ? {
@@ -366,7 +375,7 @@ export class AgendaComponent implements OnInit {
     this.error.set('');
     this.success.set(false);
 
-    const payload = {
+    const payload: any = {
       cliente_id: cliente.id,
       terapeuta_id: terapeuta.id,
       cabina_id: cabina.id,
@@ -376,6 +385,7 @@ export class AgendaComponent implements OnInit {
       servicios: this.serviciosSeleccionados().map(s => s.id),
       productos: [],
     };
+    if (this.observaciones()) payload['notas'] = this.observaciones();
 
     this.citaService.create(payload).subscribe({
       next: () => {

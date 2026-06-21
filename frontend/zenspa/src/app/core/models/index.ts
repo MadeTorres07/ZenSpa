@@ -78,6 +78,7 @@ export interface Cita {
   hora_fin: string;
   estado: string;
   total: number;
+  notas?: string;
   nombre_cliente: string;
   nombre_terapeuta: string;
   nombre_cabina: string;

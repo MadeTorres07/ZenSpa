@@ -41,6 +41,16 @@ async def lifespan(app: FastAPI):
                 print(f"Columna '{nombre}' agregada a tabla productos")
     except Exception as e:
         print(f"Migración automática de productos: {e}")
+    try:
+        inspector = inspect(engine)
+        columns = [c["name"] for c in inspector.get_columns("citas")]
+        if "notas" not in columns:
+            with engine.connect() as conn:
+                conn.execute(text("ALTER TABLE citas ADD COLUMN notas TEXT NULL"))
+                conn.commit()
+            print("Columna 'notas' agregada a tabla citas")
+    except Exception as e:
+        print(f"Migración automática de citas: {e}")
     seed_passwords()
     yield
 

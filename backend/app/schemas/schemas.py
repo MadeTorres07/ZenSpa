@@ -467,6 +467,7 @@ class CitaCreate(BaseModel):
     hora_fin: time
     servicios: list[int]
     productos: list[ProductoUso] = []
+    notas: str | None = None
 
 
 class CitaUpdate(BaseModel):
@@ -475,6 +476,7 @@ class CitaUpdate(BaseModel):
     cabina_id: int | None = None
     hora_inicio: time | None = None
     hora_fin: time | None = None
+    notas: str | None = None
 
 
 class CitaResponse(BaseModel):
@@ -487,6 +489,7 @@ class CitaResponse(BaseModel):
     hora_fin: time
     estado: str
     total: Decimal
+    notas: str | None = None
     created_at: datetime | None = None
     nombre_cliente: str
     nombre_terapeuta: str
