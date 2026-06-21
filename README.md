@@ -30,8 +30,15 @@ Sistema de gestión de citas y servicios para un spa. Desarrollado con **FastAPI
 | Login split‑screen | ✅ Panel decorativo + formulario con toggle password, recordarme |
 | Navbar responsive | ✅ Logo lotus + links por rol + avatar + hamburguesa |
 | Dashboard Admin/Recep | ✅ Hero contextual + KPIs + agenda lateral + mini‑calendario |
+| Landing page | ✅ Hero, servicios, stats, testimonios, CTA, footer con newsletter |
+| Agenda funcional | ✅ Creación, edición, cancelación, auto-cancel vencidas, notas, vista por rol |
+| CRUD Clientes | ✅ Completo con ocultación de historial_salud por rol |
+| CRUD Terapeutas | ✅ Con filtro de especialidad y bloqueo de eliminación si tiene citas |
+| CRUD Cabinas + Servicios | ✅ CRUD completo con validación de compatibilidad |
+| CRUD Productos | ✅ Con alerta stock_bajo y control de stock negativo |
+| Reportes | ✅ Servicios populares + ingresos por terapeuta (Chart.js) |
 | Docker frontend | ✅ Multi‑stage build (node → nginx), reverse proxy `/api/` |
-| Módulos placeholder restantes | 7 módulos esqueletos con rutas protegidas |
+| Newsletter | ✅ Suscripción con validación y almacenamiento en BD |
 | Paleta spa premium | ✅ Variables CSS, Playfair Display + Inter |
 
 ---
@@ -73,22 +80,84 @@ uso_productos    (productos consumidos en citas completadas)
 
 ---
 
+## Roles del sistema
+
+### 👑 Admin
+Acceso completo a todos los módulos. Puede crear, editar y eliminar cualquier recurso.
+
+| Puede hacer | No puede hacer |
+|---|---|
+| CRUD completo de usuarios, clientes, terapeutas, cabinas, servicios, productos | — |
+| Crear y editar citas (cualquier terapeuta/cabina) | — |
+| Ver y eliminar clientes (con protección de historial) | — |
+| Acceder a reportes de servicios populares e ingresos | — |
+| Gestionar inventario (productos, stock) | — |
+
+### 🧑‍💼 Recepcionista
+Gestión del día a día: clientes, citas, consultas básicas.
+
+| Puede hacer | No puede hacer |
+|---|---|
+| Ver clientes, terapeutas, cabinas, servicios, productos | Eliminar clientes (solo admin) |
+| Crear y editar citas (asignar terapeuta, cabina, servicios) | Administrar usuarios del sistema |
+| Ver citas del día y filtrar por fechas | Ver historial de salud de clientes |
+| Cancelar citas | Acceder a reportes |
+| Crear nuevos clientes | Gestionar inventario (solo lectura) |
+
+### 💆 Terapeuta
+Visión de su propia agenda para gestionar sus citas.
+
+| Puede hacer | No puede hacer |
+|---|---|
+| Ver sus citas del día (auto-filtradas) | Crear nuevas citas |
+| Marcar citas como completadas (solo después de la hora de fin) | Ver lista de otros terapeutas |
+| Agregar observaciones a sus citas | Editar horarios, cabina o servicios de una cita |
+| Ver perfil de clientes asignados | Cancelar citas |
+| | Acceder a reportes, usuarios, inventario |
+
+### 👤 Cliente
+Autogestión de sus propias citas.
+
+| Puede hacer | No puede hacer |
+|---|---|
+| Ver sus citas (solo las suyas) | Crear nuevas citas |
+| Confirmar una cita pendiente | Editar citas ya confirmadas |
+| Cancelar una cita pendiente | Ver citas de otros clientes |
+| | Ver historial de salud |
+| | Acceder a otros módulos |
+
+---
+
 ## Rutas del frontend
 
 | Ruta | Componente | Roles permitidos |
 |---|---|---|
+| `/` | LandingComponent | público |
 | `/login` | LoginComponent | público |
 | `/dashboard` | DashboardComponent | admin, recepcionista |
-| `/agenda` | AgendaComponent | admin, recepcionista, terapeuta |
+| `/agenda` | AgendaComponent | admin, recepcionista, terapeuta, cliente |
+| `/mis-citas` | AgendaComponent | admin, recepcionista, terapeuta, cliente |
 | `/clientes` | ClientesComponent | admin, recepcionista, terapeuta |
 | `/terapeutas` | TerapeutasComponent | admin |
 | `/servicios` | ServiciosComponent | admin |
 | `/cabinas` | CabinasComponent | admin, recepcionista |
 | `/inventario` | InventarioComponent | admin |
 | `/reportes` | ReportesComponent | admin |
+| `/usuarios/nuevo` | NuevoUsuarioComponent | admin |
 | `/sin-permiso` | SinPermisoComponent | público |
 
-> Login, Navbar y Dashboard ya tienen contenido visual completo (Fase 7A‑C). Los demás módulos son placeholders.
+---
+
+## Credenciales de prueba
+
+| Rol | Email | Contraseña |
+|---|---|---|
+| Admin | `admin@zenspa.com` | `ZenSpa2024!` |
+| Recepcionista | `carlos@zenspa.com` | `ZenSpa2024!` |
+| Terapeuta | `laura@zenspa.com` | `ZenSpa2024!` |
+| Cliente | `ana@email.com` | `ZenSpa2024!` |
+
+> Todas las contraseñas se regeneran automáticamente al iniciar la API. No importa el entorno, siempre funcionan con `ZenSpa2024!`.
 
 ---
 
@@ -239,8 +308,8 @@ Duración: configurable via `ACCESS_TOKEN_EXPIRE_MINUTES` (default 480 min = 8 h
 ### Terapeutas (prefix: `/api/v1/terapeutas`)
 | Método | Ruta | Descripción | Auth |
 |---|---|---|---|
-| `GET` | `/api/v1/terapeutas/` | Listar (filtro `?activo=` `?especialidad=`) | admin |
-| `GET` | `/api/v1/terapeutas/{id}` | Detalle | admin |
+| `GET` | `/api/v1/terapeutas/` | Listar (filtro `?activo=` `?especialidad=`) | admin, recepcionista |
+| `GET` | `/api/v1/terapeutas/{id}` | Detalle | admin, recepcionista |
 | `POST` | `/api/v1/terapeutas/` | Crear terapeuta + usuario | admin |
 | `PUT` | `/api/v1/terapeutas/{id}` | Actualizar | admin |
 | `DELETE` | `/api/v1/terapeutas/{id}` | Desactivar (soft delete en 2 tablas) | admin |
@@ -281,11 +350,22 @@ Duración: configurable via `ACCESS_TOKEN_EXPIRE_MINUTES` (default 480 min = 8 h
 | `GET` | `/api/v1/citas/` | Listar con filtros | admin, recep, terapeuta, cliente |
 | `GET` | `/api/v1/citas/{id}` | Detalle | admin, recep, terapeuta, cliente (solo propia) |
 | `POST` | `/api/v1/citas/` | Crear cita con validación completa | admin, recep |
-| `PUT` | `/api/v1/citas/{id}` | Actualizar estado/horario | admin, recep |
+| `PUT` | `/api/v1/citas/{id}` | Actualizar estado/horario | admin, recep, terapeuta, cliente |
+| `GET` | `/api/v1/citas/reportes/servicios-populares` | Ranking de servicios por reservas | admin |
+| `GET` | `/api/v1/citas/reportes/ingresos-terapeutas` | Ingresos totales por terapeuta | admin |
+
+> **Nota para roles:**  
+> - **Terapeuta**: solo puede cambiar `estado` y `notas` de sus propias citas  
+> - **Cliente**: solo puede cambiar `estado` de `"pendiente"` → `"confirmada"` o `"cancelada"` en citas propias
 | `GET` | `/api/v1/citas/reportes/servicios-populares` | Ranking de servicios por reservas | admin |
 | `GET` | `/api/v1/citas/reportes/ingresos-terapeutas` | Ingresos totales por terapeuta | admin |
 
 > **Filtros del listado:** `?terapeuta_id=`, `?tipo_terapia=`, `?fecha_inicio=`, `?fecha_fin=`, `?estado=`
+
+### Newsletter (prefix: `/api/v1/newsletter`)
+| Método | Ruta | Descripción | Auth |
+|---|---|---|---|
+| `POST` | `/api/v1/newsletter/suscribir` | Suscribir correo a novedades | ❌ público |
 
 ---
 
@@ -744,9 +824,8 @@ Validan que el sistema cumple los requisitos del negocio.
 
 ## Próximos pasos
 
-- [ ] Conectar dashboard a datos reales del backend (endpoints de KPIs)
-- [ ] Tabla de próximas citas, terapeutas activos, acciones rápidas
-- [ ] Módulo de agenda (calendario de citas)
-- [ ] CRUD visual completo (pendientes pulir)
 - [ ] Pruebas automatizadas (pytest backend + Jasmine/Karma frontend)
 - [ ] Módulo de experiencia / fidelización
+- [ ] Notificaciones por email/WhatsApp al crear/confirmar citas
+- [ ] Panel de administración de contenido del landing page
+- [ ] Optimización de rendimiento (lazy loading, SSR)
