@@ -23,12 +23,17 @@ export class LoginComponent implements OnInit {
   loading = false;
   error = '';
   registroExitoso = signal(false);
+  redirectMsg = signal('');
   mostrarPassword = signal(false);
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       if (params['registro'] === 'exitoso') {
         this.registroExitoso.set(true);
+      }
+      if (params['redirect'] === 'servicios') {
+        this.redirectMsg.set('Inicia sesión para ver los servicios disponibles');
+        setTimeout(() => this.redirectMsg.set(''), 6000);
       }
     });
   }

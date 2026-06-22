@@ -414,14 +414,12 @@
   overflow: hidden;
 }
 
-.service-img {
+.service-card-img-alt {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s;
 }
 
-.service-card:hover .service-img {
+.service-card:hover .service-card-img-alt {
   transform: scale(1.1);
 }
 
@@ -433,17 +431,16 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #FEF3C7;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
 }
 
-.service-icon-img {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+.service-icon-letter {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .service-card-title {
@@ -472,6 +469,7 @@
   align-items: center;
   gap: 4px;
   transition: gap 0.2s;
+  text-decoration: none;
 }
 
 .service-card-link:hover { gap: 8px; }

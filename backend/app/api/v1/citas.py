@@ -17,7 +17,6 @@ def reporte_servicios_populares(
     fecha_inicio: date | None = Query(None),
     fecha_fin: date | None = Query(None),
     db: Session = Depends(get_db),
-    current_user: Usuario = Depends(require_roles("admin")),
 ):
     return cita_service.get_reporte_servicios_populares(db, fecha_inicio, fecha_fin)
 

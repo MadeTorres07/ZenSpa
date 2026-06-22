@@ -28,7 +28,7 @@ export class NavbarComponent {
     { label: 'Agenda', route: '/agenda', roles: ['admin', 'recepcionista', 'terapeuta'] },
     { label: 'Clientes', route: '/clientes', roles: ['admin', 'recepcionista', 'terapeuta'] },
     { label: 'Terapeutas', route: '/terapeutas', roles: ['admin'] },
-    { label: 'Servicios', route: '/servicios', roles: ['admin'] },
+    { label: 'Servicios', route: '/servicios', roles: ['admin', 'terapeuta', 'cliente'] },
     { label: 'Inventario', route: '/inventario', roles: ['admin'] },
     { label: 'Usuarios', route: '/usuarios/nuevo', roles: ['admin'] },
     { label: 'Reportes', route: '/reportes', roles: ['admin'] },

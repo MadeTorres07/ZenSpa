@@ -108,6 +108,13 @@
       <h1 class="card-title">Bienvenido de nuevo</h1>
       <p class="card-desc">Accede a tu espacio de bienestar.</p>
 
+      @if (redirectMsg()) {
+        <div class="redirect-toast">
+          <span>{{ redirectMsg() }}</span>
+          <button class="redirect-close" (click)="redirectMsg.set('')">✕</button>
+        </div>
+      }
+
       @if (registroExitoso()) {
         <div class="success-box">¡Registro exitoso! Ya puedes iniciar sesión con tus credenciales.</div>
       }

@@ -28,7 +28,7 @@ export const routes: Routes = [
       { path: 'mis-citas', component: AgendaComponent, canActivate: [roleGuard], data: { roles: ['admin', 'recepcionista', 'terapeuta', 'cliente'] } },
       { path: 'clientes', component: ClientesComponent, canActivate: [roleGuard], data: { roles: ['admin', 'recepcionista', 'terapeuta'] } },
       { path: 'terapeutas', component: TerapeutasComponent, canActivate: [roleGuard], data: { roles: ['admin'] } },
-      { path: 'servicios', component: ServiciosComponent, canActivate: [roleGuard], data: { roles: ['admin'] } },
+      { path: 'servicios', component: ServiciosComponent, canActivate: [roleGuard], data: { roles: ['admin', 'terapeuta', 'cliente'] } },
       { path: 'cabinas', component: CabinasComponent, canActivate: [roleGuard], data: { roles: ['admin', 'recepcionista'] } },
       { path: 'inventario', component: InventarioComponent, canActivate: [roleGuard], data: { roles: ['admin'] } },
       { path: 'reportes', component: ReportesComponent, canActivate: [roleGuard], data: { roles: ['admin'] } },

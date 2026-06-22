@@ -1,6 +1,7 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../core/services/auth.service';
 import { ServicioService } from '../../core/services/servicio.service';
 import { CabinaService } from '../../core/services/cabina.service';
 import { CitaService } from '../../core/services/cita.service';
@@ -15,9 +16,12 @@ import type { Servicio, Cabina, ReporteServicio } from '../../core/models';
 })
 export class ServiciosComponent implements OnInit {
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
   private servicioService = inject(ServicioService);
   private cabinaService = inject(CabinaService);
   private citaService = inject(CitaService);
+
+  esSoloLectura = computed(() => !this.authService.hasRole('admin'));
 
   readonly currency = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 });
   readonly tiposTerapia = ['masajes', 'facial', 'hidroterapia', 'aromaterapia', 'multiple'];

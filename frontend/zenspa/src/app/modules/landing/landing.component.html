@@ -146,125 +146,23 @@
       <div class="section-divider"></div>
     </div>
     <div class="services-grid">
-      <div class="service-card">
-        <div class="service-card-img">
-          <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD75-mi8fcIlGaZ9mHIUgJv3Z9ZmnOfXaKi3tHpxDDTWt3ko-VtzaYfrP6qeHrlpgl3aPgQybSp6BdWZaJfGzwSCYKH48ruKQBxBUi_IPPMyzPgYkz6DCJ7OZkMo3mnFQAhW6ytV2H15p683RUjAHhtspa655abjj6yfojAYl7GRihNSBKiba1TDwkoEneJAwiSDh2m8G5u18cLJos4xN5I2dVBF7g1wOQVMjwJ4I4cA_Jmp1IlcZwVruzj54mRTVzTbMfLTp96JNc3"
-            alt="Masajes"
-            class="service-img"
-          />
-        </div>
-        <div class="service-card-body">
-          <div class="service-icon-bg">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_Zdk1rUODAFFwkI7KaL7Ffa_kxhjYhHMTV59qMzyfiGrkEGPxv2iVFKPFGIpVT9NT_7UP7XlSKi8r62ioxpg03eHCKnWyKRgc5ZOqvbJBUPpURW1S-K-bc9Z9uIz05A7061cSOx1872MlMonHFD_ijisa7oFEkqNuGOUz-WwEtUde9viPl-v4UvxrPR63Hrso8UmDEjukjQo6d0KeRQLLLKFCXWTAlgjBe73p_N2ePudk6jUK5-AXbTueqxl4CI8-Tn0H_jcfZYPm"
-              alt=""
-              class="service-icon-img"
-            />
+      @for (s of top5(); track s.id) {
+        <div class="service-card">
+          <div class="service-card-img">
+            <div class="service-card-img-alt" [style.background]="gradiente(s.tipo_terapia)"></div>
           </div>
-          <h3 class="service-card-title">Masajes Terapéuticos</h3>
-          <p class="service-card-desc">
-            Relaja tu cuerpo, alivia tensiones y recupera tu energía.
-          </p>
-          <a class="service-card-link">Ver más →</a>
-        </div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-card-img">
-          <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2ucuc2oMWOajzW4r1gBFw7Wq-BGkN0cNJ-u8WwssJsdBSALCQurKimlh02VTWH4_MPEavunGwPW9R7-H3-vvmGPblEQFB53VeCEtWiQq7N81D4GvlvgAktizPS8_Vx2ZSwGM7QvLxCpj0slF6iXRskBY94-VA8ycf5fZhjbOTOifah8GJgG3Sd1ZCezKAjUkh4YregZsTMzcpq2RxT7zuxhEkn3UWsKWQkbQQooTml3r-7JrK4K_FMYNRXihacHT-62kGuATFyEXF"
-            alt="Facial"
-            class="service-img"
-          />
-        </div>
-        <div class="service-card-body">
-          <div class="service-icon-bg">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeWnOeHHN2h6BrYsbguC63pBt3Vw_IqYRuqkJLClE1PsSArlgoVtwvmkCzxvwgRnboeANWmI0c-napvwyYTvdHSukZJ4OiVnTKmlWS5HvzLveU01hZAARBI_eaXqcxoKTNEEYyuM9z--DRLSJEzHjKgwOSxQtRV2uLfB0hQ6AMhxh5U_aYDNyI8_-XOA0gs9La-YRxYiP7SMRXOX8OfKhtbRgSGIEznDG7QgW_YCwWuJkdE0m8cDkxHd5aq0fqQDt6bEH263Ij_LjP"
-              alt=""
-              class="service-icon-img"
-            />
+          <div class="service-card-body">
+            <div class="service-icon-bg" [style.background]="gradiente(s.tipo_terapia)">
+              <span class="service-icon-letter">{{ s.nombre.charAt(0) }}</span>
+            </div>
+            <h3 class="service-card-title">{{ s.nombre }}</h3>
+            <p class="service-card-desc">
+              {{ s.descripcion || s.tipo_terapia }}
+            </p>
+            <a routerLink="/login" [queryParams]="{redirect: 'servicios'}" class="service-card-link">Ver más →</a>
           </div>
-          <h3 class="service-card-title">Tratamientos Faciales</h3>
-          <p class="service-card-desc">
-            Limpieza profunda, nutrición e hidratación para tu piel.
-          </p>
-          <a class="service-card-link">Ver más →</a>
         </div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-card-img">
-          <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuARnnKZaj3eX62Xn9gn1Hri9A25OP6QMpT9XilKLpJmGaITsr8VHJ2WYdvnN4AG87uSkMpE09ywvnyuGHZBolIjI_vNXns81fcD4kNRZwwJPHZldxUILIROVhgtabJNhqPMZCcSY9XN_BBuvcUi4Z_qgXP6xCpnln8m6RQ9WyRbeode_Iza5RQjeBUlC2JIz9-w68O-BLR_FdLx_gVlK57-YzZd87NzjddQvfZ5YDYc_0t03WqYuDjZQrHsj13Wsr7VSsl_taXYncP_"
-            alt="Hidroterapia"
-            class="service-img"
-          />
-        </div>
-        <div class="service-card-body">
-          <div class="service-icon-bg">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzesOephF847XZ7BmNDDCDTSilbh4CisulsSp4Dxf3QOha_VeHduRBkkZQB6cBMOvxYrgAOtfjcAahHf7w0df_Z784ZTe3JvvYQwxw2CSrvwTe2D-8uYiBZDsSQXaIP4Jfkqi2-URIxIkWwCqWIxcHo_cLRxoBB0wnfh8TsmdUUW8NxAypKFb9b1PPjcuFds-QxzLQPaTUyCpZWqF752vzNeOohR1_IPhubKkp_-tMqxPwDv1nx2tpBMszVopKean2SQ1mxs-mzoTH"
-              alt=""
-              class="service-icon-img"
-            />
-          </div>
-          <h3 class="service-card-title">Hidroterapia</h3>
-          <p class="service-card-desc">
-            Equilibra tu cuerpo con el poder vitalizante del agua.
-          </p>
-          <a class="service-card-link">Ver más →</a>
-        </div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-card-img">
-          <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrPLEBg9qe4vY-wQ8cYTYvFDhq1MyhFmNxwcm6JEvxCl_uxBmEMzElzYGgOr4usvn7DmOgSGt-saVgqOpioB_oNLuIaFaIjutFjrA44lNge1vHiRc6554bpUjEOYo4hDPiGd7De3sStzhWJrmlXT2t46F5X2tkTud5zE7LpWzzVwNnziOsAgRJM-nOWx0ex5bNisFv1L84YD50K74QHIXM8vqmpXuMJnsD903Pre4QbgbPtkUyVxt4xx8-DvM__quAp192yCMso-yD"
-            alt="Aromaterapia"
-            class="service-img"
-          />
-        </div>
-        <div class="service-card-body">
-          <div class="service-icon-bg">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBffxBVKfcE1HU-USLXzIqvuiJKuyO5KqNhS5Dw25B0GqJIns-DtJ4f-35lRCgSeKv_Ar7p3bouv_4WXdGM0OC0GLOXb9kGii7NMMAZRAQ0wP1KvU_MRBt2HArb5595rbfToWnKgmK9bw-PL7faOqhFYxyiWbCoBCVj_he1Z-igZF3xhtMOYamgI30fcZ2aBiLX_LWtD5nOltHRFTgeE8U41FK_3uxrYzB1gsbK5CVKfbA_Dg4AcbU-kKyFTG12Qfoix2q_0uB2lbBp"
-              alt=""
-              class="service-icon-img"
-            />
-          </div>
-          <h3 class="service-card-title">Aromaterapia</h3>
-          <p class="service-card-desc">
-            Aromas que armonizan tu mente y todas tus emociones.
-          </p>
-          <a class="service-card-link">Ver más →</a>
-        </div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-card-img">
-          <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ-DPKVJ3h4TGeDXAqhNcpzjwo8D9oz9EruBRo4sOEmMpmspWW_euIG8AMcxU9nWiU9JV1lvE1xn6OWviqbcJ2dIwhg4U49OcHwwa39aGq3svA6hzF-vzGY61rabZ_jpA2SwwkcniVZaBr0X8okJzBuKDFHzzGQiuovKZUwmE-OZMSvrtNfzYUdk574nTF_eizajbTBy47iChLCT0Kd4wTBqN7cH9CEaIQvLEylC-XWLPBzlJ_Yh1V4qTgRQCJf0AEKMWCCbIm6e75"
-            alt="Experiencias"
-            class="service-img"
-          />
-        </div>
-        <div class="service-card-body">
-          <div class="service-icon-bg">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0i-Tozxl7lPqu8c1hr83n6_ZUon0sdD6oj6qPYrSOXwaZ0-9vk-fLk7sgu-_VFlfrvUMIrzpTBDYPpDd4vL6QSZpEycmPydt125W7HCEVUja2icx0NielOObNyT4iC1WxGGiPX5em8vKawlMShgsEKH-8nSZfyUq5eRhoSf_5AfrZS9_BOXsBk6v1SQ6VuxEdGZC6JQrFvy5ZUrDdrTKcTtg9FSvM51BqHa_8t92L8RKW2t9yU1Kg1GXSDSiZ95m68XKaqKz6fjrF"
-              alt=""
-              class="service-icon-img"
-            />
-          </div>
-          <h3 class="service-card-title">Experiencias Especiales</h3>
-          <p class="service-card-desc">
-            Paquetes personalizados para esos momentos únicos.
-          </p>
-          <a class="service-card-link">Ver más →</a>
-        </div>
-      </div>
+      }
     </div>
   </div>
 </section>

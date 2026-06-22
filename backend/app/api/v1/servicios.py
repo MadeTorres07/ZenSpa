@@ -14,7 +14,6 @@ router = APIRouter(prefix="/servicios", tags=["Servicios"])
 def listar_servicios(
     tipo_terapia: str | None = Query(None),
     db: Session = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user),
 ):
     return servicio_service.get_all(db, tipo_terapia=tipo_terapia)
 
@@ -23,7 +22,6 @@ def listar_servicios(
 def obtener_servicio(
     servicio_id: int,
     db: Session = Depends(get_db),
-    current_user: Usuario = Depends(get_current_user),
 ):
     servicio = servicio_service.get_by_id(db, servicio_id)
     if not servicio:
