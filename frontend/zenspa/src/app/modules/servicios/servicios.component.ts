@@ -46,7 +46,7 @@ export class ServiciosComponent implements OnInit {
   mensaje = signal('');
 
   formServicio = this.fb.nonNullable.group({
-    nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+    nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100), Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
     tipo_terapia: ['', Validators.required],
     duracion_minutos: [60, [Validators.required, Validators.min(30), Validators.max(120)]],
     precio: [10000, [Validators.required, Validators.min(10000)]],
@@ -231,7 +231,10 @@ export class ServiciosComponent implements OnInit {
   campoError(campo: string): string {
     const control = this.formServicio.get(campo);
     if (!control || !control.touched || control.valid) return '';
-    if (control.errors?.['required']) return 'Este campo es obligatorio';
+    if (control.errors?.['required']) {
+      if (campo === 'precio') return 'Ingresa un valor numérico válido';
+      return 'Este campo es obligatorio';
+    }
     if (control.errors?.['min']) {
       if (campo === 'duracion_minutos') return 'Mínimo 30 minutos';
       if (campo === 'precio') return 'Mínimo $10.000';
@@ -239,6 +242,10 @@ export class ServiciosComponent implements OnInit {
     if (control.errors?.['max']) return 'Máximo 120 minutos';
     if (control.errors?.['minlength']) return 'Mínimo 2 caracteres';
     if (control.errors?.['maxlength']) return 'Máximo 100 caracteres';
+    if (control.errors?.['pattern']) {
+      if (campo === 'nombre') return 'El nombre solo puede contener letras y espacios';
+      if (campo === 'precio') return 'Ingresa un valor numérico válido';
+    }
     return '';
   }
 

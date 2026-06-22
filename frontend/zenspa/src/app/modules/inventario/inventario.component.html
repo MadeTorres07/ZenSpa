@@ -1,5 +1,5 @@
 @if (mensaje()) {
-  <div class="toast" [class.toast-success]="!mensaje().includes('Error')" [class.toast-error]="mensaje().includes('Error')">
+  <div class="toast" [class.toast-success]="!mensajeError()" [class.toast-error]="mensajeError()">
     <span>{{ mensaje() }}</span>
   </div>
 }

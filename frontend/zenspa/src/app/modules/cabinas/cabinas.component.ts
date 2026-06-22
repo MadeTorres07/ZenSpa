@@ -28,7 +28,7 @@ export class CabinasComponent implements OnInit {
   mensaje = signal('');
 
   formCabina = this.fb.nonNullable.group({
-    nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+    nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100), Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d10-9\s]+$/)]],
     tipo_tratamiento: ['', Validators.required],
     estado: ['disponible', Validators.required],
     equipamiento: [''],
@@ -161,6 +161,9 @@ export class CabinasComponent implements OnInit {
     if (control.errors?.['required']) return 'Este campo es obligatorio';
     if (control.errors?.['minlength']) return 'Mínimo 2 caracteres';
     if (control.errors?.['maxlength']) return 'Máximo 100 caracteres';
+    if (control.errors?.['pattern']) {
+      if (campo === 'nombre') return 'El nombre solo puede contener letras, números y espacios';
+    }
     return '';
   }
 }
