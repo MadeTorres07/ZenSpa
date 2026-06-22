@@ -1,0 +1,176 @@
+@if (mensaje()) {
+  <div class="toast" [class.toast-success]="!mensaje().includes('Error')" [class.toast-error]="mensaje().includes('Error')">
+    <span>{{ mensaje() }}</span>
+  </div>
+}
+
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Cabinas</h2>
+      <p class="page-subtitle">Gesti&oacute;n de cabinas y salas de tratamiento.</p>
+    </div>
+    <button class="btn-primary" (click)="abrirCrear()">+ Nueva cabina</button>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">Total cabinas</span>
+      <span class="kpi-valor">{{ total() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Disponibles</span>
+      <span class="kpi-valor kpi-green">{{ disponibles() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Ocupadas</span>
+      <span class="kpi-valor kpi-orange">{{ ocupadas() }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Mantenimiento</span>
+      <span class="kpi-valor kpi-red">{{ mantenimiento() }}</span>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="tabla-section">
+      <div class="tabla-toolbar">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" class="search-input" placeholder="Buscar cabina..." [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
+            <tr><th>NOMBRE</th><th>TIPO TRATAMIENTO</th><th>ESTADO</th><th>EQUIPAMIENTO</th><th>ACCIONES</th></tr>
+          </thead>
+          <tbody>
+            @for (c of filtered(); track c.id) {
+              <tr (click)="seleccionar(c)" [class.tr-selected]="cabinaSeleccionada()?.id === c.id">
+                <td>
+                  <div class="cell-cabina">
+                    <div class="thumb-cabina">C</div>
+                    <div>
+                      <span class="cell-nombre">{{ c.nombre }}</span>
+                      <span class="cell-desc">{{ c.tipo_tratamiento }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="badge-tipo">{{ c.tipo_tratamiento }}</span></td>
+                <td><span class="estado-badge" [class.estado-disponible]="c.estado === 'disponible'" [class.estado-ocupada]="c.estado === 'ocupada'" [class.estado-mantenimiento]="c.estado === 'mantenimiento'">{{ c.estado }}</span></td>
+                <td class="cell-equip">{{ c.equipamiento || '—' }}</td>
+                <td>
+                  <div class="acciones">
+                    <button class="btn-icon" title="Ver" (click)="$event.stopPropagation(); seleccionar(c)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                    <button class="btn-icon" title="Editar" (click)="$event.stopPropagation(); abrirEditar(c)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                    <button class="btn-icon btn-icon-danger" title="Eliminar" (click)="$event.stopPropagation(); confirmarEliminar(c)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td colspan="5" class="td-empty">No se encontraron cabinas</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    @if (cabinaSeleccionada(); as c) {
+      <aside class="panel-detalle">
+        <div class="panel-header">
+          <h3 class="panel-title">Detalle de cabina</h3>
+          <button class="panel-close" (click)="cerrarPanel()">✕</button>
+        </div>
+        <div class="panel-img">
+          <div class="panel-img-inner">C</div>
+        </div>
+        <div class="panel-body">
+          <span class="panel-nombre">{{ c.nombre }}</span>
+          <span class="panel-meta">{{ c.tipo_tratamiento }} · <span [class.estado-disponible]="c.estado === 'disponible'" [class.estado-ocupada]="c.estado === 'ocupada'" [class.estado-mantenimiento]="c.estado === 'mantenimiento'">{{ c.estado }}</span></span>
+        </div>
+        <div class="panel-tab-content">
+          <div class="info-block">
+            <label>Equipamiento</label>
+            <p>{{ c.equipamiento || 'Sin equipamiento registrado' }}</p>
+          </div>
+          <div class="info-block">
+            <label>ID</label>
+            <p>{{ c.id }}</p>
+          </div>
+        </div>
+        <div class="panel-actions">
+          <button class="btn-outline" (click)="abrirEditar(c)">Editar cabina</button>
+          <button class="btn-danger" (click)="confirmarEliminar(c)">Eliminar</button>
+        </div>
+      </aside>
+    }
+  </div>
+</div>
+
+@if (modalFormulario().abierto) {
+  <div class="modal-overlay" (click)="cerrarModalFormulario()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>{{ modalFormulario().editando ? 'Editar cabina' : 'Nueva cabina' }}</h3>
+
+      @if (mensaje()) {
+        <div class="toast-inline" [class.toast-success]="!mensaje().includes('Error')" [class.toast-error]="mensaje().includes('Error')">{{ mensaje() }}</div>
+      }
+
+      <form [formGroup]="formCabina" (ngSubmit)="guardarCabina()" class="form-cabina">
+        <div class="field">
+          <label>Nombre *</label>
+          <input type="text" formControlName="nombre" [class.input-error]="formCabina.get('nombre')?.touched && formCabina.get('nombre')?.invalid" />
+          @if (campoError('nombre')) { <span class="field-error">{{ campoError('nombre') }}</span> }
+        </div>
+        <div class="field">
+          <label>Tipo de tratamiento *</label>
+          <select formControlName="tipo_tratamiento" [class.input-error]="formCabina.get('tipo_tratamiento')?.touched && formCabina.get('tipo_tratamiento')?.invalid">
+            <option value="">Seleccionar...</option>
+            @for (t of tiposTratamiento; track t) { <option [value]="t">{{ t }}</option> }
+          </select>
+          @if (campoError('tipo_tratamiento')) { <span class="field-error">{{ campoError('tipo_tratamiento') }}</span> }
+        </div>
+        <div class="field">
+          <label>Estado *</label>
+          <select formControlName="estado">
+            @for (e of estados; track e) { <option [value]="e">{{ e }}</option> }
+          </select>
+        </div>
+        <div class="field">
+          <label>Equipamiento</label>
+          <textarea formControlName="equipamiento" rows="3" placeholder="Camilla, lámpara, equipo de hidroterapia, etc."></textarea>
+        </div>
+
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" (click)="cerrarModalFormulario()">Cancelar</button>
+          <button type="submit" class="btn-primary-sm" [disabled]="formCabina.invalid || editando()">
+            {{ editando() ? 'Guardando…' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (modalEliminar(); as c) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>Eliminar cabina</h3>
+      <p>¿Estás seguro de que deseas eliminar <strong>{{ c.nombre }}</strong>? Esta acción no se puede deshacer.</p>
+      <div class="modal-buttons">
+        <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+        <button class="btn-danger" (click)="eliminar()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+}

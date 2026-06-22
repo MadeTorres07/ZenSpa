@@ -29,7 +29,7 @@ export const routes: Routes = [
       { path: 'clientes', component: ClientesComponent, canActivate: [roleGuard], data: { roles: ['admin', 'recepcionista', 'terapeuta'] } },
       { path: 'terapeutas', component: TerapeutasComponent, canActivate: [roleGuard], data: { roles: ['admin'] } },
       { path: 'servicios', component: ServiciosComponent, canActivate: [roleGuard], data: { roles: ['admin', 'terapeuta', 'cliente'] } },
-      { path: 'cabinas', component: CabinasComponent, canActivate: [roleGuard], data: { roles: ['admin', 'recepcionista'] } },
+      { path: 'cabinas', component: CabinasComponent, canActivate: [roleGuard], data: { roles: ['admin'] } },
       { path: 'inventario', component: InventarioComponent, canActivate: [roleGuard], data: { roles: ['admin'] } },
       { path: 'reportes', component: ReportesComponent, canActivate: [roleGuard], data: { roles: ['admin'] } },
       { path: 'usuarios/nuevo', component: NuevoUsuarioComponent, canActivate: [roleGuard], data: { roles: ['admin'] } },
