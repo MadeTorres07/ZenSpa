@@ -25,7 +25,7 @@ export class NavbarComponent {
 
   private navItems: NavItem[] = [
     { label: 'Inicio', route: '/dashboard', roles: ['admin', 'recepcionista'] },
-    { label: 'Agenda', route: '/agenda', roles: ['admin', 'recepcionista', 'terapeuta'] },
+    { label: 'Agenda', route: '/agenda', roles: ['admin', 'recepcionista', 'terapeuta', 'cliente'] },
     { label: 'Clientes', route: '/clientes', roles: ['admin', 'recepcionista', 'terapeuta'] },
     { label: 'Terapeutas', route: '/terapeutas', roles: ['admin'] },
     { label: 'Servicios', route: '/servicios', roles: ['admin', 'terapeuta', 'cliente'] },
@@ -35,7 +35,12 @@ export class NavbarComponent {
   ];
 
   itemsVisibles = computed(() =>
-    this.navItems.filter((item) => this.authService.hasRole(...item.roles)),
+    this.navItems.filter((item) => this.authService.hasRole(...item.roles)).map((item) => {
+      if (item.label === 'Agenda' && this.authService.getSession()?.rol === 'cliente') {
+        return { ...item, route: '/mis-citas' };
+      }
+      return item;
+    }),
   );
 
   get nombreUsuario(): string {
